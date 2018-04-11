@@ -7,6 +7,45 @@
 
 1. 创建MyMarket repository
 
+2. 完成了自助收银服务的基础部分
+	目前实现了自动扫描标签，将标签EPC显示在表格中。
+
+接下来的任务是:
+	点击支付显示支付对话框
+	完成自助收银服务接入支付宝二维码，利用支付宝开发SDK。
+	扫描支付宝付款后，显示支付成功信息，返回首页继续扫描。
+下面是遇到的一些问题:
+	1. 询查返回标签EPC问题
+		java使用对象传递可以在函数中修改对象中值，在InventoryBean中包括了巡查的基本信息。
+		在jni中，先getEPClenandEPC() jcharArray数组，再获取EPC中的元素jchar*，
+		接下来给jcharArray 赋值，有两种方法赋值：
+		1. 单个元素赋值
+		```C++
+		env->SetCharArrayRegion(j_charArray, index, 1, &temp);//index是元素下标,temp是数值
+		```
+		2. 数组赋值
+		```C++
+		env->SetCharArrayRegion(j_charArray, index, len, jcharX);//index是元素开始下标, jcharX是jchar*类型
+		```
+	2. 遇到如下问题:
+	>#
+	># A fatal error has been detected by the Java Runtime Environment:
+	>#
+	>#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x049ef762, pid=2736, tid=0x000019a0
+	>#
+	># JRE version: Java(TM) SE Runtime Environment (8.0_171-b11) (build 1.8.0_171-b11)
+	># Java VM: Java HotSpot(TM) Client VM (25.171-b11 mixed mode windows-x86 )
+	># Problematic frame:
+	># j  goods.CheckInBox$1.run()V+143
+	>#	
+	># Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+	>#
+	># If you would like to submit a bug report, please visit:
+	>#   http://bugreport.java.com/bugreport/crash.jsp
+	>#	
+		一般情况是jni中语法有问题, 需要仔细检查。
+		如果 pc=0x0 , 也可能是传入了空值。
+		
 -------------------------------------------------
 
 2018.04.10 19:55
