@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import application.Main;
 import beans.AdminstratorInfo;
 import beans.UHFReaderBean;
+import checkin.CheckInControl;
 import helper.UHFHelper;
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -156,12 +157,15 @@ public class GoodsControl implements Initializable{
 	 */
 	private void showCheckIn() {
 		// TODO Auto-generated method stub
-		CheckInBox checkInBox = new CheckInBox();
-		
+		/*
+		CheckInPayControl checkInPayControl = new CheckInPayControl();
 		pane_center.getChildren().clear();//清除原有控件
-		pane_center.getChildren().add(checkInBox);//添加到面板上
-		
-		checkInBox.start();
+		pane_center.getChildren().add(checkInPayControl);//添加到面板上
+		checkInPayControl.start();
+		*/
+		//新建界面，全屏显示
+		CheckInControl control = new CheckInControl();
+		control.start();
 	}
 	
 	/**

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.BorderPane?>
+
+<StackPane fx:id="checkin_welcome_root"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="checkin.CheckInWelcomeControl"
+	style="-fx-background-color:#1874CD;">
+	<children>
+		<BorderPane>
+			<center>
+				<Label text="欢迎使用自助收银系统" textFill="WHITE"
+					style="-fx-font-size:50px;" />
+			</center>
+			<bottom>
+				<VBox spacing="10" alignment="CENTER_RIGHT">
+				<padding>
+					<Insets top="10" right="50" bottom="10" left="50" />
+				</padding>
+					<children>
+						<Button fx:id="btn_vip" text="会员" defaultButton="true"
+							prefWidth="100" style="-fx-font-size:20px;">
+							<padding>
+								<Insets top="10" bottom="10" left="10" right="10" />
+							</padding>
+						</Button>
+						<Button fx:id="btn_unvip" text="非会员" defaultButton="true"
+							prefWidth="100" style="-fx-font-size:20px;">
+							<padding>
+								<Insets top="10" bottom="10" left="10" right="10" />
+							</padding>
+						</Button>
+					</children>
+				</VBox>
+			</bottom>
+		</BorderPane>
+	</children>
+</StackPane>
+

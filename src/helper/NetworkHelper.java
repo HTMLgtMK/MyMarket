@@ -9,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 网络帮助类
@@ -18,11 +20,16 @@ import java.util.Iterator;
 public class NetworkHelper {
 	
 	
+	public static String downloadString(String spec, HashMap<String, String> map, String method) {
+		return downloadString(spec,map,method,false);
+	}
+	
 	/**
 	 * 获取字符串
 	 * @param spec 资源地址
 	 * @param map 需要上传的参数
 	 * @param method 请求方式,GET or POST
+	 * @param debug  为true则输出请求url
 	 * @return 若出错，则按照JSON格式返回错误字符串
 	 * {
 	 * 'code': status_code
@@ -30,7 +37,7 @@ public class NetworkHelper {
 	 * 'data':{ obj }
 	 * }
 	 */
-	public static String downloadString(String spec, HashMap<String, String> map, String method) {
+	public static String downloadString(String spec, HashMap<String, String> map, String method, boolean debug) {
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpURLConnection connection = null;
 		try {
@@ -50,6 +57,9 @@ public class NetworkHelper {
 					String key = it.next();
 					String value = map.get(key);
 					dos.writeBytes(key+"="+value+"&");
+					if(debug) {
+						Logger.getLogger(NetworkHelper.class.getSimpleName()).log(Level.INFO , key+"="+value);
+					}
 				}
 				dos.flush();
 				dos.close();

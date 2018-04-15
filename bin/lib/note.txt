@@ -32,3 +32,7 @@ scene.lookup(String selector); 返回的是Node，cannot convert to TreeItem。
    此时，访问ti_checkout还是为null.
 3. Controller需要实现Initializable接口，在initialize()方法中可以获取到绑定后的控件。
 	在这里可以绑定事件，也可以使用FXML注解方式绑定事件。
+
+==============================================
+
+二维码生成jar包: QRCode.jar或者com-google-zxing-core.jar

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.Label?>
+
+<BorderPane fx:id="checkin_pay_result_root" xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity"
+			style="-fx-background-color:#BA55D3;" fx:controller="checkin.CheckInPayResultControl"	>
+	<top>
+		<Label text="Pay result Page" />
+	</top>
+</BorderPane>

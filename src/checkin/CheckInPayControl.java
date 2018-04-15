@@ -1,10 +1,11 @@
-package goods;
+package checkin;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -21,16 +22,20 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-public class CheckInBox extends BorderPane {
+public class CheckInPayControl implements Initializable {
 	//定时器,间隔轮询标签
 	private Timer timer;
 	//是否科查询的标记
@@ -49,9 +54,11 @@ public class CheckInBox extends BorderPane {
 	private Label label_total;
 	//扫描按钮
 	private Button btn_inventory;
+	//支付按钮
+	private Button btn_pay;
 	
 	@SuppressWarnings("unchecked")
-	public CheckInBox() {
+	public CheckInPayControl() {
 		// TODO Auto-generated constructor stub
 		URL location = getClass().getResource("goods_checkin.fxml");
 		FXMLLoader loader = new FXMLLoader(location);
@@ -72,6 +79,14 @@ public class CheckInBox extends BorderPane {
 					}
 				};
 			});
+			btn_pay = (Button) parent.lookup("#btn_goods_check_pay");
+			btn_pay.setOnMouseClicked(new EventHandler<Event>() {
+				@Override
+				public void handle(Event event) {
+					// TODO Auto-generated method stub
+					startPay();
+				}
+			});
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -91,6 +106,36 @@ public class CheckInBox extends BorderPane {
 		startInventory();
 	}
 	
+	/**
+	 * 开始处理支付逻辑
+	 */
+	private void startPay() {
+		Stage dialog = new Stage(StageStyle.UNDECORATED);//无标题栏
+		BorderPane borderPane = null;
+		Button btn_cancel = null;
+		try {
+			borderPane = FXMLLoader.load(getClass().getResource("goods_pay.fxml"));
+			btn_cancel = (Button) borderPane.lookup("#btn_cancel_pay");
+			btn_cancel.setOnMouseClicked(new EventHandler<Event>() {
+				@Override
+				public void handle(Event event) {
+					// TODO Auto-generated method stub
+					dialog.hide();
+				}
+			});
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Scene scene = new Scene(borderPane);
+		dialog.setScene(scene);
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		dialog.show();
+	}
+	
+	/**
+	 * 开始巡查逻辑
+	 */
 	private void startInventory() {
 		timer = new Timer();
 		timer.schedule(new TimerTask() {
@@ -131,7 +176,7 @@ public class CheckInBox extends BorderPane {
 				}
 				m = m + EPClen + 1;
 				epcList.add(builder.toString());
-				Logger.getLogger(CheckInBox.class.getSimpleName()).log(Level.INFO,builder.toString());
+				Logger.getLogger(CheckInPayControl.class.getSimpleName()).log(Level.INFO,builder.toString());
 			}
 			//TODO 查询数据库, 获取列表中商品的信息.更新列表
 			HashMap<String,String> map = new HashMap<>();
@@ -145,7 +190,7 @@ public class CheckInBox extends BorderPane {
 			final int code = jsonObj.getInt("code");
 			//TODO delete msg
 			String msg = jsonObj.getString("msg");
-			Logger.getLogger(CheckInBox.class.getSimpleName()).log(Level.INFO, msg);
+			Logger.getLogger(CheckInPayControl.class.getSimpleName()).log(Level.INFO, msg);
 			if(code == 1) {
 				goodsList.clear();
 				JSONObject dataObj = jsonObj.getJSONObject("data");
@@ -187,7 +232,7 @@ public class CheckInBox extends BorderPane {
 			inventoryFlag = true;//无标签查询
 		}else {
 			//出错
-			Logger.getLogger(CheckInBox.class.getSimpleName()).log(Level.INFO, "出错:"+String.format("0x%x", ret));
+			Logger.getLogger(CheckInPayControl.class.getSimpleName()).log(Level.INFO, "出错:"+String.format("0x%x", ret));
 			timer.cancel();//出错取消询查
 		}
 		Platform.runLater(new Runnable() {
@@ -244,5 +289,11 @@ public class CheckInBox extends BorderPane {
 		}
 		types.clear();
 		types = null;
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		// TODO Auto-generated method stub
+		
 	}
 }
