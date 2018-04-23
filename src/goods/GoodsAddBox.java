@@ -6,6 +6,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +29,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.WindowEvent;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -45,6 +48,9 @@ public class GoodsAddBox extends BorderPane {
 	private Button btn_submit;
 	
 	private HashMap<String,Integer> goodsTypeMap;
+	
+	private Timer timer;
+	
 	
 	@SuppressWarnings("unchecked")
 	public GoodsAddBox() {
@@ -93,7 +99,7 @@ public class GoodsAddBox extends BorderPane {
 				@Override
 				public void handle(Event event) {
 					// TODO Auto-generated method stub
-					writeIn();
+					startWriteIn();
 				}
 			});
 			
@@ -104,6 +110,29 @@ public class GoodsAddBox extends BorderPane {
 		}
 		
 		goodsTypeMap = new HashMap<>();
+		
+		this.addEventFilter(WindowEvent.WINDOW_HIDING, new EventHandler<WindowEvent>() {
+
+			@Override
+			public void handle(WindowEvent event) {
+				// TODO Auto-generated method stub
+				if(GoodsAddBox.this.timer != null) {
+					timer.cancel();
+				}
+			}
+		});
+	}
+	
+	public void startWriteIn() {
+		timer = new Timer();
+		timer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				writeIn();
+			}
+		}, 0, 100);
+		
 	}
 	
 	/**
@@ -112,21 +141,39 @@ public class GoodsAddBox extends BorderPane {
 	private void writeIn() {
 		// TODO Auto-generated method stub
 		if(!Main.isUhfConnected()) {
-			Text text = new Text("UHF读写器尚未连接!");
-			vbox_info.getChildren().add(text);
-			return;
+			Platform.runLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					Text text = new Text("UHF读写器尚未连接!");
+					vbox_info.getChildren().add(text);
+					timer.cancel();
+					timer = null;
+					return;
+				}
+			});
 		}
 		
-		String goods_id = tf_goods_id.getText();
-		int ret = UHFHelper.writeEPC_G2(goods_id);
-		if(ret == 0) {
-			Text text = new Text("写入成功:"+goods_id);
-			vbox_info.getChildren().add(text);
-			btn_submit.setDisable(false);
-		}else {
-			Text text = new Text("写入失败 : "+String.format("0x%x", ret));
-			vbox_info.getChildren().add(text);
-		}
+		final String goods_id = tf_goods_id.getText();
+		final int ret = UHFHelper.writeEPC_G2(goods_id);
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				if(ret == 0) {
+					Text text = new Text("写入成功:"+goods_id);
+					vbox_info.getChildren().add(text);
+					btn_submit.setDisable(false);
+					Logger.getLogger(GoodsAddBox.class.getSimpleName()).log(Level.INFO, "写入成功:"+goods_id);
+					timer.cancel();
+					timer = null;
+				}else {
+					Text text = new Text("写入失败 : "+String.format("0x%x", ret));
+					vbox_info.getChildren().add(text);
+				}
+			}
+		});
 	}
 	
 	/**
@@ -220,7 +267,7 @@ public class GoodsAddBox extends BorderPane {
 						JSONObject obj = goodsTypeArr.getJSONObject(i);
 						bean.setId(obj.getInt("id"));
 						bean.setName(obj.getString("name"));
-						bean.setPrice((float)obj.getDouble("price"));
+						bean.setPrice(obj.getInt("price"));
 						bean.setImages(obj.getString("images"));
 						bean.setAddress(obj.getString("address"));
 						bean.setCompany(obj.getString("company"));
@@ -267,7 +314,6 @@ public class GoodsAddBox extends BorderPane {
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				String spec = "http://localhost:8888/api/market/Goods/getGoodsId";
 				HashMap<String,String> map = new HashMap<>();
 				map.put("goodsType", String.valueOf(goodsType));
@@ -282,7 +328,6 @@ public class GoodsAddBox extends BorderPane {
 						
 						@Override
 						public void run() {
-							// TODO Auto-generated method stub
 							Text text = new Text(msg);
 							GoodsAddBox.this.vbox_info.getChildren().add(text);
 						}
@@ -294,7 +339,6 @@ public class GoodsAddBox extends BorderPane {
 						
 						@Override
 						public void run() {
-							// TODO Auto-generated method stub
 							Text text = new Text(msg + " 商品ID: " + id);
 							GoodsAddBox.this.vbox_info.getChildren().add(text);
 							GoodsAddBox.this.tf_goods_id.setText(String.valueOf(id));

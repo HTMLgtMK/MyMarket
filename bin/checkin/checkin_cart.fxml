@@ -20,7 +20,7 @@
 			</padding>
 			<children>
 				<HBox prefHeight="80" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" spacing="20" alignment="CENTER_LEFT">
-					<Button fx:id="btn_return" style="-fx-background:null;"  />
+					<Button fx:id="btn_return" style="-fx-background-color:transparent;"  />
 					<Label  text="购物车" textFill="WHITE" style="-fx-font-size:30px;" />
 				</HBox>
 				<!-- 提示信息 -->

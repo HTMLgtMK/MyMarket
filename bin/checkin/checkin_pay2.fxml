@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.layout.Background?>
+<?import java.lang.Object?>
+<?import java.lang.String?>
+
+<BorderPane fx:id="checkin_pay2_root"
+	xmlns:fx="http://javafx.com/fxml/1"
+	style="-fx-background-color:#1874CD;"
+	fx:controller="checkin.CheckInPayControl3">
+	<top>
+		<AnchorPane prefHeight="100">
+			<padding>
+				<Insets top="10" right="10" bottom="10" left="10" />
+			</padding>
+			<children>
+				<HBox prefHeight="80" AnchorPane.leftAnchor="0.0"
+					AnchorPane.topAnchor="0.0" spacing="20" alignment="CENTER_LEFT">
+					<Button fx:id="btn_cancel_pay"
+						style="-fx-background-color:transparent;" />
+					<Label text="支付" textFill="WHITE" style="-fx-font-size:30px;"
+						textAlignment="CENTER" />
+				</HBox>
+			</children>
+		</AnchorPane>
+	</top>
+	<!-- 中间存放二维码 -->
+	<center>
+		<TabPane fx:id="tabPane_checkin"  tabClosingPolicy="UNAVAILABLE"
+			stylesheets="@./style_checkin_pay.css">
+			<padding>
+				<Insets top="20.0" right="50.0" bottom="20.0" left="50.0" />
+			</padding>
+			<tabs>
+				<Tab fx:id="tabAlipay" text="支付宝支付">
+					<fx:include fx:id="tabAlipayPage"
+						source="tab_alipay.fxml" />
+				</Tab>
+				<Tab fx:id="tabWxpay" text="微信支付">
+					<fx:include fx:id="tabWxpayPage" source="tab_wxpay.fxml" />
+				</Tab>
+			</tabs>
+		</TabPane>
+	</center>
+</BorderPane>
+

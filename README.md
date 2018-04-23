@@ -1,7 +1,56 @@
 
 ## 无人超市商品管理模块开发日志
 
-------------------------------------------------
+-------------------------------------------------
+2018.04.23 16:45
+
+这几天没有做多少内容。主要工作是完成了微信支付。
+
+1. 修改了支付界面逻辑。
+	原来的计划是 同时对支付宝和微信请求预下单，但是测试后发现，同时进行预下单会导致预下单请求时间过长。
+	现在的逻辑是 单独对支付宝和微信请求预下单，这样可以保证请求时间不会过长！
+
+2. 支付业务流程为:
+	1. 提交数据到商户后台，获取交易订单号。
+	2. 根据商户订单号，分别对支付宝和微信请求预下单。
+	
+3. 支付界面主要部分有TabPane组成。
+	TabPane的组成有下面几个部分:
+	* tab-header-area	 - StackPane
+	* headers-region 	 - StackPane
+	* tab-header-background - StackPane
+	* control-buttons-tab	- StackPane
+	* tab-down-button		- Pane
+	* arrow					- StackPane
+	* tab 					- Tab
+	* tab-label				- Label
+	* tab-close-button		- StackPane
+	* tab-content-area		- StackPane
+	
+	可对这些部分分别设置style:
+	```css
+	.tab-header-background{
+		-fx-background-color:transparent;
+	}
+	```
+
+4. FXML中设置样式方法:
+	```fxml
+	<TabPane fx:id="tabPane_checkin"  tabClosingPolicy="UNAVAILABLE"
+			stylesheets="@./style_checkin_pay.css">
+	...
+	</TabPane>
+	```
+	`@`后面为相对路径。
+
+	java 中动态设置样式的方法:
+	```java
+	scene.getStylesheets().add(getClass().getResource("style_checkin_pay.css").toExternalForm());
+	```
+	
+5. TabPane中切换界面，要停止刚才的tabController中的timer。
+
+-------------------------------------------------
 2018.04.15 19:39
 
 总结下最近完成的情况。
@@ -9,17 +58,23 @@
 1. 修改了自助收银界面。修改界面为全屏显示，借鉴网页开发知识，设计自助收银全部的界面，包含在一个ScrollPane中，
 	动态设置每个页面的宽度，使的每次只能刚好显示一个界面，然后只需要设置ScrollPane的`HValue`即可。
 	注：后面为了安全，应该隐藏滚动条。
+	
 2. 运用 `<fx:include fx:id="" source="">` 标签，可分别为每个界面设置控制器。
 	执行的顺序是 childrenController -> parentController 。
 	注意：parentController中若需要使用子控制器，命名方式应为: `<fx:id>`Controller， 否则会反射失败!
+	
 3. TableView使用时，行数据对象GoodsBean应该含有`get`方法，否则在初始化时不能正确的初始化。
 	TableView初始化使用Invoke反射获取`get`方法，这是固定的！
+	
 4. 扫描速度由原来的2s扫描一次修改为100ms扫描一次，可以获取更高的准确率和速度！
 	获取得到的EPC号要要提交到后台获取商品信息，然后再予以显示！
+	
 5. 两个childController交换数据必须通过parentController。在parentController中设置监听器和代理类进行控制。
+
 6. 完成了支付宝支付接口的调用和数据显示。注意goods_detail数据需要进行Base64编码。
 	另外，GoodsDetailList(ArrayList) 转换为 JSONArray 的方法为: 
 	`` JSONArray  goodsArr = JSONArray.fromObject(goodsDetailList); ```
+	
 7. 利用com-google-zxing-core.jar包生成QRCode。
 	JavaFX中有WritableImage类，可设置每个像素的颜色。
 	但是使用 `setArgb``方法是，注意a r g b 4个通道的颜色要全部给出，给出3个的话，高8位的a默认为0，即全透明，到时候什么也看不到。。
@@ -39,10 +94,12 @@
 	3. 扫描支付宝付款后，显示支付成功信息，返回首页继续扫描。
 	
 下面是遇到的一些问题:
+
 	1. 询查返回标签EPC问题
 		java使用对象传递可以在函数中修改对象中值，在InventoryBean中包括了巡查的基本信息。
 		在jni中，先getEPClenandEPC() jcharArray数组，再获取EPC中的元素jchar*，
 		接下来给jcharArray 赋值，有两种方法赋值：
+		
 		1. 单个元素赋值
 		```C++
 		env->SetCharArrayRegion(j_charArray, index, 1, &temp);//index是元素下标,temp是数值
@@ -51,6 +108,7 @@
 		```C++
 		env->SetCharArrayRegion(j_charArray, index, len, jcharX);//index是元素开始下标, jcharX是jchar*类型
 		```
+		
 	2. 遇到如下问题:
 		>#
 		># A fatal error has been detected by the Java Runtime Environment:
@@ -67,6 +125,7 @@
 		># If you would like to submit a bug report, please visit:
 		>#   http://bugreport.java.com/bugreport/crash.jsp
 		>#	
+		
 		一般情况是jni中语法有问题, 需要仔细检查。
 		如果 pc=0x0 , 也可能是传入了空值。
 		

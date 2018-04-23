@@ -9,7 +9,7 @@ public class GoodsTypeBean {
 	private int id;
 	private String name;
 	private String images;
-	private float price;
+	private int price;
 	private String address;
 	private String company;
 	public int getId() {
@@ -30,10 +30,10 @@ public class GoodsTypeBean {
 	public void setImages(String images) {
 		this.images = images;
 	}
-	public float getPrice() {
+	public int getPrice() {
 		return price;
 	}
-	public void setPrice(float price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 	public String getAddress() {

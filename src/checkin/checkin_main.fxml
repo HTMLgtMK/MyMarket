@@ -4,17 +4,17 @@
 <?import javafx.scene.layout.HBox?>
 
 
-<ScrollPane fx:id="scrollPane_checkin_main_root" xmlns:fx="http://javafx.com/fxml/1" fx:controller="checkin.CheckInControl">
+<ScrollPane fx:id="scrollPane_checkin_main_root" xmlns:fx="http://javafx.com/fxml/1" fx:controller="checkin.CheckInControl"
+	hbarPolicy="ALWAYS" vbarPolicy="NEVER" >
 	<content>
 		<HBox >
 			<children>
 				<!-- 存放5个页面 -->
 				<fx:include fx:id="page1" source="checkin_welcome.fxml" />
 				<fx:include fx:id="page2" source="checkin_cart.fxml" />
-				<fx:include fx:id="page3" source="checkin_pay.fxml" />
+				<fx:include fx:id="page3" source="checkin_pay2.fxml" />
 				<fx:include fx:id="page4" source="checkin_pay_result.fxml" />
 			</children>		
 		</HBox>
 	</content>
 </ScrollPane>
-

@@ -1,7 +1,5 @@
 package helper;
 
-import java.util.ArrayList;
-
 import beans.InventoryBean;
 import beans.UHFReaderBean;
 

@@ -2,10 +2,53 @@
 
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
 
 <BorderPane fx:id="checkin_pay_result_root" xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity"
-			style="-fx-background-color:#BA55D3;" fx:controller="checkin.CheckInPayResultControl"	>
+			style="-fx-background-color:#1874CD;" fx:controller="checkin.CheckInPayResultControl"	>
 	<top>
-		<Label text="Pay result Page" />
+	<VBox spacing="10">
+	<padding>
+		<Insets top="20" right="10" bottom="10" left="80" />
+	</padding>
+	<children>
+		<Label text="GT无人超市 | 收银台" textFill="WHITE" style="-fx-font-size:30px;" />
+		<Separator />
+	</children>
+	</VBox>
 	</top>
+	<!-- 中间显示支付结果信息 -->
+	<center>
+	<VBox >
+	<padding>
+		<Insets top="10" right="10" bottom="10" left="10" />
+	</padding>
+	<BorderPane.margin>
+		<Insets top="50" right="50" bottom="50" left="50" />
+	</BorderPane.margin>
+	<children>
+		<Label fx:id="label_result_msg" textFill="WHITE" style="-fx-font-size:50px;" />
+		<Label fx:id="label_tip" textFill="WHITE" style="-fx-font-size:30px;" />
+	</children>
+	</VBox>
+	</center>
+	<bottom>
+		<AnchorPane >
+		<padding>
+			<Insets top="10" right="10" bottom="10" left="10" />
+		</padding>
+		<children>
+			<Button fx:id="btn_return_welcome" text="返回首页" defaultButton="true" 
+				AnchorPane.rightAnchor="50" AnchorPane.topAnchor="0.0" style="-fx-font-size:30px;">
+			<padding>
+				<Insets top="10" right="10" bottom="10" left="10" />
+			</padding>
+			</Button>
+		</children>
+		</AnchorPane>
+	</bottom>
 </BorderPane>

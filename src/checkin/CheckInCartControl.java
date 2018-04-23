@@ -82,9 +82,9 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	private ArrayList<GoodsBean> goodsList;
 	private ObservableList<CartBean> cart;
 	// 金额
-	private float totalPrice;
-	private float discountPrice;
-	private float payPrice;
+	private int totalPrice;
+	private int discountPrice;
+	private int payPrice;
 	//表格栏数
 	private final int COLUMN_NUMS = 5;
 	
@@ -94,6 +94,16 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 
 	public void setOnShowPageListener(OnShowPageListener listener) {
 		this.showPageListener = listener;
+	}
+	
+	/**
+	 * 退出窗口时调用，强制停止计时器
+	 */
+	public void exitForceStopTimer() {
+		if(timer!=null) {
+			timer.cancel();
+			timer = null;
+		}
 	}
 
 	@Override
@@ -121,7 +131,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 		epcList = new ArrayList<>();
 		goodsList = new ArrayList<>();
 		cart = FXCollections.observableArrayList();
-		totalPrice = 0L;
+		totalPrice = 0;
 		
 		btn_pay.setOnMouseClicked(new EventHandler<Event>() {
 			public void handle(Event event) {
@@ -186,9 +196,9 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 		epcList.clear();
 		goodsList.clear();
 		cart.clear();
-		totalPrice = 0f;
-		discountPrice = 0f;
-		payPrice = 0f;
+		totalPrice = 0;
+		discountPrice = 0;
+		payPrice = 0;
 		//询查
 		int ret = UHFHelper.inventory_G2(inventoryBean);
 		/**
@@ -233,14 +243,14 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 					for(int i=0;i<count;++i) {
 						JSONObject obj = goods.getJSONObject(i);
 						GoodsBean bean = new GoodsBean();
-						bean.setAddress(obj.getString("address"));
-						bean.setBatch_number(obj.getString("batch_number"));
-						bean.setCompany(obj.getString("company"));
+						bean.setAddress(obj.optString("address"));
+						bean.setBatch_number(obj.optString("batch_number"));
+						bean.setCompany(obj.optString("company"));
 						bean.setGoods_id(obj.getString("id"));
-						bean.setImages(obj.getString("images"));
-						bean.setManufacture_date(obj.getLong("manufacture_date"));
+						bean.setImages(obj.optString("images"));
+						bean.setManufacture_date(obj.optLong("manufacture_date"));
 						bean.setName(obj.getString("name"));
-						bean.setPrice((float)obj.getDouble("price"));
+						bean.setPrice(obj.getInt("price"));
 						bean.setStatus(obj.getInt("status"));
 						bean.setType_id(obj.getInt("type_id"));
 						bean.setId(bean.getType_id());
@@ -292,8 +302,8 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				label_total.setText(String.valueOf(totalPrice));
-				label_pay.setText(String.valueOf(totalPrice));
+				label_total.setText(String.format("%.2f", Float.valueOf(totalPrice)/100));
+				label_pay.setText(String.format("%.2f", Float.valueOf(payPrice)/100));
 			}
 		});
 	}
@@ -307,7 +317,9 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 		HashMap<Integer,CartBean> types = new HashMap<>();
 		for(int i=0;i<size;++i) {//统计
 			GoodsBean bean = goodsList.get(i);
-			totalPrice += bean.getPrice();
+			if(bean.getStatus() == 1) {//待售
+				totalPrice += bean.getPrice();
+			}
 			if(types.containsKey(bean.getType_id())) {
 				CartBean cartBean = types.get(bean.getType_id());
 				cartBean.numsInc();
@@ -340,7 +352,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 			CartBean bean = types.get(key);
 			cart.add(bean);
 		}
-		discountPrice = 0.0f;
+		discountPrice = 0;
 		payPrice = totalPrice;
 		types.clear();
 		types = null;
@@ -353,19 +365,19 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	}
 
 	@Override
-	public double getTotalPrice() {
+	public int getTotalPrice() {
 		// TODO Auto-generated method stub
 		return totalPrice;
 	}
 
 	@Override
-	public double getDiscountPrice() {
+	public int getDiscountPrice() {
 		// TODO Auto-generated method stub
 		return discountPrice;
 	}
 
 	@Override
-	public double getPayPrice() {
+	public int getPayPrice() {
 		// TODO Auto-generated method stub
 		return payPrice;
 	}

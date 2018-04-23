@@ -207,7 +207,7 @@ public class CheckInPayControl implements Initializable {
 						bean.setImages(obj.getString("images"));
 						bean.setManufacture_date(obj.getLong("manufacture_date"));
 						bean.setName(obj.getString("name"));
-						bean.setPrice((float)obj.getDouble("price"));
+						bean.setPrice(obj.getInt("price"));
 						bean.setStatus(obj.getInt("status"));
 						bean.setType_id(obj.getInt("type_id"));
 						bean.setId(bean.getType_id());
