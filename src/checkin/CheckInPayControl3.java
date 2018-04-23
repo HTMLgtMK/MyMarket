@@ -115,6 +115,8 @@ public class CheckInPayControl3 implements Initializable,OnGetTradeQueryResponse
 
 			@Override
 			public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+				Logger.getLogger(CheckInPayControl3.class.getSimpleName()).log(Level.INFO, "tab changed: " + newValue.getText());
+				
 				if(newValue.equals(tabAlipay)) {
 					tabWxpayPageController.forceStopTimer();
 					tabAlipayPageController.start(outTradeNo);
@@ -133,7 +135,7 @@ public class CheckInPayControl3 implements Initializable,OnGetTradeQueryResponse
 	public void start() {
 		//设置界面跳转回调, 必须在ParentController的Initialize执行完成后执行
 		tabAlipayPageController.setOnShowPageListener(showPageListener);
-		
+		tabWxpayPageController.setOnShowPageListener(showPageListener);
 		// 获取商品信息
 		if (getDealListener != null) {
 			goodsList = getDealListener.getGoodsList();

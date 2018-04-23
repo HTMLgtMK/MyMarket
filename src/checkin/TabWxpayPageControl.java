@@ -112,10 +112,13 @@ public class TabWxpayPageControl implements Initializable {
 
 			@Override
 			public void run() {
-				String spec = Params.URL_ALIPAY_PRECREATE;
+				String spec = Params.URL_WXPAY_PRECREATE;
 				HashMap<String, String> map = new HashMap<>();
 				map.put("out_trade_no", outTradeNo);
 				String json = NetworkHelper.downloadString(spec, map, "POST");
+				
+				Logger.getLogger(TabWxpayPageControl.class.getSimpleName()).log(Level.INFO, "wxpay  precreate: "+json);
+				
 				JSONObject jsonObj = JSONObject.fromObject(json);
 				int code = jsonObj.getInt("code");
 				final String msg = jsonObj.getString("msg");
@@ -246,7 +249,7 @@ public class TabWxpayPageControl implements Initializable {
 	 * 查询微信支付支付状态
 	 */
 	private void queryWxpaySatus() {
-		String spec = "http://localhost:8888/api/market/Goods_Sale/wxpayQuery";
+		String spec = Params.URL_WXPAY_QUERY;
 		HashMap<String, String> map = new HashMap<>();
 		map.put("out_trade_no", wxpayPreCreateResponseBean.getOut_trade_no());
 		String json = NetworkHelper.downloadString(spec, map, "POST");
@@ -273,7 +276,7 @@ public class TabWxpayPageControl implements Initializable {
 	private Stage getLoadingDialog() {
 		Stage dialog = new Stage(StageStyle.TRANSPARENT);
 		ProgressIndicator pi = new ProgressIndicator();
-		Text text = new Text("提交数据中...");
+		Text text = new Text("获取二维码...");
 		VBox vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
 		vbox.setSpacing(10);

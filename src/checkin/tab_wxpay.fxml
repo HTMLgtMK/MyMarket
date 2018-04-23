@@ -5,13 +5,21 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
 
 <BorderPane fx:id="borderPane_tab_wxpay_root"
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="checkin.TabWxpayPageControl">
 	<top>
-		<Label fx:id="label_info" textFill="WHITE"
-			style="-fx-font-size:20px;" />
+		<VBox alignment="CENTER">
+		<padding>
+			<Insets top="20" bottom="20" />
+		</padding>
+			<children>
+				<Label fx:id="label_info" textFill="WHITE" alignment="CENTER"
+					style="-fx-font-size:20px;" />
+			</children>
+		</VBox>
 	</top>
 	<center>
 		<VBox alignment="TOP_CENTER" spacing="10">

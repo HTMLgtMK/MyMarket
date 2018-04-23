@@ -226,8 +226,6 @@ public class TabAlipayPageControl implements Initializable {
 
 						@Override
 						public void run() {
-							Logger.getLogger(TabAlipayPageControl.class.getSimpleName()).log(Level.INFO, "show page listener is null: " + (showPageListener == null));
-							
 							if (showPageListener != null) {
 								showPageListener.showPage(4);// 显示最后一页
 							}
@@ -272,7 +270,7 @@ public class TabAlipayPageControl implements Initializable {
 	private Stage getLoadingDialog() {
 		Stage dialog = new Stage(StageStyle.TRANSPARENT);
 		ProgressIndicator pi = new ProgressIndicator();
-		Text text = new Text("提交数据中...");
+		Text text = new Text("获取二维码...");
 		VBox vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
 		vbox.setSpacing(10);

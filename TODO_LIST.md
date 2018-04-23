@@ -30,3 +30,5 @@
 	private CheckInWelcomeControl page1Controller;
 	```
 	Reference: [JavaFx Nested Controllers (FXML <include>)](https://stackoverflow.com/questions/12543487/javafx-nested-controllers-fxml-include)
+	
+5. 修改退出当前交易支付时，需要修改后台数据库中订单的状态!
