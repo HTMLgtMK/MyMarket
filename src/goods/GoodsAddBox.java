@@ -148,8 +148,10 @@ public class GoodsAddBox extends BorderPane {
 					// TODO Auto-generated method stub
 					Text text = new Text("UHF读写器尚未连接!");
 					vbox_info.getChildren().add(text);
-					timer.cancel();
-					timer = null;
+					if(timer!=null) {
+						timer.cancel();
+						timer = null;						
+					}
 					return;
 				}
 			});
@@ -166,8 +168,10 @@ public class GoodsAddBox extends BorderPane {
 					vbox_info.getChildren().add(text);
 					btn_submit.setDisable(false);
 					Logger.getLogger(GoodsAddBox.class.getSimpleName()).log(Level.INFO, "写入成功:"+goods_id);
-					timer.cancel();
-					timer = null;
+					if(timer!=null) {
+						timer.cancel();
+						timer = null;
+					}
 				}else {
 					Text text = new Text("写入失败 : "+String.format("0x%x", ret));
 					vbox_info.getChildren().add(text);

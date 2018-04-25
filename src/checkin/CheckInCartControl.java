@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import beans.CartBean;
+import beans.DiscountBean;
 import beans.GoodsBean;
 import beans.InventoryBean;
 import checkin.CheckInControl.OnGetDealListener;
@@ -81,6 +82,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	private ArrayList<String> epcList;
 	private ArrayList<GoodsBean> goodsList;
 	private ObservableList<CartBean> cart;
+	private HashMap<Integer,ArrayList<DiscountBean>> discountMap;
 	// 金额
 	private int totalPrice;
 	private int discountPrice;
@@ -131,6 +133,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 		epcList = new ArrayList<>();
 		goodsList = new ArrayList<>();
 		cart = FXCollections.observableArrayList();
+		discountMap = new HashMap<>();
 		totalPrice = 0;
 		
 		btn_pay.setOnMouseClicked(new EventHandler<Event>() {
@@ -174,6 +177,9 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 		inventoryFlag = true;//可询查
 		label_msg.setText("开始扫描...");
 		//btn_scan.setVisible(false);
+		label_total.setText("0");
+		label_discount.setText("0");
+		label_pay.setText("0");
 	}
 	
 	/**
@@ -236,8 +242,34 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 			Logger.getLogger(CheckInPayControl.class.getSimpleName()).log(Level.INFO, msg);
 			if(code == 1) {
 				goodsList.clear();
+				discountMap.clear();
 				JSONObject dataObj = jsonObj.getJSONObject("data");
-				if(dataObj.containsKey("goods")) {
+				if(dataObj.containsKey("discount")) {//所有符合条件优惠
+					JSONArray discounts = dataObj.getJSONArray("discount");
+					int count = discounts.size();
+					for(int i=0;i<count;++i) {
+						JSONObject obj = discounts.getJSONObject(i);
+						DiscountBean bean = new DiscountBean();
+						bean.setId(obj.getInt("id"));
+						bean.setDiscount_id(obj.getInt("discount_id"));
+						bean.setGoods_type_id(obj.getInt("goods_type_id"));
+						bean.setName(obj.getString("name"));
+						bean.setExtent((float)obj.getDouble("extent"));
+						bean.setCoin(obj.getInt("coin"));
+						bean.setRest(obj.getInt("rest"));
+						
+						if(discountMap.containsKey(bean.getGoods_type_id())) {
+							ArrayList<DiscountBean> list = discountMap.get(bean.getGoods_type_id());
+							list.add(bean);
+							discountMap.replace(bean.getGoods_type_id(), list);
+						}else {
+							ArrayList<DiscountBean> list = new ArrayList<>();
+							list.add(bean);
+							discountMap.put(bean.getGoods_type_id(), list);
+						}
+					}
+				}
+				if(dataObj.containsKey("goods")) {//标签商品具体详情
 					JSONArray goods = dataObj.getJSONArray("goods");
 					int count = goods.size();
 					for(int i=0;i<count;++i) {
@@ -267,8 +299,11 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 					if(code == 1) {
 						table_cart.setItems(cart);
 					}
-					label_msg.setText("扫描成功,已停止自动扫描!");
 					//inventoryFlag = true;//手动开启询查，或者等支付完成后开启询查
+					label_msg.setText("扫描成功,已停止自动扫描!");
+					label_total.setText(String.format("%.2f", Float.valueOf(totalPrice)/100));
+					label_pay.setText(String.format("%.2f", Float.valueOf(payPrice)/100));
+					label_discount.setText(String.format("%.2f", Float.valueOf(discountPrice)/100));
 				}
 			});
 		}else if(ret == 0xFB){
@@ -278,7 +313,6 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 				
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
 					label_msg.setText("扫描结果: "+ String.format("0x%02x", ret) +" time:" +System.currentTimeMillis() );
 				}
 			});
@@ -291,21 +325,11 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 				
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
 					label_msg.setText( "出错:"+String.format("0x%x", ret));
 				}
 			});
 			
 		}
-		Platform.runLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				label_total.setText(String.format("%.2f", Float.valueOf(totalPrice)/100));
-				label_pay.setText(String.format("%.2f", Float.valueOf(payPrice)/100));
-			}
-		});
 	}
 	
 	/**
@@ -346,39 +370,53 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 				types.put(bean.getType_id(), cartBean);
 			}
 		}//for
+		
+		// 装载到表格, 同时统计优惠金额
+		discountPrice = 0;
 		Iterator<Integer> it = types.keySet().iterator();
 		while(it.hasNext()) {
-			int key = it.next();
+			int key = it.next();// goods_type_id
 			CartBean bean = types.get(key);
 			cart.add(bean);
+			
+			if(discountMap.containsKey(key)) {//若含有该商品的优惠
+				int discount_max =0 ;
+				ArrayList<DiscountBean> list = discountMap.get(key);
+				Iterator<DiscountBean> itt = list.iterator();
+				while(itt.hasNext()) {
+					DiscountBean discountBean = itt.next();
+					int extent_dis = (int) (bean.getPrice()*100*bean.getNums()*(1-discountBean.getExtent()));
+					int coin_dis = -discountBean.getCoin();
+					int discount = extent_dis + coin_dis;
+					if(discount_max < discount) {
+						discount_max = discount;
+					}
+				}
+				discountPrice += discount_max;
+			}
 		}
-		discountPrice = 0;
-		payPrice = totalPrice;
+		payPrice = totalPrice-discountPrice;
 		types.clear();
 		types = null;
 	}
 
 	@Override
 	public ArrayList<GoodsBean> getGoodsList() {
-		// TODO Auto-generated method stub
 		return goodsList;
 	}
 
 	@Override
 	public int getTotalPrice() {
-		// TODO Auto-generated method stub
 		return totalPrice;
 	}
 
 	@Override
 	public int getDiscountPrice() {
-		// TODO Auto-generated method stub
 		return discountPrice;
 	}
 
 	@Override
 	public int getPayPrice() {
-		// TODO Auto-generated method stub
 		return payPrice;
 	}
 
