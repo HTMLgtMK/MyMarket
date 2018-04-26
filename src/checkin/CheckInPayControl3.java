@@ -104,9 +104,7 @@ public class CheckInPayControl3 implements Initializable,OnGetTradeQueryResponse
 		btn_cancel_pay.setOnMouseClicked(new EventHandler<Event>() {
 			public void handle(Event event) {
 				// TODO 取消此次交易
-				if (showPageListener != null) {
-					showPageListener.showPage(2);
-				}
+				revokeDeal();
 			};
 		});
 		
@@ -150,7 +148,7 @@ public class CheckInPayControl3 implements Initializable,OnGetTradeQueryResponse
 		/**
 		 * 业务流程： 1. 提交订单，获取商家订单号 2. 由支付宝或者微信支付发起预支付
 		 */
-		Stage stage = getLoadingDialog();
+		Stage stage = getLoadingDialog("提交数据中...");
 		stage.show();
 		(new Thread(new Runnable() {
 
@@ -213,6 +211,47 @@ public class CheckInPayControl3 implements Initializable,OnGetTradeQueryResponse
 	}
 	
 	/**
+	 * 撤销本次交易
+	 */
+	private void revokeDeal() {
+		if(outTradeNo == null || outTradeNo == "") {
+			if (showPageListener != null) {
+				showPageListener.showPage(2);
+			}
+		}else {
+			Stage dialog = getLoadingDialog("撤销交易中...");
+			dialog.show();
+			(new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					String spec = Params.URL_REVOKE_DEAL;
+					HashMap<String, String> map = new HashMap<>();
+					map.put("out_trade_no", outTradeNo);
+					String json = NetworkHelper.downloadString(spec, map, "POST");
+					JSONObject jsonObj = JSONObject.fromObject(json);
+					final int code = jsonObj.getInt("code");
+					final String msg = jsonObj.getString("msg");
+					Platform.runLater(new Runnable() {
+						
+						@Override
+						public void run() {
+							dialog.hide();
+							if(code == 1) {//成功
+								if (showPageListener != null) {
+									showPageListener.showPage(2);
+								}
+							}else {
+								showErrorMsgBox(msg);
+							}
+						}
+					});
+				}
+			})).start();
+		}
+	}
+	
+	/**
 	 * 开始标签页的逻辑
 	 */
 	private void startTabPageLogic() {
@@ -235,10 +274,10 @@ public class CheckInPayControl3 implements Initializable,OnGetTradeQueryResponse
 	 * 
 	 * @return
 	 */
-	private Stage getLoadingDialog() {
+	private Stage getLoadingDialog(String msg) {
 		Stage dialog = new Stage(StageStyle.TRANSPARENT);
 		ProgressIndicator pi = new ProgressIndicator();
-		Text text = new Text("提交数据中...");
+		Text text = new Text(msg);
 		VBox vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
 		vbox.setSpacing(10);

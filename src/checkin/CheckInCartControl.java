@@ -14,6 +14,7 @@ import beans.CartBean;
 import beans.DiscountBean;
 import beans.GoodsBean;
 import beans.InventoryBean;
+import beans.Params;
 import checkin.CheckInControl.OnGetDealListener;
 import checkin.CheckInControl.OnShowPageListener;
 import helper.NetworkHelper;
@@ -233,7 +234,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 			for(int i=0;i<size;++i) {
 				map.put(String.valueOf(i), epcList.get(i));
 			}
-			String spec = "http://localhost:8888/api/market/Goods/getGoodsInfo";
+			String spec = Params.URL_GETGOODSINFO;
 			String json = NetworkHelper.downloadString(spec, map, "POST");
 			JSONObject jsonObj = JSONObject.fromObject(json);
 			final int code = jsonObj.getInt("code");
