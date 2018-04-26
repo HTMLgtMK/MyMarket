@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import beans.AlipayTradeQueryResponseBean;
+import beans.DiscountBean;
 import beans.GoodsBean;
 import beans.Params;
 import beans.WxpayOrderQueryResponseBean;
@@ -59,6 +60,7 @@ public class CheckInPayControl3 implements Initializable,OnGetTradeQueryResponse
 	private int totalPrice;// 总额
 	private int discountPrice;// 折扣金额
 	private int payPrice;// 支付金额
+	private ArrayList<DiscountBean> discountList;//提交的优惠使用情况
 	
 	private String outTradeNo;//生成的商家订单号
 
@@ -140,6 +142,7 @@ public class CheckInPayControl3 implements Initializable,OnGetTradeQueryResponse
 			totalPrice = getDealListener.getTotalPrice();
 			discountPrice = getDealListener.getDiscountPrice();
 			payPrice = getDealListener.getPayPrice();
+			discountList = getDealListener.getDiscountList();
 		}
 		// 开始清空结果信息， 设置二维码展示面板不可见
 		tabAlipay.getTabPane().setVisible(false);
@@ -175,6 +178,18 @@ public class CheckInPayControl3 implements Initializable,OnGetTradeQueryResponse
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				// 组装优惠信息
+				JSONArray discountArr = JSONArray.fromObject(discountList);
+				String discount_detail = discountArr.toString();
+				Logger.getLogger(CheckInPayControl2.class.getSimpleName()).log(Level.INFO,
+						"discount_str: " + discount_detail);
+				try {
+					discount_detail = Base64.getEncoder().encodeToString(discount_detail.getBytes());// !important
+					map.put("discount_detail", discount_detail);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 				String json = NetworkHelper.downloadString(spec, map, "POST", true);// TODO delete debug
 
 				Logger.getLogger(CheckInPayControl2.class.getSimpleName()).log(Level.INFO, json);
@@ -215,6 +230,8 @@ public class CheckInPayControl3 implements Initializable,OnGetTradeQueryResponse
 	 */
 	private void revokeDeal() {
 		if(outTradeNo == null || outTradeNo == "") {
+			tabAlipayPageController.forceStopTimer();
+			tabWxpayPageController.forceStopTimer();
 			if (showPageListener != null) {
 				showPageListener.showPage(2);
 			}
@@ -238,6 +255,8 @@ public class CheckInPayControl3 implements Initializable,OnGetTradeQueryResponse
 						public void run() {
 							dialog.hide();
 							if(code == 1) {//成功
+								tabAlipayPageController.forceStopTimer();
+								tabWxpayPageController.forceStopTimer();
 								if (showPageListener != null) {
 									showPageListener.showPage(2);
 								}

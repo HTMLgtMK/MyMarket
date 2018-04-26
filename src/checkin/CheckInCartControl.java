@@ -2,6 +2,7 @@ package checkin;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -268,6 +269,15 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 							list.add(bean);
 							discountMap.put(bean.getGoods_type_id(), list);
 						}
+						
+						//给优惠排序
+						Iterator<Integer> it = discountMap.keySet().iterator();
+						while(it.hasNext()) {
+							int type_id = it.next();
+							ArrayList<DiscountBean> discountList = discountMap.get(type_id);
+							Collections.sort(discountList);
+							discountMap.replace(type_id, discountList);
+						}
 					}
 				}
 				if(dataObj.containsKey("goods")) {//标签商品具体详情
@@ -337,14 +347,30 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	 * 将商品列表中数据填充到购物车中
 	 */
 	private void generateCart() {
-		int size = goodsList.size();
 		int index = 0;
 		HashMap<Integer,CartBean> types = new HashMap<>();
-		for(int i=0;i<size;++i) {//统计
-			GoodsBean bean = goodsList.get(i);
+		Iterator<GoodsBean> it_goods = goodsList.iterator();
+		while(it_goods.hasNext()) {//统计
+			GoodsBean bean = it_goods.next();
 			if(bean.getStatus() == 1) {//待售
 				totalPrice += bean.getPrice();
+				//统计优惠
+				if(discountMap.containsKey(bean.getType_id())) {//这类商品的优惠
+					ArrayList<DiscountBean> discountList = discountMap.get(bean.getType_id());
+					Iterator<DiscountBean> it_discount = discountList.iterator();
+					while(it_discount.hasNext()) {
+						DiscountBean discountBean = it_discount.next();
+						if(discountBean.inc()) {//有优惠可用，计算优惠金额
+							discountPrice += discountBean.calculateDiscount(bean.getPrice(), 1);
+							bean.setDiscount(discountBean);
+							break;
+						}else {//无优惠可用
+							continue;
+						}
+					}
+				}//该商品待售状态下统计可使用优惠
 			}
+			//统计商品种类
 			if(types.containsKey(bean.getType_id())) {
 				CartBean cartBean = types.get(bean.getType_id());
 				cartBean.numsInc();
@@ -354,7 +380,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 				cartBean.setIndex(index++);
 				cartBean.setName(bean.getName());
 				cartBean.setNums(1);
-				cartBean.setPrice(bean.getPrice());
+				cartBean.setPrice((float)bean.getPrice()/100);
 				switch(bean.getStatus()) {
 				case 1:{
 					cartBean.setStatus("待售");
@@ -369,32 +395,15 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 				}
 				}
 				types.put(bean.getType_id(), cartBean);
-			}
-		}//for
+			}// load into cart
+		}//while has next
 		
-		// 装载到表格, 同时统计优惠金额
-		discountPrice = 0;
+		// 装载到表格
 		Iterator<Integer> it = types.keySet().iterator();
 		while(it.hasNext()) {
 			int key = it.next();// goods_type_id
 			CartBean bean = types.get(key);
 			cart.add(bean);
-			
-			if(discountMap.containsKey(key)) {//若含有该商品的优惠
-				int discount_max =0 ;
-				ArrayList<DiscountBean> list = discountMap.get(key);
-				Iterator<DiscountBean> itt = list.iterator();
-				while(itt.hasNext()) {
-					DiscountBean discountBean = itt.next();
-					int extent_dis = (int) (bean.getPrice()*100*bean.getNums()*(1-discountBean.getExtent()));
-					int coin_dis = -discountBean.getCoin();
-					int discount = extent_dis + coin_dis;
-					if(discount_max < discount) {
-						discount_max = discount;
-					}
-				}
-				discountPrice += discount_max;
-			}
 		}
 		payPrice = totalPrice-discountPrice;
 		types.clear();
@@ -419,6 +428,18 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	@Override
 	public int getPayPrice() {
 		return payPrice;
+	}
+
+	@Override
+	public ArrayList<DiscountBean> getDiscountList() {
+		ArrayList<DiscountBean> discountList = new ArrayList<>();
+		Iterator<Integer> it = discountMap.keySet().iterator();
+		while(it.hasNext()) {
+			int key = it.next();
+			ArrayList<DiscountBean> list = discountMap.get(key);
+			discountList.addAll(list);
+		}
+		return discountList;
 	}
 
 }

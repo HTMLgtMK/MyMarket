@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import beans.AlipayTradeQueryResponseBean;
+import beans.DiscountBean;
 import beans.GoodsBean;
 import beans.WxpayOrderQueryResponseBean;
 import javafx.event.EventHandler;
@@ -176,6 +177,12 @@ public class CheckInControl implements Initializable {
 			// TODO Auto-generated method stub
 			return page2Controller.getPayPrice();
 		}
+
+		@Override
+		public ArrayList<DiscountBean> getDiscountList() {
+			// TODO Auto-generated method stub
+			return page2Controller.getDiscountList();
+		}
 	}
 	
 	/**
@@ -204,8 +211,11 @@ public class CheckInControl implements Initializable {
 		 * @return
 		 */
 		public int getPayPrice();
-		
-		//TODO 后续添加商品折扣信息表
+		/**
+		 * 商品优惠使用情况
+		 * @return
+		 */
+		public ArrayList<DiscountBean> getDiscountList();
 	}
 	
 	/**
