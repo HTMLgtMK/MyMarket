@@ -215,10 +215,10 @@ public class TabAlipayPageControl implements Initializable {
 
 			@Override
 			public void run() {
-				queryAlipayStatus();
+				int code = queryAlipayStatus();
 				
 				Logger.getLogger(TabAlipayPageControl.class.getSimpleName()).log(Level.INFO, "query code :" + (alipayTradeQueryResponseBean.getCode()));
-				if (alipayTradeQueryResponseBean.getCode() == 1) {
+				if (code != 1 || alipayTradeQueryResponseBean.getCode() == 1) {
 					queryFlag = true;// 支付宝支付都没有完成支付
 				} else {
 					// queryFlag = false;// 已完成支付，不再进行询查
@@ -239,7 +239,7 @@ public class TabAlipayPageControl implements Initializable {
 	/**
 	 * 询查支付宝支付状态
 	 */
-	private void queryAlipayStatus() {
+	private int queryAlipayStatus() {
 		// 清空查询信息
 		alipayTradeQueryResponseBean.clear();
 		
@@ -260,6 +260,7 @@ public class TabAlipayPageControl implements Initializable {
 		} else {
 			// TODO 错误处理
 		}
+		return code;
 	}
 	
 	/**

@@ -46,8 +46,13 @@
 			</GridPane.margin>
 			</Separator>
 			<!-- 表单 -->
-			<Label GridPane.columnIndex="0" GridPane.rowIndex="10" text="商品类别" alignment="CENTER" style="-fx-background-color:white;" />
-			<ChoiceBox fx:id="chbox_goodstype" GridPane.columnIndex="1" GridPane.rowIndex="10" prefWidth="185" />
+			<Label GridPane.columnIndex="0" GridPane.rowIndex="10" text="商品类别" alignment="CENTER" />
+			<HBox  GridPane.columnIndex="1" GridPane.rowIndex="10">
+				<children>
+					<TextField fx:id="tf_typename" promptText="请选择商品类别"  />
+					<Button fx:id="btn_select_goodsType" text="选择" />
+				</children>
+			</HBox>
 			
 			<Label GridPane.columnIndex="0" GridPane.rowIndex="11" text="生产日期" />
 			<DatePicker  fx:id="datepicker_goodsdate" GridPane.columnIndex="1" GridPane.rowIndex="11" />
@@ -77,8 +82,9 @@
 	</center>
 	<!-- 底部区域是添加的状态信息 -->
 	<bottom>
-		<ScrollPane fx:id="scrollpane_info" fitToHeight="true" fitToWidth="true" prefHeight="200" prefWidth="500" 
-				prefViewportHeight="200" prefViewportWidth="500" style="-fx-background-color:#ffffff;">
+		<ScrollPane fx:id="scrollpane_info" fitToHeight="true" fitToWidth="true" minHeight="200" maxHeight="200"
+				stylesheets="@./bg_scrollpane_white.css" 
+				hbarPolicy="ALWAYS" vbarPolicy="ALWAYS" >
 		</ScrollPane>
 	</bottom>
 </fx:root>

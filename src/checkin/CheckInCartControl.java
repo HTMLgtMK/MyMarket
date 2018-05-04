@@ -4,14 +4,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import beans.CartBean;
+import beans.DiscountBaseBean;
 import beans.DiscountBean;
 import beans.GoodsBean;
 import beans.InventoryBean;
@@ -84,7 +87,10 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	private ArrayList<String> epcList;
 	private ArrayList<GoodsBean> goodsList;
 	private ObservableList<CartBean> cart;
+	/*按商品种类分的所有优惠Map*/
 	private HashMap<Integer,ArrayList<DiscountBean>> discountMap;
+	/*当前使用的优惠集合*/
+	private Set<DiscountBean> usedDiscountSet; 
 	// 金额
 	private int totalPrice;
 	private int discountPrice;
@@ -136,6 +142,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 		goodsList = new ArrayList<>();
 		cart = FXCollections.observableArrayList();
 		discountMap = new HashMap<>();
+		usedDiscountSet = new HashSet<>();
 		totalPrice = 0;
 		
 		btn_pay.setOnMouseClicked(new EventHandler<Event>() {
@@ -245,6 +252,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 			if(code == 1) {
 				goodsList.clear();
 				discountMap.clear();
+				usedDiscountSet.clear();
 				JSONObject dataObj = jsonObj.getJSONObject("data");
 				if(dataObj.containsKey("discount")) {//所有符合条件优惠
 					JSONArray discounts = dataObj.getJSONArray("discount");
@@ -363,6 +371,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 						if(discountBean.inc()) {//有优惠可用，计算优惠金额
 							discountPrice += discountBean.calculateDiscount(bean.getPrice(), 1);
 							bean.setDiscount(discountBean);
+							usedDiscountSet.add(discountBean);
 							break;
 						}else {//无优惠可用
 							continue;
@@ -388,6 +397,10 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 				}
 				case 2:{
 					cartBean.setStatus("已售");
+					break;
+				}
+				case 3:{
+					cartBean.setStatus("锁定");
 					break;
 				}
 				default:{
@@ -430,15 +443,13 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 		return payPrice;
 	}
 
+	/**
+	 * 返回当前购物车中使用的优惠信息
+	 */
 	@Override
 	public ArrayList<DiscountBean> getDiscountList() {
 		ArrayList<DiscountBean> discountList = new ArrayList<>();
-		Iterator<Integer> it = discountMap.keySet().iterator();
-		while(it.hasNext()) {
-			int key = it.next();
-			ArrayList<DiscountBean> list = discountMap.get(key);
-			discountList.addAll(list);
-		}
+		discountList.addAll(usedDiscountSet);
 		return discountList;
 	}
 

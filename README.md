@@ -3,6 +3,98 @@
 
 -------------------------------------------------
 
+2018.05.04
+
+1. 完成了商品类别选择对话框，统一选择界面。<br/>
+	关于`Dialog`的使用，有以下注意点：<br/>
+	1. `Dialog` 需要具有按钮(`ButtonType`)才能被关闭。
+	2. `Dialog` 获取返回值使用 `setConverter()` 方法。
+	
+2. 完成了商品类别列表，添加商品类别，修改商品类和删除商品类。<br/>
+	关于`TableView`的使用，有以下注意点：
+	1. `TableView` 的`TableColumn`可以自定义，先利用 `tableColumn.setCellValueFaction()`获取cell的值，
+	然后利用 `tableColumn.setCellFactory()`获取`TableCell`自定义对象。
+	eg:
+	```java
+		actionColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<GoodsBean,String>, ObservableValue<String>>() {
+
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<GoodsBean, String> param) {
+				return new SimpleStringProperty(param.getValue().getGoods_id());
+			}
+		});
+		actionColumn.setCellFactory(new Callback<TableColumn<GoodsBean,String>, TableCell<GoodsBean,String>>() {
+
+			@Override
+			public TableCell<GoodsBean, String> call(TableColumn<GoodsBean, String> param) {
+				ActionTableCell cell = new ActionTableCell();
+				return cell;
+			}
+		});
+	```
+	其中，Integer类型的值的属性:
+	```java
+	ObservableValue<Integer> obsInt = new ReadOnlyObjectWrapper<>(intValue);// old version
+	(new SimpleIntegerProperty(param.getValue().getId())).asObject();//javaFx 8
+	```
+
+3. 修改了`ScrollPane`作为消息面板的逻辑，添加内容自动滚动到底部。<br/>
+	对scrollPane的`content`结点设置高度属性变化监听器，设置scrollPane的`Vvalue`为1.
+	```java
+			/*设置面板滚动*/
+			vbox_info.heightProperty().addListener(new ChangeListener<Number>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					scrollPane_info.setVvalue(1);
+				}
+			});
+	```
+	
+4. `TableView`显示滚动条(`ScrollBar`)的问题:<br/>
+	有两种方案可以显示滚动条:<br/>
+	1. 使用TableView自带的ScrollBar, 但是局限比较多
+	```java
+	table.setColumnResizePolicy();// without setting pref width of columns
+	```
+	
+	2. ScrollPane + TableView
+	使用ScrollPane嵌套一个TableView；
+	```xml
+	<ScrollPane fx:id="scrollPane_center" fitToHeight="true"
+			fitToWidth="true">
+			<content>
+				<TableView fx:id="table_goods" minHeight="-Infinity"
+					minWidth="-Infinity">
+					...
+				</TableView>
+			<content>
+	</ScrollPane>
+	```
+	这个时候获取TableView时不能直接使用``parent.lookup("#table_goods");``,被包含在ScrollPane中的
+	Node都不能被lookup直接获取。而ScrollPane允许的content结点只能是**一个**，获取TableView的方法如下:
+	```java
+	ScrollPane scrollPane_center = (ScrollPane) parent.lookup("#scrollPane_center");
+	table_goods = (TableView<GoodsBean>) scrollPane_center.getContent();
+	```
+	
+	由以上例推，获取TableColumn也不能直使用``panrent.lookup("#fx:id");``， 而是要借助TableView，方法如下:
+	```java
+	ObservableList<TableColumn<GoodsBean, ?>> columnList  = table_goods.getColumns();
+	priceColumn = (TableColumn<GoodsBean, String>) columnList.get(2);
+	dateColumn = (TableColumn<GoodsBean, String>) columnList.get(3);
+	actionColumn = (TableColumn<GoodsBean, String>) columnList.get(6);
+	```
+	即一般列的序号是知道的，可以固定写死，因此可以用这种方法获取。如果是用java代码写的ui，那也当然没有这种问题。。
+	
+总结：
+	目前PC端的内容已经基本完成了，还差的部分有:
+	1. 设置控制， 配置存储。
+	2. 会员自助收银入口。
+	3. 自助收银系统的主界面还需要再修改！
+	
+-------------------------------------------------
+
 2018.04.26 10:57
 
 1. 恢复了24日的工作。。。添加了撤销交易的功能

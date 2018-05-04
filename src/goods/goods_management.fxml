@@ -36,7 +36,12 @@
 			<root>
 			<TreeItem expanded="true" value="菜单">
 				<children>
-					<TreeItem expanded="true" value="商品类管理"></TreeItem>
+					<TreeItem expanded="true" value="商品类管理">
+						<children>
+							<TreeItem expanded="false" value="商品类列表" ></TreeItem>
+							<TreeItem expanded="false" value="添加商品类" ></TreeItem>
+						</children>
+					</TreeItem>
 					<TreeItem expanded="true" value="商品管理">
 						<children>
 							<TreeItem expanded="false" value="商品列表" ></TreeItem>

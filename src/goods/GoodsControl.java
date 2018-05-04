@@ -14,11 +14,14 @@ import beans.UHFReaderBean;
 import checkin.CheckInControl;
 import helper.UHFHelper;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -27,10 +30,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * 商品管理模块控制
@@ -55,14 +60,18 @@ public class GoodsControl implements Initializable{
 	@FXML
 	private Button btn_uhf_togleconn;
 	
+	/*控制器的舞台*/
+	private Stage mStage;
+	/*中间部分面板改变监听器*/
+	private MyPaneWidthChangedListener panecenterWidthChangedListener;
+	private MyPaneHeightChangedListener panecenterHeightChangedListener;
 	
-
 	/**
 	 * 开始显示商品管理主界面
 	 * @throws IOException 
 	 */
 	public void start() {
-		Stage stage = new Stage();
+		mStage = new Stage();
 		Pane pane = null;
 		try {
 			pane = FXMLLoader.load(getClass().getResource("goods_management.fxml"));
@@ -72,8 +81,11 @@ public class GoodsControl implements Initializable{
 			Platform.exit();//退出程序
 		}
 		Scene scene = new Scene(pane, 1000, 800);
-		stage.setScene(scene);
-		stage.show();
+		mStage.setScene(scene);
+		Image logo16 = new Image("file:assets/drawable/logo16.png");
+		Image logo32 = new Image("file:assets/drawable/logo32.png");
+		mStage.getIcons().addAll(logo16, logo32);
+		mStage.show();
 		Logger.getLogger(GoodsControl.class.getSimpleName()).log(Level.INFO	,"in start");
 	}
 	@Override
@@ -82,6 +94,10 @@ public class GoodsControl implements Initializable{
 		Logger.getLogger(GoodsControl.class.getSimpleName()).log(Level.INFO	, "in initialize");
 		showWelcome();
 		initializeStatusBar();
+		panecenterWidthChangedListener = new MyPaneWidthChangedListener();
+		panecenterHeightChangedListener = new MyPaneHeightChangedListener();
+		pane_center.widthProperty().addListener(panecenterWidthChangedListener);
+		pane_center.heightProperty().addListener(panecenterHeightChangedListener);
 	}
 	
 	private void initializeStatusBar() {
@@ -147,9 +163,37 @@ public class GoodsControl implements Initializable{
 					showGoodsAdd();
 				}else if("自助收银".equals(value)){
 					showCheckIn();
+				}else if("商品类列表".equals(value)) {
+					showGoodsTypeIndex();
+				}else if("添加商品类".equals(value)) {
+					showGoodsTypeAdd();
 				}
 			};
 		}
+	}
+	
+	/**
+	 * 显示添加商品类界面
+	 */
+	private void showGoodsTypeAdd() {
+		GoodsTypeAddBox box = new GoodsTypeAddBox();
+		pane_center.getChildren().clear();
+		pane_center.getChildren().add(box);
+		panecenterWidthChangedListener.setPane(box);
+		panecenterHeightChangedListener.setPane(box);
+		box.start();
+	}
+	
+	/**
+	 * 显示商品类列表
+	 */
+	private void showGoodsTypeIndex() {
+		GoodsTypeIndexBox box = new GoodsTypeIndexBox();
+		pane_center.getChildren().clear();
+		pane_center.getChildren().add(box);
+		panecenterWidthChangedListener.setPane(box);
+		panecenterHeightChangedListener.setPane(box);
+		box.start();
 	}
 	
 	/**
@@ -220,7 +264,12 @@ public class GoodsControl implements Initializable{
 	 * 显示商品列表
 	 */
 	private void showGoodsIndex() {
-		
+		GoodsIndexBox box = new GoodsIndexBox();
+		pane_center.getChildren().clear();
+		pane_center.getChildren().add(box);
+		panecenterWidthChangedListener.setPane(box);
+		panecenterHeightChangedListener.setPane(box);
+		box.start();
 	}
 	
 	/**
@@ -228,11 +277,45 @@ public class GoodsControl implements Initializable{
 	 */
 	private void showGoodsAdd() {
 		GoodsAddBox goodsAddBox = new GoodsAddBox();
-		
 		pane_center.getChildren().clear();//清除原有控件
 		pane_center.getChildren().add(goodsAddBox);//添加到面板上
-		
 		goodsAddBox.start();
+	}
+	
+	private class MyPaneWidthChangedListener implements ChangeListener<Number> {
+		
+		private Pane pane;
+		
+		public void setPane(Pane pane) {
+			this.pane = pane;
+			Bounds bounds = pane_center.getBoundsInLocal();
+			pane.setPrefWidth(bounds.getWidth());
+		}
+		
+		@Override
+		public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+			if(pane!=null) {
+				pane.setPrefWidth(newValue.doubleValue());
+			}
+		}
+	}
+	
+	private class MyPaneHeightChangedListener implements ChangeListener<Number> {
+		
+		private Pane pane;
+		
+		public void setPane(Pane pane) {
+			this.pane = pane;
+			Bounds bounds = pane_center.getBoundsInLocal();
+			pane.setPrefHeight(bounds.getHeight());
+		}
+		
+		@Override
+		public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+			if(pane!=null) {
+				pane.setPrefHeight(newValue.doubleValue());
+			}
+		}
 	}
 	
 }

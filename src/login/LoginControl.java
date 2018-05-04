@@ -21,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -49,6 +50,9 @@ public class LoginControl {
 	 */
 	public void start(Stage primaryStage) throws IOException {
 		this.stage = primaryStage;
+		Image logo16 = new Image("file:assets/drawable/logo16.png");
+		Image logo32 = new Image("file:assets/drawable/logo32.png");
+		stage.getIcons().addAll(logo16, logo32);
 		Pane pane = FXMLLoader.load(getClass().getResource("login.fxml"));
 		Scene scene = new Scene(pane,400,400);
 		stage.setScene(scene);

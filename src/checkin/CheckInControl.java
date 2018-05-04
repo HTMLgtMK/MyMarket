@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -55,6 +56,9 @@ public class CheckInControl implements Initializable {
 		Scene scene = new Scene(parent);
 		stage.setScene(scene);
 		stage.setMaximized(true);//全屏
+		Image logo16 = new Image("file:assets/drawable/logo16.png");
+		Image logo32 = new Image("file:assets/drawable/logo32.png");
+		stage.getIcons().addAll(logo16, logo32);
 		stage.show();
 		
 		stage.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {

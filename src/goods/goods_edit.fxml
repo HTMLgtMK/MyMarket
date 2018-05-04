@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ChoiceBox?>
+
+<fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml/1">
+	<center>
+		<!-- 表单部分 -->
+		<GridPane hgap="10" vgap="10"
+			style="-fx-background-color:#ffffff;">
+			<padding>
+				<Insets left="10" right="10" bottom="10" />
+			</padding>
+			<columnConstraints>
+				<ColumnConstraints hgrow="ALWAYS"
+					percentWidth="50" halignment="CENTER" fillWidth="true" />
+			</columnConstraints>
+			<children>
+				<Label text="*商品类别" style="-fx-font-size:20px;"
+					alignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+				<HBox spacing="10"   GridPane.rowIndex="0" 
+					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" >
+					<children>
+						<TextField fx:id="tf_name" disable="true" />
+						<Button fx:id="btn_select_goodsType" text="选择" ></Button>
+					</children>
+				</HBox>
+				
+
+				<Label text="*生产日期" style="-fx-font-size:20px;"
+					alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+				<DatePicker  fx:id="datepicker_manufacture_date" GridPane.rowIndex="1"
+					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+
+				<Label text="*生产批号" style="-fx-font-size:20px;"
+					alignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+				<TextField fx:id="tf_batch_number" GridPane.rowIndex="2"
+					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+			</children>
+		</GridPane>
+	</center>
+</fx:root>
+

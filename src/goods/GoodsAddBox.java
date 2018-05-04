@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -13,29 +12,36 @@ import java.util.logging.Logger;
 
 import application.Main;
 import beans.GoodsTypeBean;
+import beans.Params;
 import helper.NetworkHelper;
 import helper.UHFHelper;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.WindowEvent;
-import net.sf.json.JSONArray;
+import javafx.util.Callback;
 import net.sf.json.JSONObject;
 
 public class GoodsAddBox extends BorderPane {
 	
-	private ChoiceBox<String> choiceBox;
+	private TextField tf_typename;
+	private Button btn_select_goodsType;
+	
 	private DatePicker datePicker;
 	private TextField tf_batch_number;
 	private TextField tf_goods_id;
@@ -47,12 +53,10 @@ public class GoodsAddBox extends BorderPane {
 	
 	private Button btn_submit;
 	
-	private HashMap<String,Integer> goodsTypeMap;
+	private GoodsTypeBean goodsTypeBean;/*选择的商品类别*/
 	
 	private Timer timer;
 	
-	
-	@SuppressWarnings("unchecked")
 	public GoodsAddBox() {
 		URL location = getClass().getResource("goods_add.fxml");
 		FXMLLoader loader = new FXMLLoader(location);
@@ -61,7 +65,8 @@ public class GoodsAddBox extends BorderPane {
 		try {
 			Parent parent = loader.load();
 			//初始化控件
-			choiceBox = (ChoiceBox<String>) parent.lookup("#chbox_goodstype");
+			tf_typename = (TextField) parent.lookup("#tf_typename");
+			btn_select_goodsType = (Button) parent.lookup("#btn_select_goodsType");
 			datePicker = (DatePicker) parent.lookup("#datepicker_goodsdate");
 			tf_batch_number =  (TextField) parent.lookup("#tf_goodsbatchnumber");
 			tf_goods_id = (TextField) parent.lookup("#tf_goodsid");
@@ -73,9 +78,8 @@ public class GoodsAddBox extends BorderPane {
 			
 			//为scrollPane 添加content
 			vbox_info = new VBox();
-			vbox_info.setMaxHeight(Double.MAX_VALUE);
-			vbox_info.setMaxWidth(Double.MAX_VALUE);
 			vbox_info.setSpacing(10);
+			vbox_info.setPadding(new Insets(10));
 			
 			scrollPane_info.setContent(vbox_info);
 			
@@ -104,13 +108,47 @@ public class GoodsAddBox extends BorderPane {
 			});
 			
 			datePicker.setValue(LocalDate.now());
+			
+			btn_select_goodsType.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent event) {
+					Dialog<GoodsTypeBean> dialog = new Dialog<>();
+					GoodsTypeSelectBox box = new GoodsTypeSelectBox();
+					box.setSelectItem(goodsTypeBean);
+					dialog.getDialogPane().setContent(box);
+					dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK,ButtonType.NO);
+					dialog.setResultConverter(new Callback<ButtonType, GoodsTypeBean>() {
+						
+						@Override
+						public GoodsTypeBean call(ButtonType param) {
+							if(param.equals(ButtonType.OK)) {
+								GoodsTypeBean typeBean = box.getSelectedItem();
+								GoodsAddBox.this.goodsTypeBean = typeBean;
+								if(typeBean != null) {
+									tf_typename.setText(typeBean.getName());
+								}
+								return typeBean;
+							}
+							return null;
+						}
+					});
+					dialog.show();
+					box.start();
+				}
+			});
+			/*设置面板滚动*/
+			vbox_info.heightProperty().addListener(new ChangeListener<Number>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					scrollPane_info.setVvalue(1);
+				}
+			});
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		goodsTypeMap = new HashMap<>();
-		
 		this.addEventFilter(WindowEvent.WINDOW_HIDING, new EventHandler<WindowEvent>() {
 
 			@Override
@@ -139,13 +177,11 @@ public class GoodsAddBox extends BorderPane {
 	 * 写入商品ID到标签
 	 */
 	private void writeIn() {
-		// TODO Auto-generated method stub
 		if(!Main.isUhfConnected()) {
 			Platform.runLater(new Runnable() {
 				
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
 					Text text = new Text("UHF读写器尚未连接!");
 					vbox_info.getChildren().add(text);
 					if(timer!=null) {
@@ -185,8 +221,12 @@ public class GoodsAddBox extends BorderPane {
 	 */
 	private void submit() {
 		//商品类别id
-		String type=choiceBox.getSelectionModel().getSelectedItem();
-		final int type_id = goodsTypeMap.get(type);
+		int type_id= goodsTypeBean == null ? 0 : goodsTypeBean.getId();
+		if(type_id == 0) {
+			Text text = new Text("请先选择商品类别!");
+			vbox_info.getChildren().add(text);
+			return;
+		}
 		//商品生产时间
 		Logger.getLogger(GoodsAddBox.class.getSimpleName()).log(Level.INFO, datePicker.getValue().toString());
 		final Timestamp timestamp = Timestamp.valueOf( datePicker.getValue().atStartOfDay());
@@ -203,8 +243,7 @@ public class GoodsAddBox extends BorderPane {
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
-				String spec = "http://localhost:8888/api/market/Goods/submit";
+				String spec = Params.URL_GOODS_SUBMIT;
 				HashMap<String,String> map = new HashMap<>();
 				map.put("id", goods_id);
 				map.put("type_id", String.valueOf(type_id));
@@ -218,7 +257,6 @@ public class GoodsAddBox extends BorderPane {
 					
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
 						Text text = new Text(msg);
 						vbox_info.getChildren().add(text);
 						
@@ -237,90 +275,30 @@ public class GoodsAddBox extends BorderPane {
 	 * 开始内部加载逻辑
 	 */
 	public void start() {
-		Text text = new Text("开始加载商品类别...");
-		vbox_info.getChildren().add(text);
 		
-		(new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				String spec = "http://localhost:8888/api/market/Goods_Type/index";
-				String json = NetworkHelper.downloadString(spec, null, "GET");
-				//解析json数据
-				JSONObject jsonObj = JSONObject.fromObject(json);
-				int code =  jsonObj.getInt("code");
-				final String msg = jsonObj.getString("msg");
-				if(code!=1) {
-					Platform.runLater(new Runnable() {
-						
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							Text text = new Text(msg);
-							vbox_info.getChildren().add(text);
-						}
-					});
-				}else {
-					final ArrayList<GoodsTypeBean> goodsTypeList = new ArrayList<>();
-					JSONObject data = jsonObj.getJSONObject("data");
-					JSONArray goodsTypeArr = data.getJSONArray("goods_type");
-					int len = goodsTypeArr.size();
-					for(int i=0;i<len;++i) {
-						GoodsTypeBean bean = new GoodsTypeBean();
-						JSONObject obj = goodsTypeArr.getJSONObject(i);
-						bean.setId(obj.getInt("id"));
-						bean.setName(obj.getString("name"));
-						bean.setPrice(obj.getInt("price"));
-						bean.setImages(obj.getString("images"));
-						bean.setAddress(obj.getString("address"));
-						bean.setCompany(obj.getString("company"));
-						
-						goodsTypeList.add(bean);
-					}
-					Platform.runLater(new Runnable() {
-						
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							Text text = new Text(msg);
-							vbox_info.getChildren().add(text);
-							goodsTypeMap.clear();
-							//为choiceBox设置items
-							ArrayList<String> list = new ArrayList<>();
-							int size = goodsTypeList.size();
-							for(int i=0;i<size;++i) {
-								GoodsTypeBean bean = goodsTypeList.get(i);
-								list.add(bean.getName());
-								goodsTypeMap.put(bean.getName(), bean.getId());
-							}
-							choiceBox.setItems(FXCollections.observableArrayList(list));
-							if(size>0) {
-								choiceBox.getSelectionModel().select(0);
-							}
-						}
-					});
-				}
-			}
-		})).start();
 	}
 	
 	/**
 	 * 获取商品ID
 	 */
 	private void getGoodsId() {
+		int type_id = goodsTypeBean == null ? 0 : goodsTypeBean.getId();
+		if(type_id == 0) {
+			Text text = new Text("请先选择商品类别!");
+			vbox_info.getChildren().add(text);
+			return;
+		}
+		
 		Text text = new Text("开始获取商品ID...");
 		vbox_info.getChildren().add(text);
 		
-		String item = choiceBox.getSelectionModel().getSelectedItem();
-		final int goodsType = goodsTypeMap.get(item);
 		(new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
-				String spec = "http://localhost:8888/api/market/Goods/getGoodsId";
+				String spec = Params.URL_GOODS_GETGOODSID;
 				HashMap<String,String> map = new HashMap<>();
-				map.put("goodsType", String.valueOf(goodsType));
+				map.put("goodsType", String.valueOf(type_id));
 				String json = NetworkHelper.downloadString(spec, map, "POST");
 				Logger.getLogger(GoodsAddBox.class.getSimpleName()).log(Level.INFO," get json: " + json);
 				
