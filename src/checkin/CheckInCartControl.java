@@ -14,13 +14,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import beans.CartBean;
-import beans.DiscountBaseBean;
 import beans.DiscountBean;
 import beans.GoodsBean;
 import beans.InventoryBean;
 import beans.Params;
 import checkin.CheckInControl.OnGetDealListener;
 import checkin.CheckInControl.OnShowPageListener;
+import checkin.CheckInControl.Page;
 import helper.NetworkHelper;
 import helper.UHFHelper;
 import javafx.application.Platform;
@@ -118,7 +118,6 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stub
 		Screen screen = Screen.getPrimary();
 		Rectangle2D bounds = screen.getBounds();
 		double width = bounds.getWidth();
@@ -159,10 +158,9 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 		btn_return.setOnMouseClicked(new EventHandler<Event>() {
 			@Override
 			public void handle(Event event) {
-				// TODO Auto-generated method stub
 				if(showPageListener!=null) {
 					inventoryFlag = false;
-					showPageListener.showPage(1);
+					showPageListener.showPage(Page.PAGE_WELCOME);
 				}
 			}
 		});
@@ -197,7 +195,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	private void startPay() {
 		if(showPageListener!=null) {
 			inventoryFlag = false;
-			showPageListener.showPage(3);//显示支付界面
+			showPageListener.showPage(Page.PAGE_PAY);//显示支付界面
 		}
 	}
 	

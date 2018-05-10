@@ -146,14 +146,12 @@ public class GoodsAddBox extends BorderPane {
 				}
 			});
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.addEventFilter(WindowEvent.WINDOW_HIDING, new EventHandler<WindowEvent>() {
 
 			@Override
 			public void handle(WindowEvent event) {
-				// TODO Auto-generated method stub
 				if(GoodsAddBox.this.timer != null) {
 					timer.cancel();
 				}

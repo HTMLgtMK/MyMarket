@@ -10,10 +10,11 @@
 		<HBox >
 			<children>
 				<!-- 存放5个页面 -->
-				<fx:include fx:id="page1" source="checkin_welcome.fxml" />
-				<fx:include fx:id="page2" source="checkin_cart.fxml" />
-				<fx:include fx:id="page3" source="checkin_pay2.fxml" />
-				<fx:include fx:id="page4" source="checkin_pay_result.fxml" />
+				<fx:include fx:id="welcome" source="checkin_welcome.fxml" />
+				<fx:include fx:id="userLogin" source="checkin_userlogin.fxml" />
+				<fx:include fx:id="cart" source="checkin_cart.fxml" />
+				<fx:include fx:id="pay" source="checkin_pay2.fxml" />
+				<fx:include fx:id="payResult" source="checkin_pay_result.fxml" />
 			</children>		
 		</HBox>
 	</content>

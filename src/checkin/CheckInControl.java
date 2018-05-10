@@ -33,15 +33,26 @@ public class CheckInControl implements Initializable {
 	 * 否则无法正常工作！
 	 */
 	@FXML
-	private CheckInWelcomeControl page1Controller;
+	private CheckInWelcomeControl welcomeController;
 	@FXML
-	private CheckInCartControl page2Controller;
+	private CheckInUserLoginControl userLoginController;
 	@FXML
-	private CheckInPayControl3 page3Controller;
+	private CheckInCartControl cartController;
 	@FXML
-	private CheckInPayResultControl page4Controller;
+	private CheckInPayControl payController;
+	@FXML
+	private CheckInPayResultControl payResultController;
+	/*各个页面页码*/
+	public static enum Page{
+		SELF,
+		PAGE_WELCOME,
+		PAGE_USERLOGIN,
+		PAGE_CART,
+		PAGE_PAY,
+		PAGE_PAY_RESULT
+	}
 	
-	private final int PAGECOUNT = 4;//页面总数
+	private final int PAGECOUNT = 5;//页面总数
 	
 	public void start() {
 		Stage stage = new Stage(StageStyle.UNDECORATED);
@@ -75,13 +86,13 @@ public class CheckInControl implements Initializable {
 		stage.addEventHandler(WindowEvent.WINDOW_HIDING, new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent event) {
-				if(page2Controller!=null) {
-					page2Controller.exitForceStopTimer();
+				if(cartController!=null) {
+					cartController.exitForceStopTimer();
 				}
 				// TODO force stop timer!
 				/*
-				if(page3Controller!=null) {
-					page3Controller.exitForceStopTimer();
+				if(cartController!=null) {
+					cartController.exitForceStopTimer();
 				}
 				*/
 				Logger.getLogger(CheckInControl.class.getSimpleName()).log(Level.INFO, "Force stop timers !");
@@ -96,46 +107,39 @@ public class CheckInControl implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		ShowPageListener listener = new ShowPageListener();
-		page1Controller.setOnShowPageListener(listener);
-		page2Controller.setOnShowPageListener(listener);
-		page3Controller.setOnShowPageListener(listener);//这段代码是当childController 执行完成后执行的，ChildController里面设置的Listener将为空
-		page4Controller.setOnShowPageListener(listener);
+		welcomeController.setOnShowPageListener(listener);
+		userLoginController.setOnShowPageListener(listener);
+		cartController.setOnShowPageListener(listener);//这段代码是当childController 执行完成后执行的，ChildController里面设置的Listener将为空
+		payController.setOnShowPageListener(listener);
+		payResultController.setOnShowPageListener(listener);
 		
 		MyGetDealListener getDealListener = new MyGetDealListener();
-		page3Controller.setOnGetDealListener(getDealListener);//也可以直接设置为page2Controller
+		payController.setOnGetDealListener(getDealListener);//也可以直接设置为cartController
 		
 		MyGetTradeResponseListener getTradeResponseListener = new MyGetTradeResponseListener();
-		page4Controller.setOnGetTradeQueryResponseListener(getTradeResponseListener);
+		payResultController.setOnGetTradeQueryResponseListener(getTradeResponseListener);
 	}
 	
 	private class ShowPageListener implements OnShowPageListener{
 
 		@Override
-		public void showPage(int index) {
-			// TODO Auto-generated method stub
+		public void showPage(Page page) {
+			int index = page.ordinal();
 			if(index < 1 || index>PAGECOUNT) return;
 			double x = Double.valueOf(index-1) / (PAGECOUNT-1);
 			scrollPane_checkin_main_root.setHvalue(x);
-			switch(index){
-			case 1:{
-				break;
-			}
-			case 2:{//购物车界面
-				page2Controller.start();//开始处理询查逻辑
-				break;
-			}
-			case 3:{//支付界面
-				page3Controller.start();//开始处理支付逻辑
-				break;
-			}
-			case 4:{
-				page4Controller.start();//开始处理显示逻辑
-				break;
-			}
+			if(page.equals(Page.PAGE_WELCOME)) {
+			}else if(page.equals(Page.PAGE_USERLOGIN)) {// 会员登陆界面
+				userLoginController.start();
+			}else if(page.equals(Page.PAGE_CART)) {//购物车界面
+				cartController.start();//开始处理询查逻辑
+			}else if(page.equals(Page.PAGE_PAY)) {
+				payController.start();//开始处理支付逻辑
+			}else if(page.equals(Page.PAGE_PAY_RESULT)) {
+				payResultController.start();//开始处理显示逻辑
 			}
 		}
 	}
-	
 	
 	/**
 	 * 显示界面回调
@@ -145,9 +149,9 @@ public class CheckInControl implements Initializable {
 	public interface OnShowPageListener{
 		/**
 		 * 
-		 * @param index 第几个界面，下标从1开始
+		 * @param page 枚举的页面
 		 */
-		public void showPage(int index);
+		public void showPage(Page page);
 	}
 	
 	
@@ -160,32 +164,27 @@ public class CheckInControl implements Initializable {
 
 		@Override
 		public ArrayList<GoodsBean> getGoodsList() {
-			// TODO Auto-generated method stub
-			return page2Controller.getGoodsList();
+			return cartController.getGoodsList();
 		}
 
 		@Override
 		public int getTotalPrice() {
-			// TODO Auto-generated method stub
-			return page2Controller.getTotalPrice();
+			return cartController.getTotalPrice();
 		}
 
 		@Override
 		public int getDiscountPrice() {
-			// TODO Auto-generated method stub
-			return page2Controller.getDiscountPrice();
+			return cartController.getDiscountPrice();
 		}
 
 		@Override
 		public int getPayPrice() {
-			// TODO Auto-generated method stub
-			return page2Controller.getPayPrice();
+			return cartController.getPayPrice();
 		}
 
 		@Override
 		public ArrayList<DiscountBean> getDiscountList() {
-			// TODO Auto-generated method stub
-			return page2Controller.getDiscountList();
+			return cartController.getDiscountList();
 		}
 	}
 	
@@ -231,14 +230,12 @@ public class CheckInControl implements Initializable {
 
 		@Override
 		public AlipayTradeQueryResponseBean geAlipayTradeQueryResponseBean() {
-			// TODO Auto-generated method stub
-			return page3Controller.geAlipayTradeQueryResponseBean();
+			return payController.geAlipayTradeQueryResponseBean();
 		}
 
 		@Override
 		public WxpayOrderQueryResponseBean getWxpayOrderQueryResponseBean() {
-			// TODO Auto-generated method stub
-			return page3Controller.getWxpayOrderQueryResponseBean();
+			return payController.getWxpayOrderQueryResponseBean();
 		}
 	}
 	

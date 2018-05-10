@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import checkin.CheckInControl.OnShowPageListener;
+import checkin.CheckInControl.Page;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -37,12 +38,12 @@ public class CheckInWelcomeControl implements Initializable {
 		
 		btn_vip.setOnMouseClicked(new EventHandler<Event>() {
 			public void handle(Event event) {
-				showPageListener.showPage(2);
+				showPageListener.showPage(Page.PAGE_USERLOGIN);
 			};
 		});
 		btn_unvip.setOnMouseClicked(new EventHandler<Event>() {
 			public void handle(Event event) {
-				showPageListener.showPage(2);
+				showPageListener.showPage(Page.PAGE_CART);
 			};
 		});
 	}

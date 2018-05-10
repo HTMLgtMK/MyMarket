@@ -12,6 +12,7 @@ import beans.AlipayPreCreateResponseBean;
 import beans.AlipayTradeQueryResponseBean;
 import beans.Params;
 import checkin.CheckInControl.OnShowPageListener;
+import checkin.CheckInControl.Page;
 import helper.NetworkHelper;
 import helper.QRCodeHelper;
 import javafx.application.Platform;
@@ -227,7 +228,7 @@ public class TabAlipayPageControl implements Initializable {
 						@Override
 						public void run() {
 							if (showPageListener != null) {
-								showPageListener.showPage(4);// 显示最后一页
+								showPageListener.showPage(Page.PAGE_PAY_RESULT);// 显示最后一页
 							}
 						}
 					});

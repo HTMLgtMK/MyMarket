@@ -13,6 +13,7 @@ import beans.WxpayOrderQueryResponseBean;
 import beans.WxpayPreCreateResponseBean;
 import beans.WxpayPreCreateResponseBean.RETURN_CODE;
 import checkin.CheckInControl.OnShowPageListener;
+import checkin.CheckInControl.Page;
 import helper.NetworkHelper;
 import helper.QRCodeHelper;
 import javafx.application.Platform;
@@ -236,7 +237,7 @@ public class TabWxpayPageControl implements Initializable {
 						@Override
 						public void run() {
 							if (showPageListener != null) {
-								showPageListener.showPage(4);// 显示最后一页
+								showPageListener.showPage(Page.PAGE_PAY_RESULT);// 显示最后一页
 							}
 						}
 					});
@@ -254,7 +255,7 @@ public class TabWxpayPageControl implements Initializable {
 		map.put("out_trade_no", wxpayPreCreateResponseBean.getOut_trade_no());
 		String json = NetworkHelper.downloadString(spec, map, "POST");
 
-		Logger.getLogger(CheckInPayControl2.class.getSimpleName()).log(Level.INFO, json);
+		Logger.getLogger(CheckInPayControl.class.getSimpleName()).log(Level.INFO, json);
 
 		JSONObject jsonObj = JSONObject.fromObject(json);
 		int code = jsonObj.getInt("code");

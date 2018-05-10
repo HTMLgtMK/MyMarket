@@ -39,4 +39,10 @@ public class Params {
 	public static final String URL_GOODS_SUBMIT = URL_SERVER_BASE + "api/market/Goods/submit";
 	/*获取商品ID地址*/
 	public static final String URL_GOODS_GETGOODSID = URL_SERVER_BASE + "api/market/Goods/getGoodsId";
+	/*用户授权请求地址*/
+	public static final String URL_USER_GRANT_REQ = URL_SERVER_BASE + "api/user/User_Grant/grantReq";
+	/*询查用户授权状态地址*/
+	public static final String URL_GRANT_CHECK_STATUS = URL_SERVER_BASE + "api/user/User_Grant/queryGrantStatus";
+	/*关闭用户授权地址*/
+	public static final String URL_USER_CLOSE_GRANT = URL_SERVER_BASE + "api/user/User_Grant/closeGrant";
 }

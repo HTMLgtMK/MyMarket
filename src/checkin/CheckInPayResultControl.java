@@ -7,6 +7,7 @@ import beans.AlipayTradeQueryResponseBean;
 import beans.WxpayOrderQueryResponseBean;
 import checkin.CheckInControl.OnGetTradeQueryResponseListener;
 import checkin.CheckInControl.OnShowPageListener;
+import checkin.CheckInControl.Page;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -86,7 +87,7 @@ public class CheckInPayResultControl implements Initializable {
 		btn_return_welcome.setOnMouseClicked(new EventHandler<Event>() {
 			public void handle(Event event) {
 				if(showPageListener!=null) {//返回欢迎页
-					showPageListener.showPage(1);
+					showPageListener.showPage(Page.PAGE_WELCOME);
 				}
 			}; 
 		});

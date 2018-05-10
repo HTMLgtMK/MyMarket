@@ -20,7 +20,7 @@
 <BorderPane fx:id="checkin_pay2_root"
 	xmlns:fx="http://javafx.com/fxml/1"
 	style="-fx-background-color:#1874CD;"
-	fx:controller="checkin.CheckInPayControl3">
+	fx:controller="checkin.CheckInPayControl">
 	<top>
 		<AnchorPane prefHeight="100">
 			<padding>
