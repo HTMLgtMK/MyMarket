@@ -1,44 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Pane?>
 
-<StackPane fx:id="checkin_welcome_root"
+<BorderPane fx:id="checkin_welcome_root"
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="checkin.CheckInWelcomeControl"
 	style="-fx-background-color:#1874CD;">
-	<children>
-		<BorderPane>
-			<center>
-				<Label text="欢迎使用自助收银系统" textFill="WHITE"
-					style="-fx-font-size:50px;" />
-			</center>
-			<bottom>
-				<VBox spacing="10" alignment="CENTER_RIGHT">
-				<padding>
-					<Insets top="10" right="50" bottom="10" left="50" />
-				</padding>
+	<top>
+		<VBox spacing="10">
+			<padding>
+				<Insets top="20" right="10" bottom="10" left="80" />
+			</padding>
+			<children>
+				<Label text="GT无人超市 | 自助收银系统" textFill="WHITE"
+					style="-fx-font-size:30px;" />
+				<Separator />
+			</children>
+		</VBox>
+	</top>
+	<center>
+		<Pane fx:id="media_wrapper" style="-fx-background-color:#000000;">
+			<children>
+				<MediaView fx:id="mediaView_welcome" fitWidth="${media_wrapper.width}" fitHeight="${media_wrapper.height}"
+					style="-fx-background-color:#000000;"></MediaView>
+			</children>
+		</Pane>
+	</center>
+	<right>
+		<HBox alignment="CENTER">
+			<padding>
+				<Insets top="10" right="50" bottom="10" left="50" />
+			</padding>
+			<children>
+				<VBox alignment="CENTER" spacing="30">
 					<children>
-						<Button fx:id="btn_vip" text="会员" defaultButton="true"
-							prefWidth="100" style="-fx-font-size:20px;">
-							<padding>
-								<Insets top="10" bottom="10" left="10" right="10" />
-							</padding>
-						</Button>
-						<Button fx:id="btn_unvip" text="非会员" defaultButton="true"
-							prefWidth="100" style="-fx-font-size:20px;">
-							<padding>
-								<Insets top="10" bottom="10" left="10" right="10" />
-							</padding>
-						</Button>
+						<Label text="欢迎使用" AnchorPane.topAnchor="20.0"
+							alignment="CENTER" textFill="WHITE" style="-fx-font-size:72px;" />
+						<VBox spacing="10" AnchorPane.bottomAnchor="20.0"
+							AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+							<children>
+								<Button fx:id="btn_vip" text="会员" defaultButton="true"
+									prefWidth="280" prefHeight="80" style="-fx-font-size:20px;">
+									<padding>
+										<Insets top="10" bottom="10" left="10" right="10" />
+									</padding>
+								</Button>
+								<Button fx:id="btn_unvip" text="非会员" defaultButton="true"
+									prefWidth="280" prefHeight="80" style="-fx-font-size:20px;">
+									<padding>
+										<Insets top="10" bottom="10" left="10" right="10" />
+									</padding>
+								</Button>
+							</children>
+						</VBox>
 					</children>
 				</VBox>
-			</bottom>
-		</BorderPane>
-	</children>
-</StackPane>
+			</children>
+		</HBox>
+	</right>
+</BorderPane>
 

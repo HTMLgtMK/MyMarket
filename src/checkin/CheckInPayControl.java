@@ -12,9 +12,11 @@ import beans.AlipayTradeQueryResponseBean;
 import beans.DiscountBean;
 import beans.GoodsBean;
 import beans.Params;
+import beans.UserBean;
 import beans.WxpayOrderQueryResponseBean;
 import checkin.CheckInControl.OnGetDealListener;
 import checkin.CheckInControl.OnGetTradeQueryResponseListener;
+import checkin.CheckInControl.OnGetUserListener;
 import checkin.CheckInControl.OnShowPageListener;
 import checkin.CheckInControl.Page;
 import helper.NetworkHelper;
@@ -64,6 +66,8 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 	private ArrayList<DiscountBean> discountList;//提交的优惠使用情况
 	
 	private String outTradeNo;//生成的商家订单号
+	
+	private UserBean userBean;// 授权的用户信息
 
 	@FXML
 	private BorderPane checkin_pay2_root;
@@ -83,6 +87,8 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 	private OnShowPageListener showPageListener;
 
 	private OnGetDealListener getDealListener;
+	
+	private OnGetUserListener getUserListener;
 
 	public void setOnGetDealListener(OnGetDealListener getDealListener) {
 		this.getDealListener = getDealListener;
@@ -90,6 +96,10 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 
 	public void setOnShowPageListener(OnShowPageListener listener) {
 		this.showPageListener = listener;
+	}
+	
+	public void setOnGetUserListener(OnGetUserListener listener) {
+		this.getUserListener = listener;
 	}
 
 	@Override
@@ -101,7 +111,7 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 		checkin_pay2_root.setPrefSize(width, height);
 
 		// 初始化按钮
-		Image img_return = new Image("file:assets/drawable/return.png");
+		Image img_return = new Image("file:resource/drawable/return.png");
 		btn_cancel_pay.setGraphic(new ImageView(img_return));
 		btn_cancel_pay.setOnMouseClicked(new EventHandler<Event>() {
 			public void handle(Event event) {
@@ -125,7 +135,6 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 					tabWxpayPageController.start(outTradeNo);
 				}
 			}
-			
 		});
 	}
 
@@ -144,6 +153,10 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 			payPrice = getDealListener.getPayPrice();
 			discountList = getDealListener.getDiscountList();
 		}
+		//获取用户授权信息
+		if(getUserListener != null) {
+			userBean = getUserListener.getUser();
+		}
 		// 开始清空结果信息， 设置二维码展示面板不可见
 		tabAlipay.getTabPane().setVisible(false);
 		tabWxpay.getTabPane().setVisible(false);
@@ -157,9 +170,13 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 
 			@Override
 			public void run() {
+				long user_id = 1;
+				if(userBean != null) {
+					user_id = userBean.getId();
+				}
 				String spec = Params.URL_SUBMIT_DEAL;
 				HashMap<String, String> map = new HashMap<>();
-				map.put("user_id", "1");// TODO 用户ID先固定为非VIP用户
+				map.put("user_id", String.valueOf(user_id));
 				map.put("store_id", "1");// TODO 店铺ID先固定为1号店
 				map.put("terminal_id", "1");// TODO 终端ID先固定为1号终端
 				map.put("pay_amount", String.valueOf(payPrice));
@@ -175,7 +192,7 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 					// goods_detail = URLEncoder.encode(goods_detail, "utf-8");
 					map.put("goods_detail", goods_detail);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+					// continue?
 					e.printStackTrace();
 				}
 				// 组装优惠信息

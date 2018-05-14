@@ -10,6 +10,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 
 <BorderPane fx:id="checkin_userlogin_root"
 	xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity"
@@ -31,25 +32,34 @@
 			</children>
 		</AnchorPane>
 	</top>
-	<!-- 中间显示视屏信息 -->
+	<!-- 中间显广告信息 -->
 	<center>
-		<Pane></Pane>
+		<StackPane fx:id="pane_center" style="-fx-background-color:#1E90FF;">
+		<children>
+			<ImageView fx:id="img_adv1" fitHeight="${pane_center.height}" fitWidth="${pane_center.width}" />
+			<ImageView fx:id="img_adv2" fitHeight="${pane_center.height}" fitWidth="${pane_center.width}" />
+			<ImageView fx:id="img_adv3" fitHeight="${pane_center.height}" fitWidth="${pane_center.width}" />
+			<ImageView fx:id="img_adv4" fitHeight="${pane_center.height}" fitWidth="${pane_center.width}" />
+			<ImageView fx:id="img_adv5" fitHeight="${pane_center.height}" fitWidth="${pane_center.width}" />
+		</children>
+		</StackPane>
 	</center>
 	<!-- 用户登陆面板 -->
 	<right>
-		<VBox spacing="10">
-			<BorderPane.margin>
-				<Insets left="30" right="50" />
-			</BorderPane.margin>
+		<HBox>
 			<padding>
-				<Insets top="10" bottom="10"/>
+				<Insets top="10" right="50" bottom="10" left="50" />
 			</padding>
 			<children>
-				<ImageView fx:id="img_login_qrcode" fitWidth="300"
-					fitHeight="300" />
-				<Label fx:id="label_hint" prefWidth="200" textFill="WHITE"
-					style="-fx-font-size:20px;" text="请使用手机客户端扫描二维码登陆授权" />
+				<VBox spacing="30" alignment="CENTER">
+					<children>
+						<ImageView fx:id="img_login_qrcode" fitWidth="300"
+							fitHeight="300" />
+						<Label fx:id="label_hint" prefWidth="300" textFill="WHITE" wrapText="true"
+							style="-fx-font-size:20px;" text="请使用手机客户端扫描二维码登陆授权" />
+					</children>
+				</VBox>
 			</children>
-		</VBox>
+		</HBox>
 	</right>
 </BorderPane>

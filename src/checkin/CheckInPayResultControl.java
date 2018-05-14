@@ -53,19 +53,19 @@ public class CheckInPayResultControl implements Initializable {
 			
 			/*支付宝支付*/
 			if(alipayTradeQueryResponseBean.getCode() == 2 || wxpayOrderQueryResponseBean.getCode() == 2) {//交易关闭，可能是由于超时引起
-				Image img = new Image("file:assets/drawable/pay_closed.png");
+				Image img = new Image("file:resource/drawable/pay_closed.png");
 				label_result_msg.setText("交易关闭!");
 				label_result_msg.setGraphic(new ImageView(img));
 				
 				label_tip.setText("请在5min内完成付款!");
 			}else if(alipayTradeQueryResponseBean.getCode() == 3 || wxpayOrderQueryResponseBean.getCode() == 3) {
-				Image img = new Image("file:assets/drawable/pay_ok.png");
+				Image img = new Image("file:resource/drawable/pay_ok.png");
 				label_result_msg.setText("交易成功!");
 				label_result_msg.setGraphic(new ImageView(img));
 				
 				label_tip.setText("感谢您使用自助收银系统!欢迎再次光临!");
 			}else if(alipayTradeQueryResponseBean.getCode() == -1  || wxpayOrderQueryResponseBean.getCode() == -1) {
-				Image img = new Image("file:assets/drawable/pay_fail.png");
+				Image img = new Image("file:resource/drawable/pay_fail.png");
 				label_result_msg.setText("出错!");
 				label_result_msg.setGraphic(new ImageView(img));
 				

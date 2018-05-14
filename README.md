@@ -3,6 +3,60 @@
 
 -------------------------------------------------
 
+2018.05.14 21:31
+
+1. 修改了首页界面，设计中间显示无人超市宣传视频，右侧为入口按钮。
+	播放视频:
+	```java
+	File welcomeFile = new File("./resource/video/welcome.mp4");
+	URI uri = welcomeFile.toURI();
+	Media media = new Media(uri.toString());
+	mediaPlayer = new MediaPlayer(media);
+	mediaView_welcome.setMediaPlayer(mediaPlayer);
+	// 播放
+	mediaPlayer.play();
+	// 停止
+	mediaPlayer.stop();
+	// 释放资源
+	mediaPlayer.dispose();
+	```
+
+2. 修改了会员登陆授权界面，设计中间显示广告轮播图，右侧为授权二维码。
+
+3. 修改了进入自助收银系统的逻辑.
+	实现了 `Initializable` 接口的类， 在调用 `FXMLLoader.load(URL)`方法时，
+	会再生成一个实例，因此当使用 ``new CheckInControl()`` 方式创建Instance时,
+	`initialize` 和 `start` 方法中获取得到的`instance`不一致，这样导致 `start` 中不能正确获取UI控件对象(为null).
+	
+	解决方法是: 获取 `FXMLLoader`中的`Controller`实例，然后再调用`start`方法。
+	```java
+	/**
+	 * 必须通过这个方法获取控制器实例, 内部的使用方法才是同一个实例
+	 * @return
+	 */
+	public static CheckInControl getInstance() {
+		FXMLLoader loader = new FXMLLoader(CheckInControl.class.getResource("checkin_main.fxml"));
+		Parent parent = null; // 临时存储，否则换成 static 类型
+		try {
+			parent = loader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		CheckInControl instance = loader.getController(); // !important 获取Controller实例
+		instance.parent = parent; // 保存在FXMLLoader的Controller实例中，后续要用到
+		return instance;
+	}
+	
+	/* in GoodsControl */
+	CheckInControl control = CheckInControl.getInstance();
+	control.start();
+	```
+	
+	这样获取得到的Instance可以对`ChildController`进行操作。
+	原来的`ForceStopTimer`是由于`ChildController`对象为空而不执行。
+
+-------------------------------------------------
+
 2018.05.10 10:33
 
 1. 添加会员登陆授权功能。逻辑为:

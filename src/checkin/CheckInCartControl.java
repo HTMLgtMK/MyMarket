@@ -18,7 +18,9 @@ import beans.DiscountBean;
 import beans.GoodsBean;
 import beans.InventoryBean;
 import beans.Params;
+import beans.UserBean;
 import checkin.CheckInControl.OnGetDealListener;
+import checkin.CheckInControl.OnGetUserListener;
 import checkin.CheckInControl.OnShowPageListener;
 import checkin.CheckInControl.Page;
 import helper.NetworkHelper;
@@ -71,6 +73,12 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	private Label label_pay;
 	@FXML
 	private Button btn_pay;
+	@FXML
+	private Label label_user_point;
+	@FXML
+	private ImageView imageView_avatar;
+	@FXML
+	private Label label_nickname;
 
 	/**
 	 *  定时器,间隔轮询标签
@@ -97,13 +105,40 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	private int payPrice;
 	//表格栏数
 	private final int COLUMN_NUMS = 5;
-	
-	
+	/*当前授权的用户*/
+	private UserBean userBean;
+	/*获取当前用户的回调接口*/
+	private OnGetUserListener getUserListener;
 	//显示界面接口回掉
 	private OnShowPageListener showPageListener;
 
 	public void setOnShowPageListener(OnShowPageListener listener) {
 		this.showPageListener = listener;
+	}
+	
+	public void setOnGetUserListener(OnGetUserListener listener) {
+		this.getUserListener = listener;
+	}
+	
+	/**
+	 * 清空痕迹 
+	 */
+	public void clearGoods() {
+		if(epcList != null) {
+			epcList.clear();
+		}
+		if(goodsList != null) {
+			goodsList.clear();
+		}
+		if(discountMap != null) {
+			discountMap.clear();
+		}
+		if(cart != null) {
+			cart.clear();
+		}
+		if(usedDiscountSet != null) {
+			usedDiscountSet.clear();
+		}
 	}
 	
 	/**
@@ -132,7 +167,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 		priceColumn.setPrefWidth(column_width);
 		statusColumn.setPrefWidth(column_width);
 		//初始化按钮
-		Image img_return = new Image("file:assets/drawable/return.png");
+		Image img_return = new Image("file:resource/drawable/return.png");
 		btn_return.setGraphic(new ImageView(img_return));
 		//initial 
 		inventoryBean = new InventoryBean();
@@ -170,6 +205,24 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	 * 当前可见，开始处理逻辑事务
 	 */
 	public void start() {
+		//获取授权的会员
+		if(getUserListener != null) {
+			userBean = getUserListener.getUser();
+		}
+		if(userBean != null) {
+			Image image = new Image("file:resource/drawable/avatar.png");
+			imageView_avatar.setImage(image);
+			label_nickname.setText(userBean.getUser_nickname());
+			label_user_point.setText(String.valueOf(userBean.getPoint()));
+			Image img_point = new Image("file:resource/drawable/point_32.png");
+			label_user_point.setGraphic(new ImageView(img_point));
+			label_user_point.setGraphicTextGap(10);
+		}else {
+			imageView_avatar.setImage(null);
+			label_nickname.setText("");
+			label_user_point.setText("");
+			label_user_point.setGraphic(null);
+		}
 		if(timer == null) {
 			timer = new Timer();
 			timer.schedule(new TimerTask() {

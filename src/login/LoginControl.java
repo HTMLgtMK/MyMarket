@@ -50,8 +50,8 @@ public class LoginControl {
 	 */
 	public void start(Stage primaryStage) throws IOException {
 		this.stage = primaryStage;
-		Image logo16 = new Image("file:assets/drawable/logo16.png");
-		Image logo32 = new Image("file:assets/drawable/logo32.png");
+		Image logo16 = new Image("file:resource/drawable/logo16.png");
+		Image logo32 = new Image("file:resource/drawable/logo32.png");
 		stage.getIcons().addAll(logo16, logo32);
 		Pane pane = FXMLLoader.load(getClass().getResource("login.fxml"));
 		Scene scene = new Scene(pane,400,400);

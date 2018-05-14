@@ -35,7 +35,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  * 商品管理模块控制
@@ -76,21 +75,19 @@ public class GoodsControl implements Initializable{
 		try {
 			pane = FXMLLoader.load(getClass().getResource("goods_management.fxml"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block 
 			e.printStackTrace();
 			Platform.exit();//退出程序
 		}
 		Scene scene = new Scene(pane, 1000, 800);
 		mStage.setScene(scene);
-		Image logo16 = new Image("file:assets/drawable/logo16.png");
-		Image logo32 = new Image("file:assets/drawable/logo32.png");
+		Image logo16 = new Image("file:resource/drawable/logo16.png");
+		Image logo32 = new Image("file:resource/drawable/logo32.png");
 		mStage.getIcons().addAll(logo16, logo32);
 		mStage.show();
 		Logger.getLogger(GoodsControl.class.getSimpleName()).log(Level.INFO	,"in start");
 	}
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stubs
 		Logger.getLogger(GoodsControl.class.getSimpleName()).log(Level.INFO	, "in initialize");
 		showWelcome();
 		initializeStatusBar();
@@ -101,7 +98,6 @@ public class GoodsControl implements Initializable{
 	}
 	
 	private void initializeStatusBar() {
-		// TODO Auto-generated method stub
 		/**
 		 * 初始化DLL库
 		 */
@@ -200,15 +196,18 @@ public class GoodsControl implements Initializable{
 	 * 显示自助收银服务
 	 */
 	private void showCheckIn() {
-		// TODO Auto-generated method stub
 		/*
 		CheckInPayControl checkInPayControl = new CheckInPayControl();
 		pane_center.getChildren().clear();//清除原有控件
 		pane_center.getChildren().add(checkInPayControl);//添加到面板上
 		checkInPayControl.start();
 		*/
-		//新建界面，全屏显示
-		CheckInControl control = new CheckInControl();
+		/*新建界面，全屏显示*/
+		// 两个不同实例
+		//CheckInControl control = new CheckInControl();
+		//control.start();
+		// 相同实例
+		CheckInControl control = CheckInControl.getInstance();
 		control.start();
 	}
 	

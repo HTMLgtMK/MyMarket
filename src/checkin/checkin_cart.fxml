@@ -10,117 +10,153 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.image.ImageView?>
 
-<BorderPane fx:id="checkin_cart_root" xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity"
-			style="-fx-background-color:#1874CD;" fx:controller="checkin.CheckInCartControl"	>
+<BorderPane fx:id="checkin_cart_root"
+	xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity"
+	maxWidth="-Infinity" style="-fx-background-color:#1874CD;"
+	fx:controller="checkin.CheckInCartControl">
 	<top>
-		<AnchorPane prefHeight="100" >
+		<AnchorPane>
 			<padding>
 				<Insets top="10" right="10" bottom="10" left="10" />
 			</padding>
 			<children>
-				<HBox prefHeight="80" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" spacing="20" alignment="CENTER_LEFT">
-					<Button fx:id="btn_return" style="-fx-background-color:transparent;"  />
-					<Label  text="购物车" textFill="WHITE" style="-fx-font-size:30px;" />
+				<VBox spacing="10" AnchorPane.leftAnchor="0.0"
+					AnchorPane.topAnchor="0.0" >
+					<children>
+						<HBox prefHeight="80" alignment="CENTER_LEFT" spacing="20">
+							<Button fx:id="btn_return"
+								style="-fx-background-color:transparent;" />
+							<Label text="购物车" textFill="WHITE"
+								style="-fx-font-size:30px;" />
+						</HBox>
+						<!-- 提示信息 -->
+						<Label fx:id="label_msg" text="提示" textFill="WHITE"
+							style="-fx-font-size:20px;">
+							<padding>
+								<Insets top="10" right="10" bottom="10" left="10" />
+							</padding>
+						</Label>
+					</children>
+				</VBox>
+				<!-- 用户信息 -->
+				<HBox spacing="10" alignment="CENTER_LEFT" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="0.0">
+				<children>
+					<ImageView fx:id="imageView_avatar" fitWidth="64" fitHeight="64" />
+					<Label fx:id="label_nickname" textFill="WHITE" text="nickname" style="-fx-font-size:20px;" />
+					
+					<Label fx:id="label_user_point" textFill="#f6ef37" text="0" style="-fx-font-size:20px;" >
+						<HBox.margin>
+						<Insets left="30" />
+						</HBox.margin>
+					</Label>
+				</children>
 				</HBox>
-				<!-- 提示信息 -->
-				<Label fx:id="label_msg" text="提示" textFill="WHITE" 
-						style="-fx-font-size:20px;"
-						AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="80" 
-						AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" >
-				<padding>
-					<Insets top="10" right="10" bottom="10" left="10" />
-				</padding>
-				</Label>
 			</children>
 		</AnchorPane>
 	</top>
 	<!-- 中间是表格 -->
 	<center>
-	<TableView fx:id="table_cart" >
-		<columns>
-			<TableColumn fx:id="indexColumn" text="序号" style="-fx-font-size:20px;" >
-				<cellValueFactory>
-					<PropertyValueFactory property="index" />
-				</cellValueFactory>
-			</TableColumn>
-			<TableColumn fx:id="nameColumn" text="名称" style="-fx-font-size:20px;" >
-				<cellValueFactory>
-					<PropertyValueFactory property="name" />
-				</cellValueFactory>
-			</TableColumn>
-			<TableColumn fx:id="numsColumn" text="数量" style="-fx-font-size:20px;"  >
-				<cellValueFactory>
-					<PropertyValueFactory property="nums" />
-				</cellValueFactory>
-			</TableColumn>
-			<TableColumn fx:id="priceColumn" text="单价" style="-fx-font-size:20px;"  >
-				<cellValueFactory>
-					<PropertyValueFactory property="price" />
-				</cellValueFactory>
-			</TableColumn>
-			<TableColumn fx:id="statusColumn" text="状态" style="-fx-font-size:20px;" >
-				<cellValueFactory>
-					<PropertyValueFactory property="status" />
-				</cellValueFactory>
-			</TableColumn>
-		</columns>
-		<items></items>
-		<sortOrder>
-              <fx:reference source="indexColumn"/>
-        </sortOrder> 
-	</TableView>
+		<TableView fx:id="table_cart">
+			<columns>
+				<TableColumn fx:id="indexColumn" text="序号"
+					style="-fx-font-size:20px;">
+					<cellValueFactory>
+						<PropertyValueFactory property="index" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn fx:id="nameColumn" text="名称"
+					style="-fx-font-size:20px;">
+					<cellValueFactory>
+						<PropertyValueFactory property="name" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn fx:id="numsColumn" text="数量"
+					style="-fx-font-size:20px;">
+					<cellValueFactory>
+						<PropertyValueFactory property="nums" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn fx:id="priceColumn" text="单价"
+					style="-fx-font-size:20px;">
+					<cellValueFactory>
+						<PropertyValueFactory property="price" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn fx:id="statusColumn" text="状态"
+					style="-fx-font-size:20px;">
+					<cellValueFactory>
+						<PropertyValueFactory property="status" />
+					</cellValueFactory>
+				</TableColumn>
+			</columns>
+			<items></items>
+			<sortOrder>
+				<fx:reference source="indexColumn" />
+			</sortOrder>
+		</TableView>
 	</center>
 	<!-- 底部是总价栏 -->
 	<bottom>
-		<AnchorPane >
-		<padding>
-			<Insets top="10" right="10" bottom="10" left="10" />
-		</padding>
-		<children>
-			<HBox alignment="CENTER_LEFT"
-				AnchorPane.leftAnchor="10" AnchorPane.topAnchor="0.0" >
-				<children>
-					<!-- 支付金额计算 -->
-					<VBox spacing="10">
+		<AnchorPane>
+			<padding>
+				<Insets top="10" right="10" bottom="10" left="10" />
+			</padding>
+			<children>
+				<!-- 扫描按钮 -->
+				<HBox AnchorPane.leftAnchor="10" AnchorPane.topAnchor="0.0"
+					AnchorPane.bottomAnchor="0.0" alignment="CENTER">
 					<children>
-						<!-- 总金额 -->
-						<HBox spacing="10">
-							<children>
-								<Label text="总额: " textFill="WHITE" style="-fx-font-size:20px;" />
-								<Label  fx:id="label_total"  textFill="WHITE"  text="￥0" style="-fx-font-size:20px;" />
-							</children>
-						</HBox>
-						<!-- 折扣金额 -->
-						<HBox spacing="10">
-							<children>
-								<Label text="折扣金额: "  textFill="WHITE" style="-fx-font-size:20px;" />
-								<Label  fx:id="label_discount"   textFill="WHITE" text="￥0" style="-fx-font-size:20px;" />
-							</children>
-						</HBox>
-						<!-- 支付金额 -->
-						<HBox spacing="10">
-							<children>
-								<Label text="支付金额: "  textFill="WHITE" style="-fx-font-size:20px;" />
-								<Label  fx:id="label_pay"  textFill="WHITE" text="￥0" style="-fx-font-size:20px;" />
-							</children>
-						</HBox>
+						<Button fx:id="btn_scan" text="重新扫描"
+							style="-fx-font-size:20px;" defaultButton="true" />
 					</children>
-					</VBox>
-					<Button fx:id="btn_pay" text="支付"  style="-fx-font-size:20px;" defaultButton="true" >
-						<HBox.margin>
-						<Insets left="20" />
-						</HBox.margin>
-					</Button>
-				</children>
-			</HBox>
-			<!-- 扫描按钮 -->
-			<HBox  AnchorPane.rightAnchor="10" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" alignment="CENTER" >
-				<children>
-					<Button fx:id="btn_scan" text="重新扫描" style="-fx-font-size:20px;" defaultButton="true" />
-				</children>
-			</HBox>
-		</children>
+				</HBox>
+				<HBox alignment="CENTER_LEFT" AnchorPane.rightAnchor="10"
+					AnchorPane.topAnchor="0.0">
+					<children>
+						<!-- 支付金额计算 -->
+						<VBox spacing="10">
+							<children>
+								<!-- 总金额 -->
+								<HBox spacing="10">
+									<children>
+										<Label text="总额: " textFill="WHITE"
+											style="-fx-font-size:20px;" />
+										<Label fx:id="label_total" textFill="WHITE" text="￥0"
+											prefWidth="100"
+											style="-fx-font-size:20px;" />
+									</children>
+								</HBox>
+								<!-- 折扣金额 -->
+								<HBox spacing="10">
+									<children>
+										<Label text="折扣金额: " textFill="WHITE"
+											style="-fx-font-size:20px;" />
+										<Label fx:id="label_discount" textFill="WHITE" text="￥0"
+											prefWidth="100" style="-fx-font-size:20px;" />
+									</children>
+								</HBox>
+								<!-- 支付金额 -->
+								<HBox spacing="10">
+									<children>
+										<Label text="支付金额: " textFill="WHITE"
+											style="-fx-font-size:20px;" />
+										<Label fx:id="label_pay" textFill="WHITE" text="￥0"
+											prefWidth="100" style="-fx-font-size:20px;" />
+									</children>
+								</HBox>
+							</children>
+						</VBox>
+						<Button fx:id="btn_pay" text="支付"
+							style="-fx-font-size:20px;" defaultButton="true">
+							<HBox.margin>
+								<Insets left="20" />
+							</HBox.margin>
+						</Button>
+					</children>
+				</HBox>
+			</children>
 		</AnchorPane>
 	</bottom>
 </BorderPane>

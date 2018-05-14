@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import beans.Params;
 import beans.UserBean;
 import beans.UserGrantReqBean;
+import checkin.CheckInControl.OnGetUserListener;
 import checkin.CheckInControl.OnShowPageListener;
 import checkin.CheckInControl.Page;
 import helper.NetworkHelper;
@@ -48,7 +49,7 @@ import net.sf.json.JSONObject;
  * @author GT
  *
  */
-public class CheckInUserLoginControl implements Initializable {
+public class CheckInUserLoginControl implements Initializable, OnGetUserListener {
 
 	@FXML
 	private BorderPane checkin_userlogin_root;
@@ -58,6 +59,16 @@ public class CheckInUserLoginControl implements Initializable {
 	private ImageView img_login_qrcode;
 	@FXML
 	private Label label_hint;
+	/*轮播的广告*/
+	private final String[] ADVS = {"file:resource/drawable/adv1.jpg",
+			"file:resource/drawable/adv2.jpg",
+			"file:resource/drawable/adv3.jpg",
+			"file:resource/drawable/adv4.jpg",
+			"file:resource/drawable/adv5.jpg"};
+	private ImageView[] imgViews;
+	
+	private Timer imgTimer;
+	private int curImg;
 	
 	private UserGrantReqBean userGrantReqBean; // 会员授权状态信息
 	private UserBean userBean; // 会员信息
@@ -71,6 +82,29 @@ public class CheckInUserLoginControl implements Initializable {
 		this.showPageListener = listener;
 	}
 	
+	/**
+	 * 清除会员痕迹
+	 */
+	public void clearUser() {
+		userGrantReqBean = null;
+		userBean = null;
+	}
+	
+	/**
+	 * 强制停止计时器
+	 */
+	public void exitForceStopTimer() {
+		if(timer != null) {
+			checkFlag = false;
+			timer.cancel();
+			timer = null;
+		}
+		if(imgTimer!=null) {
+			imgTimer.cancel();
+			imgTimer = null;
+		}
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		Screen screen = Screen.getPrimary();
@@ -80,7 +114,7 @@ public class CheckInUserLoginControl implements Initializable {
 		checkin_userlogin_root.setPrefSize(width, height);
 
 		// 初始化按钮
-		Image img_return = new Image("file:assets/drawable/return.png");
+		Image img_return = new Image("file:resource/drawable/return.png");
 		btn_cancel_login.setGraphic(new ImageView(img_return));
 		btn_cancel_login.setOnMouseClicked(new EventHandler<Event>() {
 			public void handle(Event event) {
@@ -88,7 +122,39 @@ public class CheckInUserLoginControl implements Initializable {
 			};
 		});
 		
+		// 初始化轮播图
+		ImageView img_adv1 = (ImageView) checkin_userlogin_root.lookup("#img_adv1");
+		ImageView img_adv2 = (ImageView) checkin_userlogin_root.lookup("#img_adv2");
+		ImageView img_adv3 = (ImageView) checkin_userlogin_root.lookup("#img_adv3");
+		ImageView img_adv4 = (ImageView) checkin_userlogin_root.lookup("#img_adv4");
+		ImageView img_adv5 = (ImageView) checkin_userlogin_root.lookup("#img_adv5");
+		imgViews = new ImageView[] {img_adv1, img_adv2, img_adv3, img_adv4, img_adv5};
+		for(int i=0;i<5;++i) {
+			Image img = new Image(ADVS[i]);
+			imgViews[i].setImage(img);
+		}
+		
 		checkFlag = false;
+	}
+	
+	/*开始展示轮播图*/
+	private void startPlayImages() {
+		curImg = 0;
+		if(imgTimer == null) {
+			imgTimer = new Timer();
+			imgTimer.schedule(new TimerTask() {
+				
+				@Override
+				public void run() {
+					if(curImg == 5) curImg = 0;
+					for(int i=0;i<5;++i) {
+						imgViews[i].setVisible(false);
+					}
+					imgViews[curImg].setVisible(true);
+					++curImg;
+				}
+			}, 0, 5*1000);
+		}
 	}
 	
 	/**
@@ -147,6 +213,8 @@ public class CheckInUserLoginControl implements Initializable {
 				}
 			}
 		})).start();
+		// 开始轮播图片
+		startPlayImages();
 	}
 
 	/**
@@ -270,6 +338,10 @@ public class CheckInUserLoginControl implements Initializable {
 	}
 	
 	private void showCartPage() {
+		if(imgTimer != null) {
+			imgTimer.cancel();
+			imgTimer = null;
+		}
 		if(showPageListener != null) {
 			showPageListener.showPage(Page.PAGE_CART);
 		}
@@ -280,6 +352,7 @@ public class CheckInUserLoginControl implements Initializable {
 	 */
 	private void closeGrantReq() {
 		if(userGrantReqBean == null) {
+			exitForceStopTimer();
 			if(showPageListener != null) {
 				showPageListener.showPage(Page.PAGE_WELCOME);
 			}
@@ -360,6 +433,11 @@ public class CheckInUserLoginControl implements Initializable {
 		dialog.setOpacity(0.5);
 		dialog.initModality(Modality.APPLICATION_MODAL);
 		return dialog;
+	}
+
+	@Override
+	public UserBean getUser() {
+		return userBean;
 	}
 	
 }
