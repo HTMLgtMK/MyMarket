@@ -1,5 +1,7 @@
 package beans;
 
+import java.util.ArrayList;
+
 /**
  * 会员数据结构
  * Created by GT on 2018/5/5.
@@ -26,6 +28,8 @@ public class UserBean {
     private long user_level ;
     private String more;
     
+    private ArrayList<DiscountUseBean> discounts;
+    
     public UserBean(){}
     
 	public UserBean(long id, String name, String user_login, int point, int balance, String user_nickname,
@@ -39,6 +43,7 @@ public class UserBean {
 		this.user_nickname = user_nickname;
 		this.avatar = avatar;
 		this.user_level = user_level;
+		this.discounts = new ArrayList<>();
 	}
 	public UserBean(long id, String name, String mobile, String user_pass, int user_status, String user_login,
 			String user_email, String last_login_ip, int last_login_time, String user_activation_key, int create_time,
@@ -64,6 +69,7 @@ public class UserBean {
 		this.birthday = birthday;
 		this.user_level = user_level;
 		this.more = more;
+		this.discounts = new ArrayList<>();
 	}
 	public long getId() {
 		return id;
@@ -179,6 +185,15 @@ public class UserBean {
 	public void setMore(String more) {
 		this.more = more;
 	}
+	
+	public ArrayList<DiscountUseBean> getDiscounts() {
+		return discounts;
+	}
+
+	public void setDiscounts(ArrayList<DiscountUseBean> discounts) {
+		this.discounts = discounts;
+	}
+
 	@Override
 	public String toString() {
 		return "UserBean [id=" + id + ", name=" + name + ", mobile=" + mobile + ", user_pass=" + user_pass
@@ -186,7 +201,7 @@ public class UserBean {
 				+ ", last_login_ip=" + last_login_ip + ", last_login_time=" + last_login_time + ", user_activation_key="
 				+ user_activation_key + ", create_time=" + create_time + ", point=" + point + ", balance=" + balance
 				+ ", user_nickname=" + user_nickname + ", avatar=" + avatar + ", sex=" + sex + ", birthday=" + birthday
-				+ ", user_level=" + user_level + ", more=" + more + "]";
+				+ ", user_level=" + user_level + ", more=" + more + ", discounts=" + discounts + "]";
 	}
     
 }

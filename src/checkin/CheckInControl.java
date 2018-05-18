@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import beans.AlipayTradeQueryResponseBean;
-import beans.DiscountBean;
+import beans.DiscountUseBean;
 import beans.GoodsBean;
 import beans.UserBean;
 import beans.WxpayOrderQueryResponseBean;
@@ -220,7 +220,7 @@ public class CheckInControl implements Initializable {
 		}
 
 		@Override
-		public ArrayList<DiscountBean> getDiscountList() {
+		public ArrayList<DiscountUseBean> getDiscountList() {
 			return cartController.getDiscountList();
 		}
 	}
@@ -265,7 +265,7 @@ public class CheckInControl implements Initializable {
 		 * 
 		 * @return
 		 */
-		public ArrayList<DiscountBean> getDiscountList();
+		public ArrayList<DiscountUseBean> getDiscountList();
 	}
 
 	/**

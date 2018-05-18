@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Separator?>
 
 <BorderPane fx:id="checkin_pay_root"
 	xmlns:fx="http://javafx.com/fxml/1"
@@ -18,15 +19,13 @@
 	fx:controller="checkin.CheckInPayControl2"
 	>
 	<top>
-		<AnchorPane prefHeight="100" >
-			<padding>
-				<Insets top="10" right="10" bottom="10" left="10" />
-			</padding>
+		<VBox spacing="10" styleClass="container-top" >
 			<children>
-				<HBox prefHeight="80" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" spacing="20" alignment="CENTER_LEFT">
-					<Button fx:id="btn_cancel_pay" style="-fx-background:transparent;"  />
-					<Label  text="支付" textFill="WHITE" style="-fx-font-size:30px;" textAlignment="CENTER" />
+				<HBox spacing="20" alignment="CENTER_LEFT">
+					<Button fx:id="btn_cancel_pay" styleClass="return-button" />
+					<Label  text="支付" styleClass="container-title" />
 				</HBox>
+				<Separator />
 			</children>
 		</AnchorPane>
 	</top>

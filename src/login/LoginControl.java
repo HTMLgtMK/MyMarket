@@ -19,9 +19,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -65,6 +67,8 @@ public class LoginControl {
 		btn_login = (Button) pane.lookup("#button_login_login");
 		//注册监听器等
 		loginControl();
+		// 将焦点移到账号输入框
+		tf_account.requestFocus();
 	}
 	
 	private void loginControl() {
@@ -81,18 +85,22 @@ public class LoginControl {
 				lb_msg.setText("");
 			}
 		});
-		
+		EventHandler<KeyEvent> eventHandler = new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent event) {
+				if(event.getCode().equals(KeyCode.ENTER)) {
+					checkAccount();//触发登陆
+				}
+			}
+		};
+		pf_pwd.setOnKeyPressed(eventHandler);
+		btn_login.setOnKeyPressed(eventHandler);
 		btn_login.setOnMouseClicked(new EventHandler<Event>() {
 			public void handle(Event event) {
-				String account = tf_account.getText();
-				String pwd = pf_pwd.getText();
-				if("".equals(account) || "".equals(pwd) ) {
-					lb_msg.setText("请输入账户和密码!");
-					return;
-				}
 				//向后台接口提交数据，检查账户密码正确性，获取登陆token
-				checkAccount(account,pwd);
-			}; 
+				checkAccount();
+			};
 		});
 	}
 	
@@ -101,7 +109,13 @@ public class LoginControl {
 	 * @param account
 	 * @param pwd
 	 */
-	private void checkAccount(String account,String pwd) {
+	private void checkAccount() {
+		String account = tf_account.getText().trim();
+		String pwd = pf_pwd.getText();
+		if("".equals(account) || "".equals(pwd) ) {
+			lb_msg.setText("请输入账户和密码!");
+			return;
+		}
 		//显示一个等待对话框
 		Stage dialog = getLoginInfoDialog();
 		dialog.show();
@@ -150,13 +164,13 @@ public class LoginControl {
 						
 						@Override
 						public void run() {
-							// TODO Auto-generated method stub
 							dialog.hide();
 							Main.setToken(token);
 							Main.setAdminInfo(adminInfo);
 							Logger.getLogger(LoginControl.class.getSimpleName()).log(Level.INFO, adminInfo.toString());
 							LoginControl.this.stage.hide();
-							(new GoodsControl()).start();
+							GoodsControl goodsControl = GoodsControl.getInstance();
+							goodsControl.start();
 						}
 					});
 				}
@@ -167,15 +181,14 @@ public class LoginControl {
 	
 	private Stage getLoginInfoDialog() {
 		Stage dialog = new Stage(StageStyle.TRANSPARENT);
-		ProgressIndicator pi = new ProgressIndicator();
+		ProgressBar pb = new ProgressBar();
 		Text text = new Text("登陆中");
 		VBox vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
 		vbox.setSpacing(10);
 		vbox.setPadding(new Insets(10,10,10,10));
-		pi.setPadding(new Insets(10, 10, 10, 10));
 		text.setFill(Color.WHITE);
-		vbox.getChildren().addAll(pi,text);
+		vbox.getChildren().addAll(pb, text);
 		vbox.setStyle("-fx-background-color:#000000;-fx-border-radiu:10px;-fx-background-radiu:10px;");
 		Scene scene = new Scene(vbox);
 		dialog.setScene(scene);

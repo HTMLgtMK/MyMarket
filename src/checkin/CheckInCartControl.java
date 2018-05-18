@@ -1,8 +1,10 @@
 package checkin;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,6 +17,7 @@ import java.util.logging.Logger;
 
 import beans.CartBean;
 import beans.DiscountBean;
+import beans.DiscountUseBean;
 import beans.GoodsBean;
 import beans.InventoryBean;
 import beans.Params;
@@ -40,6 +43,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -49,6 +53,8 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	private BorderPane checkin_cart_root;
 	@FXML
 	private Button btn_return;
+	@FXML
+	private VBox cart_container;
 	@FXML
 	private Button btn_scan;//Invisible nodes never receive mouse events or keyboard focus and never maintain keyboard focus when they become invisible.
 	@FXML
@@ -74,7 +80,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	@FXML
 	private Button btn_pay;
 	@FXML
-	private Label label_user_point;
+	private Label label_user_balance;
 	@FXML
 	private ImageView imageView_avatar;
 	@FXML
@@ -98,13 +104,11 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	/*按商品种类分的所有优惠Map*/
 	private HashMap<Integer,ArrayList<DiscountBean>> discountMap;
 	/*当前使用的优惠集合*/
-	private Set<DiscountBean> usedDiscountSet; 
+	private Set<DiscountUseBean> usedDiscountSet; 
 	// 金额
 	private int totalPrice;
 	private int discountPrice;
 	private int payPrice;
-	//表格栏数
-	private final int COLUMN_NUMS = 5;
 	/*当前授权的用户*/
 	private UserBean userBean;
 	/*获取当前用户的回调接口*/
@@ -150,7 +154,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 			timer = null;
 		}
 	}
-
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		Screen screen = Screen.getPrimary();
@@ -159,13 +163,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 		double height = bounds.getHeight();
 		checkin_cart_root.setPrefSize(width, height);
 		//设置表格宽度
-		table_cart.setPrefWidth(width);
-		double column_width = width / COLUMN_NUMS;
-		indexColumn.setPrefWidth(column_width);
-		nameColumn.setPrefWidth(column_width);
-		numsColumn.setPrefWidth(column_width);
-		priceColumn.setPrefWidth(column_width);
-		statusColumn.setPrefWidth(column_width);
+		// 已经在fxml中完成 ${tableWidth / 5}
 		//初始化按钮
 		Image img_return = new Image("file:resource/drawable/return.png");
 		btn_return.setGraphic(new ImageView(img_return));
@@ -213,15 +211,15 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 			Image image = new Image("file:resource/drawable/avatar.png");
 			imageView_avatar.setImage(image);
 			label_nickname.setText(userBean.getUser_nickname());
-			label_user_point.setText(String.valueOf(userBean.getPoint()));
+			label_user_balance.setText(String.valueOf(userBean.getBalance()));
 			Image img_point = new Image("file:resource/drawable/point_32.png");
-			label_user_point.setGraphic(new ImageView(img_point));
-			label_user_point.setGraphicTextGap(10);
+			label_user_balance.setGraphic(new ImageView(img_point));
+			label_user_balance.setGraphicTextGap(10);
 		}else {
 			imageView_avatar.setImage(null);
 			label_nickname.setText("");
-			label_user_point.setText("");
-			label_user_point.setGraphic(null);
+			label_user_balance.setText("");
+			label_user_balance.setGraphic(null);
 		}
 		if(timer == null) {
 			timer = new Timer();
@@ -251,6 +249,9 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 			showPageListener.showPage(Page.PAGE_PAY);//显示支付界面
 		}
 	}
+	
+	private SimpleDateFormat dateFormater = new SimpleDateFormat("HH:mm:ss");
+	private Date date = new Date();
 	
 	/**
 	 * 开始询查，运行在子线程
@@ -295,6 +296,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 			}
 			String spec = Params.URL_GETGOODSINFO;
 			String json = NetworkHelper.downloadString(spec, map, "POST");
+			Logger.getLogger(CheckInPayControl.class.getSimpleName()).log(Level.INFO, json);
 			JSONObject jsonObj = JSONObject.fromObject(json);
 			final int code = jsonObj.getInt("code");
 			//TODO delete msg
@@ -318,6 +320,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 						bean.setExtent((float)obj.getDouble("extent"));
 						bean.setCoin(obj.getInt("coin"));
 						bean.setRest(obj.getInt("rest"));
+						bean.setOpen(obj.getInt("open"));
 						
 						if(discountMap.containsKey(bean.getGoods_type_id())) {
 							ArrayList<DiscountBean> list = discountMap.get(bean.getGoods_type_id());
@@ -328,15 +331,14 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 							list.add(bean);
 							discountMap.put(bean.getGoods_type_id(), list);
 						}
-						
-						//给优惠排序
-						Iterator<Integer> it = discountMap.keySet().iterator();
-						while(it.hasNext()) {
-							int type_id = it.next();
-							ArrayList<DiscountBean> discountList = discountMap.get(type_id);
-							Collections.sort(discountList);
-							discountMap.replace(type_id, discountList);
-						}
+					}
+					//给优惠排序
+					Iterator<Integer> it = discountMap.keySet().iterator();
+					while(it.hasNext()) {
+						int type_id = it.next();
+						ArrayList<DiscountBean> discountList = discountMap.get(type_id);
+						Collections.sort(discountList);
+						discountMap.replace(type_id, discountList);
 					}
 				}
 				if(dataObj.containsKey("goods")) {//标签商品具体详情
@@ -344,6 +346,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 					int count = goods.size();
 					for(int i=0;i<count;++i) {
 						JSONObject obj = goods.getJSONObject(i);
+						if(obj == null) continue; // 可能扫描到不是该商店使用的标签
 						GoodsBean bean = new GoodsBean();
 						bean.setAddress(obj.optString("address"));
 						bean.setBatch_number(obj.optString("batch_number"));
@@ -365,7 +368,6 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 				
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
 					if(code == 1) {
 						table_cart.setItems(cart);
 					}
@@ -383,7 +385,8 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 				
 				@Override
 				public void run() {
-					label_msg.setText("扫描结果: "+ String.format("0x%02x", ret) +" time:" +System.currentTimeMillis() );
+					date.setTime(System.currentTimeMillis());
+					label_msg.setText("时间:" + dateFormater.format(date) + String.format(" 扫描结果: %s (0x%02x) ", UHFHelper.CODE_MSG_MAP.get(ret) ,ret) );
 				}
 			});
 		}else {
@@ -395,11 +398,21 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 				
 				@Override
 				public void run() {
-					label_msg.setText( "出错:"+String.format("0x%x", ret));
+					label_msg.setText( "出错:"+String.format("%s (0x%02x)", UHFHelper.CODE_MSG_MAP.get(ret), ret));
 				}
 			});
 			
 		}
+	}
+	
+	private DiscountUseBean getUseDiscount(int discountId) {
+		if(userBean == null) return null;
+		ArrayList<DiscountUseBean> userDiscounts = userBean.getDiscounts();
+		if(userDiscounts == null) return null;
+		for(DiscountUseBean bean : userDiscounts) {
+			if(bean.getDiscount_id() == discountId) return bean;
+		}
+		return null;
 	}
 	
 	/**
@@ -419,11 +432,17 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 					Iterator<DiscountBean> it_discount = discountList.iterator();
 					while(it_discount.hasNext()) {
 						DiscountBean discountBean = it_discount.next();
-						if(discountBean.inc()) {//有优惠可用，计算优惠金额
+						DiscountUseBean discountUseBean = getUseDiscount(discountBean.getDiscount_id());
+						if(discountUseBean != null && discountUseBean.inc()) {// 会员有该优惠 并且可以使用
+							//有优惠可用，计算优惠金额
 							discountPrice += discountBean.calculateDiscount(bean.getPrice(), 1);
 							bean.setDiscount(discountBean);
-							usedDiscountSet.add(discountBean);
+							usedDiscountSet.add(discountUseBean); // 添加或更新该优惠使用情况
 							break;
+						}else if(discountBean.getOpen() == 1) {// 全部顾客可用
+							discountPrice += discountBean.calculateDiscount(bean.getPrice(), 1);
+							bean.setDiscount(discountBean);
+							// ... 不加入优惠使用集合， 但是计算优惠价格
 						}else {//无优惠可用
 							continue;
 						}
@@ -458,6 +477,7 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 					cartBean.setStatus("未知");
 				}
 				}
+				// TODO 显示是否 使用了优惠
 				types.put(bean.getType_id(), cartBean);
 			}// load into cart
 		}//while has next
@@ -498,8 +518,8 @@ public class CheckInCartControl implements Initializable,OnGetDealListener {
 	 * 返回当前购物车中使用的优惠信息
 	 */
 	@Override
-	public ArrayList<DiscountBean> getDiscountList() {
-		ArrayList<DiscountBean> discountList = new ArrayList<>();
+	public ArrayList<DiscountUseBean> getDiscountList() {
+		ArrayList<DiscountUseBean> discountList = new ArrayList<>();
 		discountList.addAll(usedDiscountSet);
 		return discountList;
 	}

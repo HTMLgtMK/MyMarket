@@ -12,13 +12,13 @@ public class GoodsBean extends GoodsTypeBean {
 	/*使用信息*/
 	
 	//优惠基础信息
-	private DiscountBaseBean discount;
+	private DiscountBean discount;
 	
-	public void setDiscount(DiscountBean discountBean) {
-		discount = discountBean;
+	public void setDiscount(DiscountBean discountUseBean) {
+		discount = discountUseBean;
 	}
 	
-	public DiscountBaseBean getDiscount() {
+	public DiscountBean getDiscount() {
 		return discount;
 	}
 	

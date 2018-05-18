@@ -14,7 +14,8 @@
 
 <BorderPane fx:id="checkin_userlogin_root"
 	xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity"
-	maxWidth="-Infinity" style="-fx-background-color:#1874CD;"
+	maxWidth="-Infinity"
+	styleClass="container"
 	fx:controller="checkin.CheckInUserLoginControl">
 	<top>
 		<AnchorPane prefHeight="100">
@@ -26,8 +27,7 @@
 					AnchorPane.topAnchor="0.0" spacing="20" alignment="CENTER_LEFT">
 					<Button fx:id="btn_cancel_login"
 						style="-fx-background-color:transparent;" />
-					<Label text="会员登陆" textFill="WHITE"
-						style="-fx-font-size:30px;" textAlignment="CENTER" />
+					<Label text="会员登陆" styleClass="container-title" />
 				</HBox>
 			</children>
 		</AnchorPane>

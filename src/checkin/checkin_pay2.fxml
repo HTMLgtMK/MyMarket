@@ -16,31 +16,27 @@
 <?import javafx.scene.layout.Background?>
 <?import java.lang.Object?>
 <?import java.lang.String?>
+<?import javafx.scene.control.Separator?>
 
 <BorderPane fx:id="checkin_pay2_root"
 	xmlns:fx="http://javafx.com/fxml/1"
-	style="-fx-background-color:#1874CD;"
+	styleClass="container"
 	fx:controller="checkin.CheckInPayControl">
 	<top>
-		<AnchorPane prefHeight="100">
-			<padding>
-				<Insets top="10" right="10" bottom="10" left="10" />
-			</padding>
+		<VBox spacing="10" styleClass="container-top">
 			<children>
-				<HBox prefHeight="80" AnchorPane.leftAnchor="0.0"
-					AnchorPane.topAnchor="0.0" spacing="20" alignment="CENTER_LEFT">
-					<Button fx:id="btn_cancel_pay"
-						style="-fx-background-color:transparent;" />
-					<Label text="支付" textFill="WHITE" style="-fx-font-size:30px;"
-						textAlignment="CENTER" />
+				<HBox spacing="20" alignment="CENTER_LEFT">
+					<Button fx:id="btn_cancel_pay" styleClass="return-button" />
+					<Label text="支付" styleClass="container-title" />
 				</HBox>
+				<Separator />
 			</children>
-		</AnchorPane>
+		</VBox>
 	</top>
 	<!-- 中间存放二维码 -->
 	<center>
 		<TabPane fx:id="tabPane_checkin"  tabClosingPolicy="UNAVAILABLE"
-			stylesheets="@./style_checkin_pay.css">
+			stylesheets="@./css/style_checkin_pay.css">
 			<padding>
 				<Insets top="20.0" right="50.0" bottom="20.0" left="50.0" />
 			</padding>

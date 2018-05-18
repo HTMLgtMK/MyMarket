@@ -2,12 +2,15 @@ package checkin;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import beans.AlipayTradeQueryResponseBean;
 import beans.WxpayOrderQueryResponseBean;
 import checkin.CheckInControl.OnGetTradeQueryResponseListener;
 import checkin.CheckInControl.OnShowPageListener;
 import checkin.CheckInControl.Page;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -30,6 +33,12 @@ public class CheckInPayResultControl implements Initializable {
 	private Label label_result_msg;
 	@FXML
 	private Label label_tip;
+	@FXML
+	private Label label_return_timer;
+	/*自动返回计时器*/
+	private Timer timer;
+	
+	private int count;
 	
 	private OnShowPageListener showPageListener;
 	
@@ -72,12 +81,35 @@ public class CheckInPayResultControl implements Initializable {
 				label_tip.setText(alipayTradeQueryResponseBean.getStatus() + " 请联系管理员!");
 			}
 		}
+		count = 5;
+		timer = new Timer();
+		timer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				// 返回首页
+				Platform.runLater(new Runnable() {
+					
+					@Override
+					public void run() {
+						if(count == 0) {
+							timer.cancel();
+							timer = null;
+							
+							if(showPageListener!=null) {
+								showPageListener.showPage(Page.PAGE_WELCOME);
+							}
+							return;
+						}
+						label_return_timer.setText(String.format("还有 %d 秒返回首页", count--));
+					}
+				});
+			}
+		}, 0, 1*1000);
 	}
-	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stub
 		Screen screen = Screen.getPrimary();
 		Rectangle2D bounds = screen.getBounds();
 		double width = bounds.getWidth();
@@ -86,6 +118,10 @@ public class CheckInPayResultControl implements Initializable {
 		
 		btn_return_welcome.setOnMouseClicked(new EventHandler<Event>() {
 			public void handle(Event event) {
+				if(timer != null) { // 取消倒计时
+					timer.cancel();
+					timer = null;
+				}
 				if(showPageListener!=null) {//返回欢迎页
 					showPageListener.showPage(Page.PAGE_WELCOME);
 				}

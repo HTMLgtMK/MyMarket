@@ -61,36 +61,63 @@ public class GoodsControl implements Initializable{
 	
 	/*控制器的舞台*/
 	private Stage mStage;
+	/*父类容器*/
+	private Parent container;
 	/*中间部分面板改变监听器*/
 	private MyPaneWidthChangedListener panecenterWidthChangedListener;
 	private MyPaneHeightChangedListener panecenterHeightChangedListener;
 	
+	public GoodsControl() {
+		// !important 不能使用这种构造方法
+	}
+	
+	/**
+	 * 获取GoodsControl的唯一方法
+	 * @return
+	 */
+	public static GoodsControl getInstance() {
+		URL location = GoodsControl.class.getResource("goods_main.fxml");
+		FXMLLoader loader = new FXMLLoader(location);
+		Parent parent = null;
+		try {
+			parent = loader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		GoodsControl instance = loader.getController();
+		instance.container = parent;
+		return instance;
+	}
+	
+	
 	/**
 	 * 开始显示商品管理主界面
-	 * @throws IOException 
 	 */
 	public void start() {
 		mStage = new Stage();
-		Pane pane = null;
-		try {
-			pane = FXMLLoader.load(getClass().getResource("goods_management.fxml"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			Platform.exit();//退出程序
-		}
-		Scene scene = new Scene(pane, 1000, 800);
+//		Pane pane = null;
+//		try {
+//			pane = FXMLLoader.load(getClass().getResource("goods_management.fxml"));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			Platform.exit();//退出程序
+//		}
+		Scene scene = new Scene(container, 1000, 800);
 		mStage.setScene(scene);
 		Image logo16 = new Image("file:resource/drawable/logo16.png");
 		Image logo32 = new Image("file:resource/drawable/logo32.png");
 		mStage.getIcons().addAll(logo16, logo32);
 		mStage.show();
 		Logger.getLogger(GoodsControl.class.getSimpleName()).log(Level.INFO	,"in start");
+		
+		showWelcome();
+		initializeStatusBar();
 	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		Logger.getLogger(GoodsControl.class.getSimpleName()).log(Level.INFO	, "in initialize");
-		showWelcome();
-		initializeStatusBar();
+		
 		panecenterWidthChangedListener = new MyPaneWidthChangedListener();
 		panecenterHeightChangedListener = new MyPaneHeightChangedListener();
 		pane_center.widthProperty().addListener(panecenterWidthChangedListener);
@@ -103,7 +130,7 @@ public class GoodsControl implements Initializable{
 		 */
 		Main.setUhfConnected(false);
 		int ret = UHFHelper.init();
-		Logger.getLogger(GoodsControl.class.getSimpleName()).log(Level.INFO	,"init DLL:"+ String.format("0x%x", ret));
+		Logger.getLogger(GoodsControl.class.getSimpleName()).log(Level.INFO	,"init DLL:"+ String.format("0x%02x", ret));
 		if(ret == 0) {
 			label_uhf_reader_status.setText("已连接");
 			btn_uhf_togleconn.setText("断开");
@@ -114,13 +141,12 @@ public class GoodsControl implements Initializable{
 				Main.setUhfBean(uhfBean);
 			}
 		}else {
-			label_uhf_reader_status.setText("连接失败 : "+String.format("0x%x", ret));
+			label_uhf_reader_status.setText("连接失败 : "+String.format(" %s (0x%02x)", UHFHelper.CODE_MSG_MAP.get(ret) ,ret));
 		}
 		btn_uhf_togleconn.setOnMouseClicked(new EventHandler<Event>() {
 
 			@Override
 			public void handle(Event event) {
-				// TODO Auto-generated method stub
 				if(Main.isUhfConnected()) {//已连接,关闭连接
 					int ret = UHFHelper.closeComPort();
 					if(ret == 0) {
@@ -135,7 +161,7 @@ public class GoodsControl implements Initializable{
 						Main.setUhfConnected(true);
 						btn_uhf_togleconn.setText("断开");
 					}else {
-						label_uhf_reader_status.setText("连接失败 : "+ String.format("0x%x", ret));
+						label_uhf_reader_status.setText("连接失败 : "+ String.format(" %s (0x%02x)", UHFHelper.CODE_MSG_MAP.get(ret) ,ret));
 					}
 				}
 			}

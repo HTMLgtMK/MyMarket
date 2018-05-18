@@ -10,19 +10,20 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.Pane?>
+<?import java.lang.String?>
 
 <BorderPane fx:id="checkin_welcome_root"
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="checkin.CheckInWelcomeControl"
-	style="-fx-background-color:#1874CD;">
+	styleClass="container"
+	>
 	<top>
 		<VBox spacing="10">
 			<padding>
 				<Insets top="20" right="10" bottom="10" left="80" />
 			</padding>
 			<children>
-				<Label text="GT无人超市 | 自助收银系统" textFill="WHITE"
-					style="-fx-font-size:30px;" />
+				<Label text="GT无人超市 | 自助收银系统" styleClass="container-title" />
 				<Separator />
 			</children>
 		</VBox>
@@ -36,10 +37,7 @@
 		</Pane>
 	</center>
 	<right>
-		<HBox alignment="CENTER">
-			<padding>
-				<Insets top="10" right="50" bottom="10" left="50" />
-			</padding>
+		<HBox alignment="CENTER" styleClass="container-right">
 			<children>
 				<VBox alignment="CENTER" spacing="30">
 					<children>
@@ -48,13 +46,13 @@
 						<VBox spacing="10" AnchorPane.bottomAnchor="20.0"
 							AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 							<children>
-								<Button fx:id="btn_vip" text="会员" defaultButton="true"
+								<Button fx:id="btn_vip" text="会员" styleClass="default-button"
 									prefWidth="280" prefHeight="80" style="-fx-font-size:20px;">
 									<padding>
 										<Insets top="10" bottom="10" left="10" right="10" />
 									</padding>
 								</Button>
-								<Button fx:id="btn_unvip" text="非会员" defaultButton="true"
+								<Button fx:id="btn_unvip" text="非会员" styleClass="default-button"
 									prefWidth="280" prefHeight="80" style="-fx-font-size:20px;">
 									<padding>
 										<Insets top="10" bottom="10" left="10" right="10" />

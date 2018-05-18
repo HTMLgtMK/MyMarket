@@ -1,0 +1,45 @@
+/**
+ * 自助收银系统基本样式
+ */
+/* 默认容器 */
+.container {
+	-fx-background-color:#1874CD;
+}
+
+.container-title {
+	-fx-font-size:30px;
+	-fx-text-fill:WHITE;
+	-fx-text-alignment:CENTER;
+}
+
+/*默认按钮样式*/
+.default-button {
+	-fx-border-radiu:10px;
+	-fx-background-radiu:10px;
+	-fx-background-color:#00B2EE;
+	-fx-text-fill:#ffffff;
+}
+.default-button:hover{
+	-fx-background-color:#006400;
+}
+/* 返回按钮样式 */
+.return-button {
+	-fx-background-color:transparent;
+}
+/* 容器内文字基本样式 */
+.container-text {
+	-fx-text-fill: WHITE;
+	-fx-font-size: 20px;
+}
+/* 提示信息 */
+.container-hint-msg {
+	-fx-padding:10 10 10 10;	
+}
+/* 容器右侧框样式 */
+.container-right {
+	-fx-padding: 10 50 10 50;
+}
+/*容器顶部基本样式 */
+.container-top {
+	-fx-padding: 10;
+}

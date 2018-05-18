@@ -5,7 +5,8 @@
 
 
 <ScrollPane fx:id="scrollPane_checkin_main_root" xmlns:fx="http://javafx.com/fxml/1" fx:controller="checkin.CheckInControl"
-	hbarPolicy="ALWAYS" vbarPolicy="NEVER" >
+	hbarPolicy="ALWAYS" vbarPolicy="NEVER" 
+	stylesheets="@./css/checkin.css" >
 	<content>
 		<HBox >
 			<children>
@@ -15,7 +16,7 @@
 				<fx:include fx:id="cart" source="checkin_cart.fxml" />
 				<fx:include fx:id="pay" source="checkin_pay2.fxml" />
 				<fx:include fx:id="payResult" source="checkin_pay_result.fxml" />
-			</children>		
+			</children>
 		</HBox>
 	</content>
 </ScrollPane>

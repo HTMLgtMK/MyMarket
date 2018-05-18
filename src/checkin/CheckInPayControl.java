@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import beans.AlipayTradeQueryResponseBean;
-import beans.DiscountBean;
+import beans.DiscountUseBean;
 import beans.GoodsBean;
 import beans.Params;
 import beans.UserBean;
@@ -63,7 +63,7 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 	private int totalPrice;// 总额
 	private int discountPrice;// 折扣金额
 	private int payPrice;// 支付金额
-	private ArrayList<DiscountBean> discountList;//提交的优惠使用情况
+	private ArrayList<DiscountUseBean> discountList;//提交的优惠使用情况
 	
 	private String outTradeNo;//生成的商家订单号
 	

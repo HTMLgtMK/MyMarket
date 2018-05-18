@@ -1,6 +1,7 @@
 package checkin;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -8,6 +9,8 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import beans.DiscountUseBean;
+import beans.DiscountUserBean;
 import beans.Params;
 import beans.UserBean;
 import beans.UserGrantReqBean;
@@ -42,6 +45,7 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -286,6 +290,21 @@ public class CheckInUserLoginControl implements Initializable, OnGetUserListener
 							userBean.setPoint(userObj.getInt("point"));
 							userBean.setBalance(userObj.getInt("balance"));
 							userBean.setUser_level(userObj.getLong("user_level"));
+							// 获取优惠信息
+							JSONArray discountArray = userObj.getJSONArray("discount");
+							int count = discountArray.size();
+							ArrayList<DiscountUseBean>  discounts = new ArrayList<>();
+							for(int i=0; i<count;++i) {
+								JSONObject discountObj = discountArray.getJSONObject(i);
+								DiscountUseBean bean = new DiscountUseBean();
+								bean.setId(discountObj.getInt("id"));
+								bean.setDiscount_id(discountObj.getInt("discount_id"));
+								bean.setCount(discountObj.getInt("count"));
+								bean.setRest(discountObj.getInt("rest"));
+								bean.setCreate_time(discountObj.getLong("create_time"));
+								discounts.add(bean);
+							}
+							userBean.setDiscounts(discounts);
 							// 停止继续询查
 							checkFlag = false;
 							timer.cancel();

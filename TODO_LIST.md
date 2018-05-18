@@ -32,3 +32,8 @@
 	Reference: [JavaFx Nested Controllers (FXML <include>)](https://stackoverflow.com/questions/12543487/javafx-nested-controllers-fxml-include)
 	
 5. 修改退出当前交易支付时，需要修改后台数据库中订单的状态!
+
+6. 修改部分:
+	1. 首页 显示硬件链接状态
+	2. 修改扫描商品的时间显示
+	3. 修改收银系统全局样式
