@@ -37,7 +37,7 @@ public class CheckInControl implements Initializable {
 	@FXML
 	private CheckInUserLoginControl userLoginController;
 	@FXML
-	private CheckInCartControl cartController;
+	private CheckInCart2Control cartController;
 	@FXML
 	private CheckInPayControl payController;
 	@FXML

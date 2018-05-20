@@ -13,8 +13,12 @@ public class Params {
 	public static final String URL_WXPAY_PRECREATE = URL_SERVER_BASE + "api/market/Goods_Sale/wxpay_qrpay";
 	/*微信支付结果询查地址*/
 	public static final String URL_WXPAY_QUERY = URL_SERVER_BASE + "api/market/Goods_Sale/wxpayQuery";
-	/*获取商品详情接口地址*/
+	/*获取商品详情接口地址(带返回优惠信息)*/
 	public static final String URL_GETGOODSINFO = URL_SERVER_BASE + "api/market/Goods/getGoodsInfo";
+	/*获取商品详情接口地址2*/
+	public static final String URL_GETGOODSINFO2 = URL_SERVER_BASE + "api/market/Goods/getGoodsInfo2";
+	/*获取优惠地址*/
+	public static final String URL_GETDISCOUNTS = URL_SERVER_BASE + "api/market/Goods/getDiscounts";
 	/*撤销本次交易接口地址*/
 	public static final String URL_REVOKE_DEAL = URL_SERVER_BASE + "api/market/Goods_Sale/revokeDeal";
 	/*商品类型列表地址*/

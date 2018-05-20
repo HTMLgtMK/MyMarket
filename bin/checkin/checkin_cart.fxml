@@ -17,7 +17,7 @@
 <BorderPane fx:id="checkin_cart_root"
 	xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity"
 	maxWidth="-Infinity" styleClass="container"
-	fx:controller="checkin.CheckInCartControl">
+	fx:controller="checkin.CheckInCart2Control">
 	<top>
 		<AnchorPane styleClass="container-top">
 			<children>

@@ -1,6 +1,7 @@
 package checkin;
 
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -189,7 +190,6 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 						"goods_detail: " + goods_detail);
 				try {
 					goods_detail = Base64.getEncoder().encodeToString(goods_detail.getBytes());// !important
-					// goods_detail = URLEncoder.encode(goods_detail, "utf-8");
 					map.put("goods_detail", goods_detail);
 				} catch (Exception e) {
 					// continue?
