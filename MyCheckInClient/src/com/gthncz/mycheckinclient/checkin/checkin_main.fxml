@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+
+
+<ScrollPane fx:id="scrollPane_checkin_main_root" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gthncz.mycheckinclient.checkin.CheckInControl"
+	hbarPolicy="ALWAYS" vbarPolicy="NEVER" 
+	stylesheets="@./css/checkin.css" >
+	<content>
+		<HBox >
+			<children>
+				<!-- 存放5个页面 -->
+				<fx:include fx:id="welcome" source="checkin_welcome.fxml" />
+				<fx:include fx:id="userLogin" source="checkin_userlogin.fxml" />
+				<fx:include fx:id="cart" source="checkin_cart.fxml" />
+				<fx:include fx:id="pay" source="checkin_pay2.fxml" />
+				<fx:include fx:id="payResult" source="checkin_pay_result.fxml" />
+			</children>
+		</HBox>
+	</content>
+</ScrollPane>

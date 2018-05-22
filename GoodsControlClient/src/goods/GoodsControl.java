@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import application.Main;
 import beans.AdminstratorInfo;
 import beans.UHFReaderBean;
-import checkin.CheckInControl;
 import helper.UHFHelper;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -233,8 +232,8 @@ public class GoodsControl implements Initializable{
 		//CheckInControl control = new CheckInControl();
 		//control.start();
 		// 相同实例
-		CheckInControl control = CheckInControl.getInstance();
-		control.start();
+		//CheckInControl control = CheckInControl.getInstance();
+		//control.start();
 	}
 	
 	/**

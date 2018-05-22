@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="borderPane_tab_wxpay_root"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.gthncz.mycheckinclient.checkin.TabWxpayPageControl">
+	<top>
+		<VBox alignment="CENTER">
+		<padding>
+			<Insets top="20" bottom="20" />
+		</padding>
+			<children>
+				<Label fx:id="label_info" textFill="WHITE" alignment="CENTER"
+					style="-fx-font-size:20px;" />
+			</children>
+		</VBox>
+	</top>
+	<center>
+		<VBox alignment="TOP_CENTER" spacing="10">
+			<children>
+				<StackPane prefWidth="300" prefHeight="300">
+					<children>
+						<ImageView fx:id="imageView_qrcode" fitWidth="300"
+							fitHeight="300" />
+						<Label fx:id="label_result" textFill="WHITE"
+							style="-fx-font-size:20px;" />
+					</children>
+				</StackPane>
+				<Label fx:id="label_title" textFill="WHITE"
+					style="-fx-font-size:20px;" />
+			</children>
+		</VBox>
+	</center>
+</BorderPane>
