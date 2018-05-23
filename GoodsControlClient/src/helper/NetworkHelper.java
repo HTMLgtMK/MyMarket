@@ -53,9 +53,14 @@ public class NetworkHelper {
 				DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
 				Iterator<String> it = map.keySet().iterator();
 				while(it.hasNext()) {
+					StringBuilder builder = new StringBuilder();
 					String key = it.next();
 					String value = map.get(key);
-					dos.writeBytes(key+"="+value+"&");
+					builder.append(key);
+					builder.append('=');
+					builder.append(value);
+					builder.append('&');
+					dos.write(builder.toString().getBytes()); // 不能使用writeBytes(String)方法, 会出现中文不能传输的问题。
 					if(debug) {
 						Logger.getLogger(NetworkHelper.class.getSimpleName()).log(Level.INFO , key+"="+value);
 					}

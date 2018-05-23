@@ -9,9 +9,6 @@ import com.gthncz.mycheckinclient.login.LoginController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.fxml.FXMLLoader;
 
 /**
  * 自助收银系统项目

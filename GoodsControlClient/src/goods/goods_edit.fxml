@@ -13,41 +13,42 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.ChoiceBox?>
 
-<fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="goods.GoodsEditController"
+	stylesheets="@./css/goods_main.css" styleClass="container">
 	<center>
 		<!-- 表单部分 -->
-		<GridPane hgap="10" vgap="10"
-			style="-fx-background-color:#ffffff;">
-			<padding>
-				<Insets left="10" right="10" bottom="10" />
-			</padding>
+		<GridPane hgap="10" vgap="10" styleClass="container-center">
 			<columnConstraints>
-				<ColumnConstraints hgrow="ALWAYS"
+				<ColumnConstraints hgrow="SOMETIMES"
+					percentWidth="50" halignment="CENTER" fillWidth="true" />
+				<ColumnConstraints hgrow="SOMETIMES"
 					percentWidth="50" halignment="CENTER" fillWidth="true" />
 			</columnConstraints>
 			<children>
-				<Label text="*商品类别" style="-fx-font-size:20px;"
-					alignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-				<HBox spacing="10"   GridPane.rowIndex="0" 
-					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" >
+				<Label text="*商品类别" alignment="CENTER" GridPane.rowIndex="0"
+					GridPane.columnIndex="0" />
+				<HBox spacing="10" GridPane.rowIndex="0"
+					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
 					<children>
 						<TextField fx:id="tf_name" disable="true" />
-						<Button fx:id="btn_select_goodsType" text="选择" ></Button>
+						<Button fx:id="btn_select_goodsType" text="选择"></Button>
 					</children>
 				</HBox>
-				
 
-				<Label text="*生产日期" style="-fx-font-size:20px;"
-					alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-				<DatePicker  fx:id="datepicker_manufacture_date" GridPane.rowIndex="1"
-					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
 
-				<Label text="*生产批号" style="-fx-font-size:20px;"
-					alignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+				<Label text="*生产日期" alignment="CENTER" GridPane.rowIndex="1"
+					GridPane.columnIndex="0" />
+				<DatePicker fx:id="datepicker_manufacture_date"
+					GridPane.rowIndex="1" GridPane.columnIndex="1"
+					GridPane.hgrow="ALWAYS" />
+
+				<Label text="*生产批号" alignment="CENTER" GridPane.rowIndex="2"
+					GridPane.columnIndex="0" />
 				<TextField fx:id="tf_batch_number" GridPane.rowIndex="2"
 					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
 			</children>
 		</GridPane>
 	</center>
-</fx:root>
+</BorderPane>
 

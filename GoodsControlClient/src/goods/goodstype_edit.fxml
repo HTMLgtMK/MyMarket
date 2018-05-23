@@ -11,40 +11,37 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="goods.GoodsTypeEditController" 
+	stylesheets="@./css/goods_main.css" styleClass="container">
 	<center>
 		<!-- 表单部分 -->
-		<GridPane hgap="10" vgap="10"
-			style="-fx-background-color:#ffffff;">
-			<padding>
-				<Insets left="10" right="10" bottom="10" />
-			</padding>
+		<GridPane hgap="10" vgap="10" styleClass="container-center">
 			<columnConstraints>
 				<ColumnConstraints hgrow="ALWAYS"
 					percentWidth="50" halignment="CENTER" fillWidth="true" />
 			</columnConstraints>
 			<children>
-				<Label text="*商品类名称" style="-fx-font-size:20px;"
+				<Label text="*商品类名称" 
 					alignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0" />
 				<TextField fx:id="tf_name" GridPane.rowIndex="0"
 					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
 
-				<Label text="*商品价格" style="-fx-font-size:20px;"
+				<Label text="*商品价格(分)" 
 					alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="0" />
 				<TextField fx:id="tf_price" GridPane.rowIndex="1"
 					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
 
-				<Label text="*商品产地" style="-fx-font-size:20px;"
+				<Label text="*商品产地" 
 					alignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="0" />
 				<TextField fx:id="tf_address" GridPane.rowIndex="2"
 					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
 
-				<Label text="*生产公司" style="-fx-font-size:20px;"
+				<Label text="*生产公司" 
 					alignment="CENTER" GridPane.rowIndex="3" GridPane.columnIndex="0" />
 				<TextField fx:id="tf_company" GridPane.rowIndex="3"
 					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
 			</children>
 		</GridPane>
 	</center>
-</fx:root>
+</BorderPane>
 

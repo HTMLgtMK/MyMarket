@@ -1,0 +1,71 @@
+/* 商品管理全局样式 */
+
+*{
+	-fx-font-size: 20px;
+}
+
+.menu-bar .menu {
+	-fx-font-size: 15px;
+}
+
+.nav {
+	-fx-font-size: 20px;
+}
+
+/*默认按钮样式*/
+.default-button {
+	-fx-border-radiu:10px;
+	-fx-background-radiu:10px;
+	-fx-background-color:#00B2EE;
+	-fx-text-fill:#ffffff;
+}
+
+.default-button:hover{
+	-fx-background-color:#006400;
+}
+
+.button-warining {
+	-fx-border-radiu:10px;
+	-fx-background-radiu:10px;
+	-fx-background-color: #FFC125;
+	-fx-text-fill: #ffffff;
+}
+
+.button-warining:warning {
+	-fx-background-color: #FF7F24;
+}
+
+.button-cancel {
+	-fx-border-radiu:10px;
+	-fx-background-radiu:10px;
+	-fx-background-color: #4F4F4F;
+	-fx-text-fill: #ffffff;
+}
+
+.button-cancel:warning {
+	-fx-background-color: #363636;
+}
+
+.container {
+	
+}
+
+.container .container-top {
+	-fx-padding: 10, 20, 10, 20;
+	-fx-background-color:#ccccff; 
+	-fx-z-index:-1;
+	-fx-spacing: 10;
+	-fx-alignment: center-left;
+}
+
+.container .container-top Label {
+	-fx-font-size: 20px;
+}
+
+.container .container-center {
+	-fx-background-color: white;
+}
+
+.container .container-bottom {
+	
+}

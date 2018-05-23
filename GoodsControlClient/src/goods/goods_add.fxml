@@ -17,74 +17,99 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ScrollPane?>
 
-<fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" prefWidth="750" prefHeight="760">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+	styleClass="container" fx:controller="goods.GoodsAddController">
+	<top>
+		<HBox styleClass="container-top">
+			<children>
+				<Label text="商品管理  &gt;&gt;" />
+				<Label text="添加商品" />
+			</children>
+		</HBox>
+	</top>
 	<!-- 中间区域是添加主面板 -->
 	<center>
-		<GridPane prefWidth="500" prefHeight="560"  hgap="10" vgap="10" gridLinesVisible="false" >
+		<GridPane styleClass="container-center" hgap="10" vgap="10"
+			gridLinesVisible="false">
 			<columnConstraints>
-			<ColumnConstraints percentWidth="30" hgrow="ALWAYS" halignment="CENTER"></ColumnConstraints>
+				<ColumnConstraints percentWidth="30"
+					hgrow="SOMETIMES" halignment="CENTER"></ColumnConstraints>
+				<ColumnConstraints percentWidth="30"
+					hgrow="SOMETIMES" halignment="RIGHT"></ColumnConstraints>
+				<ColumnConstraints percentWidth="20"
+					hgrow="SOMETIMES" halignment="LEFT"></ColumnConstraints>
 			</columnConstraints>
-			<children>
-			<!-- 说明信息 -->
-			<VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0" GridPane.rowSpan="9" spacing="10" >
 			<padding>
-				<Insets top="10" bottom="10" left="30" right="30"  />
+				<Insets top="20" />
 			</padding>
 			<children>
-				<Text text="添加商品说明" textAlignment="LEFT" fill="BLACK" style="-fx-font-size:20px;" />
-				<Text text="* 选择商品类信息, 填写商品生产日期信息 和 生成批号信息"  />
-				<Text text="* 启动RFID读写器, 检测连接状态, 设置为写入模式" />
-				<Text text="* 获取商品唯一ID" />
-				<Text text="* 将标签放在识别区域, 写入信息" />
-				<Text text="* 提交商品信息到数据库" />
-				<Text text="注意: RFID读写器每次只能写入一张标签" />
+				<!-- 读写器信息 -->
+				<Label GridPane.columnIndex="0" GridPane.rowIndex="0"
+					text="读写器状态" />
+				<Label fx:id="label_uhf_status" text="状态"
+					GridPane.columnIndex="1" GridPane.rowIndex="0" />
+				<Button fx:id="btn_uhf_connect" text="连接"
+					styleClass="default-button" GridPane.columnIndex="2"
+					GridPane.rowIndex="0" />
+
+				<Separator GridPane.columnIndex="0"
+					GridPane.columnSpan="3" GridPane.rowIndex="1">
+					<GridPane.margin>
+						<Insets top="30" bottom="30" />
+					</GridPane.margin>
+				</Separator>
+				<!-- 表单 -->
+				<Label GridPane.columnIndex="0" GridPane.rowIndex="2"
+					text="商品类别" alignment="CENTER" />
+				<TextField fx:id="tf_typename" promptText="请选择商品类别"
+					GridPane.columnIndex="1" GridPane.rowIndex="2" />
+				<Button fx:id="btn_select_goodsType" text="选择"
+					GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+				<Label GridPane.columnIndex="0" GridPane.rowIndex="3"
+					text="生产日期" />
+				<DatePicker fx:id="datepicker_goodsdate"
+					GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+				<Label GridPane.columnIndex="0" GridPane.rowIndex="4"
+					text="生产批号" />
+				<TextField fx:id="tf_goodsbatchnumber"
+					GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+				<!-- 商品id -->
+				<Label GridPane.columnIndex="0" GridPane.rowIndex="5"
+					text="商品ID" />
+				<TextField fx:id="tf_goodsid" GridPane.columnIndex="1"
+					GridPane.rowIndex="5" disable="true" />
+				<Button fx:id="btn_getgoodsId" GridPane.columnIndex="2"
+					GridPane.rowIndex="5" text="获取ID" />
+
+				<!-- 按钮组 -->
+				<HBox GridPane.columnIndex="0" GridPane.columnSpan="3"
+					GridPane.rowIndex="6" GridPane.rowSpan="1" alignment="CENTER">
+					<children>
+						<Button fx:id="btn_writein" text="写入" />
+						<Button fx:id="btn_submit" text="提交">
+							<HBox.margin>
+								<Insets left="30" />
+							</HBox.margin>
+						</Button>
+						<Button fx:id="btn_test" text="测试">
+							<HBox.margin>
+								<Insets left="30" />
+							</HBox.margin>
+						</Button>
+					</children>
+				</HBox>
 			</children>
-			</VBox>
-			<Separator GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="9" >
-			<GridPane.margin>
-				<Insets top="30" bottom="30"  />
-			</GridPane.margin>
-			</Separator>
-			<!-- 表单 -->
-			<Label GridPane.columnIndex="0" GridPane.rowIndex="10" text="商品类别" alignment="CENTER" />
-			<HBox  GridPane.columnIndex="1" GridPane.rowIndex="10">
-				<children>
-					<TextField fx:id="tf_typename" promptText="请选择商品类别"  />
-					<Button fx:id="btn_select_goodsType" text="选择" />
-				</children>
-			</HBox>
-			
-			<Label GridPane.columnIndex="0" GridPane.rowIndex="11" text="生产日期" />
-			<DatePicker  fx:id="datepicker_goodsdate" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-			
-			<Label GridPane.columnIndex="0" GridPane.rowIndex="12" text="生产批号" />
-			<TextField  fx:id="tf_goodsbatchnumber" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-			
-			<!-- 商品id -->
-			<Label GridPane.columnIndex="0" GridPane.rowIndex="13" text="商品ID" />
-			<TextField  fx:id="tf_goodsid" GridPane.columnIndex="1" GridPane.rowIndex="13" disable="true" />
-			<Button fx:id="btn_getgoodsId" GridPane.columnIndex="2" GridPane.rowIndex="13" text="获取ID" />
-			
-			<!-- 按钮组 -->
-			<HBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="14" GridPane.rowSpan="1"
-					alignment="CENTER" >
-				<children>
-					<Button fx:id="btn_writein" text="写入" />
-					<Button fx:id="btn_submit" text="提交">
-						<HBox.margin>
-							<Insets left="30" />
-						</HBox.margin>
-					</Button> 
-				</children>
-			</HBox>
-			</children>
-		</GridPane> 
+		</GridPane>
 	</center>
 	<!-- 底部区域是添加的状态信息 -->
 	<bottom>
-		<ScrollPane fx:id="scrollpane_info" fitToHeight="true" fitToWidth="true" minHeight="200" maxHeight="200"
-				stylesheets="@./bg_scrollpane_white.css" 
-				hbarPolicy="ALWAYS" vbarPolicy="ALWAYS" >
+		<ScrollPane fx:id="scrollpane_info" fitToHeight="true"
+			fitToWidth="true" minHeight="200" maxHeight="200"
+			stylesheets="@./bg_scrollpane_white.css"
+			styleClass="container-bottom" vbarPolicy="ALWAYS">
 		</ScrollPane>
 	</bottom>
-</fx:root>
+</BorderPane>

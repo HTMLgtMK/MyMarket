@@ -12,6 +12,7 @@ import com.gthncz.mycheckinclient.beans.DiscountUseBean;
 import com.gthncz.mycheckinclient.beans.GoodsBean;
 import com.gthncz.mycheckinclient.beans.UserBean;
 import com.gthncz.mycheckinclient.beans.WxpayOrderQueryResponseBean;
+import com.gthncz.mycheckinclient.helper.UHFHelper;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -95,6 +96,7 @@ public class CheckInControl implements Initializable {
 			@Override
 			public void handle(KeyEvent event) {
 				if (event.getCode().equals(KeyCode.ESCAPE)) {
+					UHFHelper.closeComPort(); // close UHFReader
 					stage.hide();
 				} else {
 					event.consume();// blocks all others key bingdings

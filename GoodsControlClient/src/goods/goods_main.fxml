@@ -15,9 +15,12 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1"
-	prefWidth="1000" prefHeight="800" fx:controller="goods.GoodsControl">
+	prefWidth="1000" prefHeight="800" stylesheets="@./css/goods_main.css"
+	fx:controller="goods.GoodsController">
 	<top>
 		<!-- 顶部区域用于放菜单栏 -->
 		<MenuBar prefWidth="1000" prefHeight="30">
@@ -31,26 +34,88 @@
 	<left>
 		<!-- 左部区域用于放导航栏 -->
 		<TreeView onMouseClicked="#onTreeViewClicked"
-			fx:id="treeView" prefWidth="250" prefHeight="760">
+			styleClass="nav" fx:id="treeView" prefWidth="250" prefHeight="760">
 			<padding>
 				<Insets left="20" top="10" right="10" bottom="10"></Insets>
 			</padding>
 			<root>
 				<TreeItem expanded="true" value="菜单">
 					<children>
+						<TreeItem expanded="false" value="欢迎">
+							<graphic>
+								<ImageView>
+									<image>
+										<Image url="file:resource/drawable/welcome.png"
+											backgroundLoading="true" />
+									</image>
+								</ImageView>
+							</graphic>
+						</TreeItem>
 						<TreeItem expanded="true" value="商品类管理">
+							<graphic>
+								<ImageView>
+									<image>
+										<Image url="file:resource/drawable/goods_type_list.png"
+											backgroundLoading="true" />
+									</image>
+								</ImageView>
+							</graphic>
 							<children>
-								<TreeItem expanded="false" value="商品类列表"></TreeItem>
-								<TreeItem expanded="false" value="添加商品类"></TreeItem>
+								<TreeItem expanded="false" value="商品类列表">
+									<graphic>
+										<ImageView>
+											<image>
+												<Image
+													url="file:resource/drawable/goods_type_list.png"
+													backgroundLoading="true" />
+											</image>
+										</ImageView>
+									</graphic>
+								</TreeItem>
+								<TreeItem expanded="false" value="添加商品类">
+									<graphic>
+										<ImageView>
+											<image>
+												<Image url="file:resource/drawable/goods_type_add.png"
+													backgroundLoading="true" />
+											</image>
+										</ImageView>
+									</graphic>
+								</TreeItem>
 							</children>
 						</TreeItem>
 						<TreeItem expanded="true" value="商品管理">
+							<graphic>
+								<ImageView>
+									<image>
+										<Image url="file:resource/drawable/goods_list.png"
+											backgroundLoading="true" />
+									</image>
+								</ImageView>
+							</graphic>
 							<children>
-								<TreeItem expanded="false" value="商品列表"></TreeItem>
-								<TreeItem expanded="false" value="添加商品"></TreeItem>
+								<TreeItem expanded="false" value="商品列表">
+									<graphic>
+										<ImageView>
+											<image>
+												<Image url="file:resource/drawable/goods_list.png"
+													backgroundLoading="true" />
+											</image>
+										</ImageView>
+									</graphic>
+								</TreeItem>
+								<TreeItem expanded="false" value="添加商品">
+									<graphic>
+										<ImageView>
+											<image>
+												<Image url="file:resource/drawable/goods_add.png"
+													backgroundLoading="true" />
+											</image>
+										</ImageView>
+									</graphic>
+								</TreeItem>
 							</children>
 						</TreeItem>
-						<TreeItem expanded="false" value="自助收银"></TreeItem>
 					</children>
 				</TreeItem>
 			</root>
@@ -59,20 +124,5 @@
 	<center>
 		<Pane fx:id="pane_center"></Pane>
 	</center>
-	<bottom>
-		<!-- 底部区域用于显示状态信息 -->
-		<AnchorPane fx:id="pane_bottom" prefWidth="1000"
-			prefHeight="30" style="-fx-background-color:#ccccff;">
-			<children>
-				<!-- 右部显示UFHReader的连接状态 -->
-				<HBox spacing="10" prefHeight="30" AnchorPane.rightAnchor="10"
-					alignment="CENTER">
-					<Label text="状态" />
-					<Label fx:id="label_uhf_reader_status" text="未连接" />
-					<Button fx:id="btn_uhf_togleconn" text="切换" />
-				</HBox>
-			</children>
-		</AnchorPane>
-	</bottom>
 </BorderPane>
 

@@ -10,64 +10,78 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Separator?>
 
-<fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="goods.GoodsTypeAddController"
+	stylesheets="@./css/goods_type_add.css" styleClass="container">
 	<top>
-		<HBox spacing="10"
-			style="-fx-background-color:#ccccff; -fx-z-index:-1;"
-			alignment="CENTER_LEFT">
-			<padding>
-				<Insets top="10" left="20" right="20" bottom="10"></Insets>
-			</padding>
+		<HBox styleClass="container-top">
 			<children>
-				<Label text="添加商品类别" style="-fx-font-size:20px;" />
+				<Label text="商品类别管理  &gt;&gt;" />
+				<Label text="添加商品类别" />
 			</children>
 		</HBox>
 	</top>
 	<center>
 		<!-- 表单部分 -->
-		<GridPane hgap="10" vgap="10">
+		<GridPane hgap="10" vgap="10"
+			styleClass="container-center, form">
 			<padding>
-				<Insets left="10" right="10" bottom="10" />
+				<Insets top="20" />
 			</padding>
 			<columnConstraints>
-				<!-- fillWidth="true"  -->
-				<ColumnConstraints hgrow="ALWAYS"
-					percentWidth="50" halignment="CENTER" />
+				<!-- fillWidth="true" -->
+				<ColumnConstraints hgrow="SOMETIMES"
+					percentWidth="30" halignment="CENTER" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					halignment="CENTER" percentWidth="30" />
 			</columnConstraints>
 			<children>
-				<Label text="*商品类名称" style="-fx-font-size:20px;"
-					alignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+				<Label text="*商品类名称" GridPane.rowIndex="0"
+					GridPane.columnIndex="0" />
 				<TextField fx:id="tf_add_name" GridPane.rowIndex="0"
-					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+					GridPane.columnIndex="1" />
 
-				<Label text="*商品价格" style="-fx-font-size:20px;"
-					alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+				<Label text="*商品价格(元)" styleClass="require" GridPane.rowIndex="1"
+					GridPane.columnIndex="0" />
 				<TextField fx:id="tf_add_price" GridPane.rowIndex="1"
-					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+					GridPane.columnIndex="1" />
 
 				<Label text="*商品产地" style="-fx-font-size:20px;"
 					alignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="0" />
 				<TextField fx:id="tf_add_address" GridPane.rowIndex="2"
-					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+					GridPane.columnIndex="1" />
 
 				<Label text="*生产公司" style="-fx-font-size:20px;"
 					alignment="CENTER" GridPane.rowIndex="3" GridPane.columnIndex="0" />
 				<TextField fx:id="tf_add_company" GridPane.rowIndex="3"
-					GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+					GridPane.columnIndex="1" />
 
-				<Button fx:id="btn_add_submit" text="提交" defaultButton="true"
-					GridPane.rowIndex="4" GridPane.columnIndex="0"
-					GridPane.columnSpan="2" />
+				<Button fx:id="btn_add_submit" text="提交"
+					styleClass="default-button" GridPane.rowIndex="4"
+					GridPane.columnIndex="0" GridPane.columnSpan="2">
+					<GridPane.margin>
+						<Insets top="20" />
+					</GridPane.margin>
+					<padding>
+						<Insets top="10" right="20" bottom="10" left="20" />
+					</padding>
+				</Button>
 			</children>
 		</GridPane>
 	</center>
 	<bottom>
 		<!-- 状态面板 -->
-		<ScrollPane fx:id="scrollpane_add_info"
-			stylesheets="@./bg_scrollpane_white.css" minHeight="200" maxHeight="200"
-			hbarPolicy="ALWAYS" vbarPolicy="ALWAYS">
-		</ScrollPane>
+		<VBox>
+			<children>
+				<Separator />
+				<ScrollPane fx:id="scrollpane_add_info"
+					stylesheets="@./bg_scrollpane_white.css" minHeight="200" maxHeight="200"
+					vbarPolicy="ALWAYS">
+				</ScrollPane>
+			</children>
+		</VBox>
 	</bottom>
-</fx:root>
+</BorderPane>
 

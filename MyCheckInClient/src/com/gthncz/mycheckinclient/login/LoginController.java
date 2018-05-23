@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -230,6 +229,7 @@ public class LoginController implements Initializable {
 		})).start();
 	}
 	
+	/* 跳转到收银界面 */
 	private void jump2checkin() {
 		(new Thread(new Runnable() {
 			

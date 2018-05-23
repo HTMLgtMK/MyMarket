@@ -28,12 +28,9 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
-		try {
-			(new LoginControl()).start(primaryStage);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-//		String arch = System.getProperty("sun.arch.data.model");
+		LoginControl loginControl = LoginControl.getInstance();
+		loginControl.start(primaryStage);
+//		String arch = System.getProperty("sun.arch.data.model"); // 查看操作系统位数
 //		System.out.println(arch);
 	}
 	

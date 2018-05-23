@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" 
+	stylesheets="@./css/goods_welcome.css"
+	fx:controller="goods.GoodsWelcomeController"
+	styleClass="container"
+	>
+	<top>
+		<StackPane styleClass="container-top-welcome" prefHeight="200" >
+			<children>
+				<Label styleClass="container-title" text="欢迎使用" />
+			</children>
+		</StackPane>
+	</top>
+	<center>
+		<GridPane vgap="10" hgap="30" styleClass="container-center">
+			<children>
+				<!-- 登陆的员工信息 -->
+				<Label text="用户名" GridPane.columnIndex="1"
+					GridPane.rowIndex="2" />
+				<Label fx:id="label_user_login" GridPane.columnIndex="2"
+					GridPane.rowIndex="2" text="user_login" />
+
+				<Label text="实名" GridPane.columnIndex="1"
+					GridPane.rowIndex="3" />
+				<Label fx:id="label_name" GridPane.columnIndex="2"
+					GridPane.rowIndex="3" text="name" />
+
+				<Label text="手机" GridPane.columnIndex="1"
+					GridPane.rowIndex="4" />
+				<Label fx:id="label_mobile" GridPane.columnIndex="2"
+					GridPane.rowIndex="4" text="mobile" />
+
+				<Label text="状态" GridPane.columnIndex="1"
+					GridPane.rowIndex="5" />
+				<Label fx:id="label_user_status" GridPane.columnIndex="2"
+					GridPane.rowIndex="5" text="status" />
+
+				<Label text="岗位" GridPane.columnIndex="1"
+					GridPane.rowIndex="6" />
+				<Label fx:id="label_post_name" GridPane.columnIndex="2"
+					GridPane.rowIndex="6" text="post_name" />
+
+				<Label text="创建时间" GridPane.columnIndex="1"
+					GridPane.rowIndex="7" />
+				<Label fx:id="label_create_time" GridPane.columnIndex="2"
+					GridPane.rowIndex="7" text="create_time" />
+
+				<Button fx:id="btn_logout" text="退出登陆" styleClass="default-button"
+					GridPane.columnIndex="1" GridPane.rowIndex="8"
+					GridPane.columnSpan="2" >
+					<padding>
+						<Insets top="10" right="10" bottom="10" left="10" />
+					</padding>
+				</Button>
+			</children>
+		</GridPane>
+	</center>
+</BorderPane>

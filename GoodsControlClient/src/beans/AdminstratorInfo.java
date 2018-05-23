@@ -1,5 +1,7 @@
 package beans;
 
+import net.sf.json.JSONObject;
+
 /**
  * 员工信息
  * @author GT
@@ -11,7 +13,7 @@ public class AdminstratorInfo {
 	private String name;//用户实名
 	private String mobile;//用户手机号
 	private int user_status;//员工状态,0:离职,1:正常,2:未验证 
-	private int create_time;
+	private long create_time;
 	private int sex;//员工性别,1:男,2:女
 	private int birthday;
 	private int post_id;
@@ -47,10 +49,10 @@ public class AdminstratorInfo {
 	public void setUser_status(int user_status) {
 		this.user_status = user_status;
 	}
-	public int getCreate_time() {
+	public long getCreate_time() {
 		return create_time;
 	}
-	public void setCreate_time(int create_time) {
+	public void setCreate_time(long create_time) {
 		this.create_time = create_time;
 	}
 	public int getSex() {
@@ -77,6 +79,22 @@ public class AdminstratorInfo {
 	public void setPost_name(String post_name) {
 		this.post_name = post_name;
 	}
+	
+	public static AdminstratorInfo newInstanceFromJSONObject(final JSONObject adminObj) {
+		final AdminstratorInfo adminInfo = new AdminstratorInfo();
+		adminInfo.setBirthday(adminObj.getInt("birthday"));
+		adminInfo.setCreate_time(adminObj.getLong("create_time")*1000);
+		adminInfo.setId(adminObj.getInt("id"));
+		adminInfo.setMobile(adminObj.getString("mobile"));
+		adminInfo.setName(adminObj.getString("name"));
+		adminInfo.setPost_id(adminObj.getInt("post_id"));
+		adminInfo.setPost_name(adminObj.getString("post_name"));
+		adminInfo.setSex(adminObj.getInt("sex"));
+		adminInfo.setUser_login(adminObj.getString("user_login"));
+		adminInfo.setUser_status(adminObj.getInt("user_status"));
+		return adminInfo;
+	} 
+	
 	@Override
 	public String toString() {
 		return "AdminUserInfo [id=" + id + ", user_login=" + user_login + ", name=" + name + ", mobile=" + mobile

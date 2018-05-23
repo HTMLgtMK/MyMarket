@@ -1,0 +1,42 @@
+/* 登陆界面样式  */
+.container{
+
+}
+
+.container-top{
+	-fx-background-color: linear-gradient(#7dc5eb, #bd8cbb) ;
+	-fx-alignment: center ;
+}
+
+.container-top > Label {
+	-fx-text-fill: white ;
+}
+
+.container-center{
+	-fx-background-color:#ffffff;
+	-fx-padding: 20, 0, 0, 0;
+	-fx-spacing: 10;
+}
+
+.container-bottom {
+	
+}
+
+
+.form {
+	-fx-spacing: 10;
+}
+
+.form .form-group {
+	-fx-alignment:center ;
+	-fx-spacing: 20;
+	-fx-padding: 0, 10;
+}
+
+.form .form-lable {
+	
+}
+
+.form .form-input {
+	
+}

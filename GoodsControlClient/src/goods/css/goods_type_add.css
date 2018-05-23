@@ -1,0 +1,16 @@
+/* 商品类别添加样式 */
+
+.form {
+	
+}
+
+.form Label {
+	-fx-font-size: 20px;
+	-fx-text-alignment: center;
+}
+
+/* 不支持的伪类元素... */
+.form .require:before{
+	content: "*";
+	color: red;
+}

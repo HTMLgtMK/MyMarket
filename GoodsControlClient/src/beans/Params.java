@@ -3,6 +3,8 @@ package beans;
 public class Params {
 	/*服务器地址*/
 	public static final String URL_SERVER_BASE = "http://localhost:8888/";
+	/*员工登陆地址*/
+	public static final String URL_ADMIN_LOGIN = URL_SERVER_BASE + "api/admin/Public/login";
 	/*商品类型列表地址*/
 	public static final String URL_GOODSTYPE_INDEX = URL_SERVER_BASE + "api/market/Goods_Type/index";
 	/*商品类型添加地址*/
