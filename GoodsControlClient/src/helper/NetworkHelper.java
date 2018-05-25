@@ -74,7 +74,7 @@ public class NetworkHelper {
 						+connection.getResponseMessage()+"\", \"data\":\"\"}");
 			}else {
 				//获取数据
-				InputStreamReader is = new InputStreamReader(connection.getInputStream());
+				InputStreamReader is = new InputStreamReader(connection.getInputStream(), "UTF-8"); // 必须指定编码, 否则接收的数据乱码
 				BufferedReader reader = new BufferedReader(is);
 				String line = "";
 				while((line = reader.readLine()) != null) {

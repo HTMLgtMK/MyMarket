@@ -370,6 +370,7 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 	 * 显示页面标签的代理类
 	 * @author GT
 	 */
+	/*
 	private class MyShowTabPageListener implements OnShowTabPageListener{
 
 		@Override
@@ -378,6 +379,7 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 		}
 		
 	}
+	*/
 	
 	/**
 	 * 显示选项标签页的监听器
