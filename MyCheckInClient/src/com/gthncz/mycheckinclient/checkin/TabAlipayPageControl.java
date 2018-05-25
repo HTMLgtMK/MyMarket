@@ -16,6 +16,7 @@ import com.gthncz.mycheckinclient.checkin.CheckInControl.Page;
 import com.gthncz.mycheckinclient.helper.NetworkHelper;
 import com.gthncz.mycheckinclient.helper.QRCodeHelper;
 
+import application.Main;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,6 +42,7 @@ import net.sf.json.JSONObject;
  *	ParentController CheckInPayController3
  */
 public class TabAlipayPageControl implements Initializable {
+	private static final String TAG = TabAlipayPageControl.class.getSimpleName();
 
 	@FXML
 	private BorderPane borderPane_tab_alipay_root;
@@ -198,7 +200,9 @@ public class TabAlipayPageControl implements Initializable {
 
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
+					if(Main.DEBUG) {
+						Logger.getLogger(TAG).log(Level.INFO, "** 信息 >> Alipay query Timer is running...");
+					}
 					if (queryFlag == false)
 						return;
 					queryPayStatus();

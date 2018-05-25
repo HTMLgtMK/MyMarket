@@ -29,6 +29,7 @@ import com.gthncz.mycheckinclient.checkin.CheckInControl.Page;
 import com.gthncz.mycheckinclient.helper.NetworkHelper;
 import com.gthncz.mycheckinclient.helper.UHFHelper;
 
+import application.Main;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -159,6 +160,7 @@ public class CheckInCart2Control implements Initializable, OnGetDealListener {
 			inventionTask.stopInvention();
 		}
 		if (loadGoodsInfoTask != null) {
+			epcSemaphore.release(); // 可能一直卡着? 释放一个信号量
 			loadGoodsInfoTask.stopLoad();
 		}
 		inventionTask = null;
@@ -230,7 +232,7 @@ public class CheckInCart2Control implements Initializable, OnGetDealListener {
 			Image image = new Image("file:resource/drawable/avatar.png");
 			imageView_avatar.setImage(image);
 			label_nickname.setText(userBean.getUser_nickname());
-			label_user_balance.setText(String.valueOf(userBean.getBalance()));
+			label_user_balance.setText(String.format("￥%.2f", Float.valueOf(userBean.getBalance())/100));
 			Image img_point = new Image("file:resource/drawable/point_32.png");
 			label_user_balance.setGraphic(new ImageView(img_point));
 			label_user_balance.setGraphicTextGap(10);
@@ -393,6 +395,9 @@ public class CheckInCart2Control implements Initializable, OnGetDealListener {
 		@Override
 		public void run() {
 			while (inventionFlag) { // 为了可以手动退出轮询
+				if(Main.DEBUG) {
+					Logger.getLogger(TAG).log(Level.INFO, "** 信息 >> Inventory Task is running...");					
+				}
 				inventoryBean.setTotallen(0);// 置0
 				inventoryBean.setCardNum(0);// 标签数置0
 				int ret = UHFHelper.inventory_G2(inventoryBean);
@@ -446,6 +451,7 @@ public class CheckInCart2Control implements Initializable, OnGetDealListener {
 							label_msg.setText(String.format("出错: %s (0x%02x)", UHFHelper.CODE_MSG_MAP.get(ret), ret));
 						}
 					});
+					loadGoodsInfoTask.stopLoad();
 					epcSemaphore.release(); // 需要释放一个信号量，否则询查商品详情线程一直被阻塞
 					inventionFlag = false; // 退出轮询
 				}
@@ -477,6 +483,9 @@ public class CheckInCart2Control implements Initializable, OnGetDealListener {
 		@Override
 		public void run() {
 			while (loadFlag) {
+				if(Main.DEBUG) {
+					Logger.getLogger(TAG).log(Level.INFO, "** 信息 >> LoadGoodsInfo Task is running...");					
+				}
 				try {
 					epcSemaphore.acquire(); // 阻塞当前进程
 				} catch (InterruptedException e) {

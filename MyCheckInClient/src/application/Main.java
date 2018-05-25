@@ -17,6 +17,9 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 	
+	/** debug标识 */
+	public static final boolean DEBUG = true;
+	
 	/**
 	 * 用户登陆token
 	 */

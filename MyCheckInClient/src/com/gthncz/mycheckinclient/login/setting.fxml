@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gthncz.mycheckinclient.login.SettingController">
+	<children>
+		<Label  text="店铺ID" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+		<TextField fx:id="tf_store_id" GridPane.columnIndex="1" GridPane.rowIndex="0" promptText="店铺ID" />
+		
+		<Label  text="终端ID" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+		<TextField fx:id="tf_terminal_id" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="终端ID" />
+	</children>
+</GridPane>
+

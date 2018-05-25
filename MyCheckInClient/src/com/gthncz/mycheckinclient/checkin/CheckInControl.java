@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.gthncz.mycheckinclient.beans.AlipayTradeQueryResponseBean;
+import com.gthncz.mycheckinclient.beans.BalancepayTradeQueryResponse;
 import com.gthncz.mycheckinclient.beans.DiscountUseBean;
 import com.gthncz.mycheckinclient.beans.GoodsBean;
 import com.gthncz.mycheckinclient.beans.UserBean;
@@ -288,6 +289,11 @@ public class CheckInControl implements Initializable {
 		public WxpayOrderQueryResponseBean getWxpayOrderQueryResponseBean() {
 			return payController.getWxpayOrderQueryResponseBean();
 		}
+
+		@Override
+		public BalancepayTradeQueryResponse geBalancepayTradeQueryResponse() {
+			return payController.geBalancepayTradeQueryResponse();
+		}
 	}
 
 	/**
@@ -310,6 +316,13 @@ public class CheckInControl implements Initializable {
 		 * @return
 		 */
 		public WxpayOrderQueryResponseBean getWxpayOrderQueryResponseBean();
+		
+		/**
+		 * 获取余额支付交易及过查询
+		 * 
+		 * @return
+		 */
+		public BalancepayTradeQueryResponse geBalancepayTradeQueryResponse();
 	}
 
 	/**

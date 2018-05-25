@@ -17,6 +17,7 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.control.MenuItem?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1"
 	prefWidth="1000" prefHeight="800" stylesheets="@./css/goods_main.css"
@@ -25,9 +26,10 @@
 		<!-- 顶部区域用于放菜单栏 -->
 		<MenuBar prefWidth="1000" prefHeight="30">
 			<menus>
-				<Menu fx:id="menu_control" text="控制"></Menu>
-				<Menu fx:id="menu_setting" text="设置"></Menu>
-				<Menu fx:id="menu_help" text="帮助"></Menu>
+				<Menu text="帮助">
+					<MenuItem  fx:id="menu_about" text="关于" />
+					<MenuItem fx:id="menu_exit" text="退出" />
+				</Menu>
 			</menus>
 		</MenuBar>
 	</top>

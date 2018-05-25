@@ -48,6 +48,9 @@
 				<Tab fx:id="tabWxpay" text="微信支付">
 					<fx:include fx:id="tabWxpayPage" source="tab_wxpay.fxml" />
 				</Tab>
+				<Tab fx:id="tabBalancepay" text="余额支付">
+					<fx:include fx:id="tabBalancepayPage" source="tab_balancepay.fxml" />
+				</Tab>
 			</tabs>
 		</TabPane>
 	</center>

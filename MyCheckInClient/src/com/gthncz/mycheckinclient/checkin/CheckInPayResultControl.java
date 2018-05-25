@@ -4,13 +4,17 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.gthncz.mycheckinclient.beans.AlipayTradeQueryResponseBean;
+import com.gthncz.mycheckinclient.beans.BalancepayTradeQueryResponse;
 import com.gthncz.mycheckinclient.beans.WxpayOrderQueryResponseBean;
 import com.gthncz.mycheckinclient.checkin.CheckInControl.OnGetTradeQueryResponseListener;
 import com.gthncz.mycheckinclient.checkin.CheckInControl.OnShowPageListener;
 import com.gthncz.mycheckinclient.checkin.CheckInControl.Page;
 
+import application.Main;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -25,6 +29,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 
 public class CheckInPayResultControl implements Initializable {
+	private static final String TAG = CheckInPayResultControl.class.getSimpleName();
 	
 	@FXML
 	private BorderPane checkin_pay_result_root;
@@ -60,26 +65,30 @@ public class CheckInPayResultControl implements Initializable {
 		if(getTradeQueryResponseListener!=null) {
 			AlipayTradeQueryResponseBean alipayTradeQueryResponseBean = getTradeQueryResponseListener.geAlipayTradeQueryResponseBean();
 			WxpayOrderQueryResponseBean wxpayOrderQueryResponseBean = getTradeQueryResponseListener.getWxpayOrderQueryResponseBean();
+			BalancepayTradeQueryResponse  balancepayTradeQueryResponse= getTradeQueryResponseListener.geBalancepayTradeQueryResponse();
 			
 			/*支付宝支付*/
-			if(alipayTradeQueryResponseBean.getCode() == 2 || wxpayOrderQueryResponseBean.getCode() == 2) {//交易关闭，可能是由于超时引起
+			if(alipayTradeQueryResponseBean.getCode() == 2 || wxpayOrderQueryResponseBean.getCode() == 2 
+					|| balancepayTradeQueryResponse.getStatus() == 4) {//交易关闭，可能是由于超时引起
 				Image img = new Image("file:resource/drawable/pay_closed.png");
 				label_result_msg.setText("交易关闭!");
 				label_result_msg.setGraphic(new ImageView(img));
 				
 				label_tip.setText("请在5min内完成付款!");
-			}else if(alipayTradeQueryResponseBean.getCode() == 3 || wxpayOrderQueryResponseBean.getCode() == 3) {
+			}else if(alipayTradeQueryResponseBean.getCode() == 3 || wxpayOrderQueryResponseBean.getCode() == 3
+					|| balancepayTradeQueryResponse.getStatus() == 3) {
 				Image img = new Image("file:resource/drawable/pay_ok.png");
 				label_result_msg.setText("交易成功!");
 				label_result_msg.setGraphic(new ImageView(img));
 				
 				label_tip.setText("感谢您使用自助收银系统!欢迎再次光临!");
-			}else if(alipayTradeQueryResponseBean.getCode() == -1  || wxpayOrderQueryResponseBean.getCode() == -1) {
+			}else if(alipayTradeQueryResponseBean.getCode() == -1  || wxpayOrderQueryResponseBean.getCode() == -1
+					|| balancepayTradeQueryResponse.getCode() == 0) {
 				Image img = new Image("file:resource/drawable/pay_fail.png");
 				label_result_msg.setText("出错!");
 				label_result_msg.setGraphic(new ImageView(img));
 				
-				label_tip.setText(alipayTradeQueryResponseBean.getStatus() + " 请联系管理员!");
+				label_tip.setText("请联系管理员!");
 			}
 		}
 		count = 5;
@@ -93,6 +102,9 @@ public class CheckInPayResultControl implements Initializable {
 					
 					@Override
 					public void run() {
+						if(Main.DEBUG) {
+							Logger.getLogger(TAG).log(Level.INFO, "** 信息 >> CheckInPayResult CountDown Timer is running...");
+						}
 						if(count == 0) {
 							timer.cancel();
 							timer = null;

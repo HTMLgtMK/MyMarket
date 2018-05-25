@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="goods.AboutController">
+	<center>
+		<Text text="此程序是GT无人超市商品管理部分, 项目仅用于学习使用, 请勿做商业使用, 交流请联系GT_GameEmail@163.com" />
+	</center>
+</BorderPane>
+

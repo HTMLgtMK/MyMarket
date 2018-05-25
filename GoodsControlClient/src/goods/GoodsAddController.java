@@ -3,7 +3,9 @@ package goods;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -86,6 +88,9 @@ public class GoodsAddController implements Initializable {
 	
 	private Timer readRFIDTimer; // 测试RFID的计时器
 	private boolean isReading; 
+	
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private Date date = new Date();
 
 	public static GoodsAddController getInstance() {
 		URL location = GoodsAddController.class.getResource("goods_add.fxml");
@@ -343,6 +348,8 @@ public class GoodsAddController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		initViews();
 	}
+	
+	private Text writeInText = null; //写入时可修改的标签
 
 	public void startWriteIn() {
 		if (isWriting || isReading)
@@ -356,6 +363,8 @@ public class GoodsAddController implements Initializable {
 			}
 		}, 0, 100);
 		isWriting = true;
+		writeInText = new Text();
+		vbox_info.getChildren().add(writeInText);
 	}
 
 	/**
@@ -384,8 +393,10 @@ public class GoodsAddController implements Initializable {
 
 			@Override
 			public void run() {
+				date.setTime(System.currentTimeMillis());
 				if (ret == 0) {
-					showMessage(LEVEL_MSG_INFO, "写入成功:" + goods_id);
+					showMessage(LEVEL_MSG_INFO, String.format("%s 写入成功 : %s", 
+							simpleDateFormat.format(date), goods_id), writeInText);
 					btn_submit.setDisable(false);
 					Logger.getLogger(GoodsAddController.class.getSimpleName()).log(Level.INFO, "写入成功:" + goods_id);
 					if (timer != null) {
@@ -394,7 +405,8 @@ public class GoodsAddController implements Initializable {
 					}
 					isWriting = false;
 				} else {
-					showMessage(LEVEL_MSG_ERROR, String.format("写入失败: %s(0x%x)", UHFHelper.CODE_MSG_MAP.get(ret), ret));
+					showMessage(LEVEL_MSG_ERROR, String.format("%s 写入失败: %s(0x%x)", 
+							simpleDateFormat.format(date),UHFHelper.CODE_MSG_MAP.get(ret), ret), writeInText);
 				}
 			}
 		});
@@ -467,9 +479,16 @@ public class GoodsAddController implements Initializable {
 
 	private Paint mPaint = null;
 
-	/** 在消息面板上显示信息 */
 	private void showMessage(int level, String msg) {
-		Text text = new Text(msg);
+		this.showMessage(level, msg, null);
+	}
+	/** 在消息面板上显示信息 */
+	private void showMessage(int level, String msg, Text text) {
+		if(text == null) {
+			text = new Text(msg);
+			vbox_info.getChildren().add(text);
+		}
+		text.setText(msg);
 		switch (level) {
 		case LEVEL_MSG_INFO: {
 			mPaint = Paint.valueOf("#000000");
@@ -489,7 +508,6 @@ public class GoodsAddController implements Initializable {
 		}
 		}
 		text.setFill(mPaint);
-		vbox_info.getChildren().add(text);
 	}
 
 	/**
@@ -543,6 +561,7 @@ public class GoodsAddController implements Initializable {
 	
 	/** 读RFID标签, 读到即停止 */
 	protected void readRFID() {
+		date.setTime(System.currentTimeMillis());
 		inventoryBean.setTotallen(0);// 置0
 		inventoryBean.setCardNum(0);// 标签数置0
 		int ret = UHFHelper.inventory_G2(inventoryBean);
@@ -573,7 +592,8 @@ public class GoodsAddController implements Initializable {
 				
 				@Override
 				public void run() {
-					readingText.setText(String.format("扫描成功！\r\n %s", epcListBuilder.toString()));
+					showMessage(LEVEL_MSG_INFO, String.format("%s 扫描成功！\r\n %s", 
+							simpleDateFormat.format(date),epcListBuilder.toString()), readingText);
 					readRFIDTimer.cancel(); 
 					readRFIDTimer = null;
 					isReading = false;
@@ -586,7 +606,8 @@ public class GoodsAddController implements Initializable {
 
 				@Override
 				public void run() {
-					readingText.setText(String.format("扫描结果: %s(0x%02X)", UHFHelper.CODE_MSG_MAP.get(ret), ret));
+					showMessage(LEVEL_MSG_ERROR, String.format("%s 扫描结果: %s(0x%02X)", 
+							simpleDateFormat.format(date), UHFHelper.CODE_MSG_MAP.get(ret), ret), readingText);
 				}
 			});
 		} else {
@@ -597,7 +618,8 @@ public class GoodsAddController implements Initializable {
 
 				@Override
 				public void run() {
-					readingText.setText(String.format("出错: %s (0x%02x)", UHFHelper.CODE_MSG_MAP.get(ret), ret));
+					showMessage(LEVEL_MSG_ERROR, String.format("%s 出错: %s (0x%02x)", 
+							simpleDateFormat.format(date), UHFHelper.CODE_MSG_MAP.get(ret), ret), readingText);
 					readRFIDTimer.cancel(); 
 					readRFIDTimer = null;
 					isReading = false;

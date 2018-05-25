@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.gthncz.mycheckinclient.beans.AlipayTradeQueryResponseBean;
+import com.gthncz.mycheckinclient.beans.BalancepayTradeQueryResponse;
 import com.gthncz.mycheckinclient.beans.DiscountUseBean;
 import com.gthncz.mycheckinclient.beans.GoodsBean;
 import com.gthncz.mycheckinclient.beans.Params;
@@ -19,6 +20,7 @@ import com.gthncz.mycheckinclient.checkin.CheckInControl.OnGetTradeQueryResponse
 import com.gthncz.mycheckinclient.checkin.CheckInControl.OnGetUserListener;
 import com.gthncz.mycheckinclient.checkin.CheckInControl.OnShowPageListener;
 import com.gthncz.mycheckinclient.checkin.CheckInControl.Page;
+import com.gthncz.mycheckinclient.helper.INIHelper;
 import com.gthncz.mycheckinclient.helper.NetworkHelper;
 
 import javafx.application.Platform;
@@ -69,6 +71,9 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 	private String outTradeNo;//生成的商家订单号
 	
 	private UserBean userBean;// 授权的用户信息
+	
+	private String storeId; // 店铺ID
+	private String terminalId; //终端ID
 
 	@FXML
 	private BorderPane checkin_pay2_root;
@@ -84,6 +89,10 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 	private Tab tabWxpay;
 	 @FXML 
 	private TabWxpayPageControl tabWxpayPageController;
+	@FXML
+	private Tab tabBalancepay;
+	@FXML
+	private TabBalancepayPageControl tabBalancepayPageController;
 
 	private OnShowPageListener showPageListener;
 
@@ -130,13 +139,28 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 				
 				if(newValue.equals(tabAlipay)) {
 					tabWxpayPageController.forceStopTimer();
+					tabBalancepayPageController.forceStopTimer();
 					tabAlipayPageController.start(outTradeNo);
 				}else if(newValue.equals(tabWxpay)) {
 					tabAlipayPageController.forceStopTimer();
+					tabBalancepayPageController.forceStopTimer();
 					tabWxpayPageController.start(outTradeNo);
+				}else if(newValue.equals(tabBalancepay)) {
+					tabAlipayPageController.forceStopTimer();
+					tabWxpayPageController.forceStopTimer();
+					tabBalancepayPageController.start(outTradeNo, userBean);
 				}
 			}
 		});
+		
+		HashMap<String, String> ini = INIHelper.getIniSet();
+		if(ini != null) {
+			storeId = ini.get("store_id").trim();
+			terminalId = ini.get("terminal_id").trim();
+		}else {
+			storeId = "1";
+			terminalId = "1";
+		}
 	}
 
 	/**
@@ -146,6 +170,7 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 		//设置界面跳转回调, 必须在ParentController的Initialize执行完成后执行
 		tabAlipayPageController.setOnShowPageListener(showPageListener);
 		tabWxpayPageController.setOnShowPageListener(showPageListener);
+		tabBalancepayPageController.setOnShowPageListener(showPageListener);
 		// 获取商品信息
 		if (getDealListener != null) {
 			goodsList = getDealListener.getGoodsList();
@@ -161,6 +186,7 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 		// 开始清空结果信息， 设置二维码展示面板不可见
 		tabAlipay.getTabPane().setVisible(false);
 		tabWxpay.getTabPane().setVisible(false);
+		tabBalancepay.getTabPane().setVisible(false);
 		outTradeNo = "";
 		/**
 		 * 业务流程： 1. 提交订单，获取商家订单号 2. 由支付宝或者微信支付发起预支付
@@ -178,8 +204,8 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 				String spec = Params.URL_SUBMIT_DEAL;
 				HashMap<String, String> map = new HashMap<>();
 				map.put("user_id", String.valueOf(user_id));
-				map.put("store_id", "1");// TODO 店铺ID先固定为1号店
-				map.put("terminal_id", "1");// TODO 终端ID先固定为1号终端
+				map.put("store_id", storeId);
+				map.put("terminal_id", terminalId);
 				map.put("pay_amount", String.valueOf(payPrice));
 				map.put("discount_amount", String.valueOf(discountPrice));
 				map.put("total_amount", String.valueOf(totalPrice));
@@ -222,8 +248,6 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 						@Override
 						public void run() {
 							stage.hide();
-							tabAlipay.getTabPane().setVisible(true);
-							tabWxpay.getTabPane().setVisible(true);
 							//开始标签页的逻辑
 							startTabPageLogic();
 						}
@@ -249,6 +273,7 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 		if(outTradeNo == null || outTradeNo == "") {
 			tabAlipayPageController.forceStopTimer();
 			tabWxpayPageController.forceStopTimer();
+			tabBalancepayPageController.forceStopTimer();
 			if (showPageListener != null) {
 				showPageListener.showPage(Page.PAGE_CART);
 			}
@@ -274,6 +299,7 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 							if(code == 1) {//成功
 								tabAlipayPageController.forceStopTimer();
 								tabWxpayPageController.forceStopTimer();
+								tabBalancepayPageController.forceStopTimer();
 								if (showPageListener != null) {
 									showPageListener.showPage(Page.PAGE_CART);
 								}
@@ -291,6 +317,13 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 	 * 开始标签页的逻辑
 	 */
 	private void startTabPageLogic() {
+		tabAlipay.getTabPane().setVisible(true);
+		tabWxpay.getTabPane().setVisible(true);
+		if(userBean != null) {
+			tabBalancepay.setDisable(false);
+		}else {
+			tabBalancepay.setDisable(true);
+		}
 		showTabPage(0);//显示支付宝界面逻辑
 		tabAlipayPageController.start(outTradeNo);
 	}
@@ -365,4 +398,9 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 		return tabWxpayPageController.getWxpayOrderQueryResponseBean();
 	}
 
+	@Override
+	public BalancepayTradeQueryResponse geBalancepayTradeQueryResponse() {
+		return tabBalancepayPageController.getBalancepayTradeQueryResponse();
+	}
+	
 }

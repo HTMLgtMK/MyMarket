@@ -24,29 +24,29 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import net.sf.json.JSONObject;
 
 public class LoginController implements Initializable {
 	private static final String TAG = LoginController.class.getSimpleName();
 
-	@FXML
-	protected TextField textfield_login_account;
-	@FXML
-	protected PasswordField passwordfield_login_password;
-	@FXML
-	protected Label label_login_msg;
-	@FXML
-	protected Button button_login_login;
-	@FXML
-	protected Button btn_setting;
+	@FXML protected TextField textfield_login_account;
+	@FXML protected PasswordField passwordfield_login_password;
+	@FXML protected Label label_login_msg;
+	@FXML protected Button button_login_login;
+	@FXML protected Button btn_setting;
 	@FXML protected Button btn_exit;
 	@FXML protected VBox vbox_form_wrapper;
 	@FXML protected VBox vbox_connection_wrapper;
@@ -89,6 +89,8 @@ public class LoginController implements Initializable {
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.initStyle(StageStyle.UNDECORATED); // 无标题栏
+		Image logo = new Image("file:resource/drawable/logo32.png");
+		primaryStage.getIcons().add(logo);
 		primaryStage.show();
 		
 		vbox_connection_wrapper.setVisible(false);
@@ -143,6 +145,35 @@ public class LoginController implements Initializable {
 				connectUHFReader();
 			}
 		});
+		btn_setting.setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				showSetting();
+			}
+		});
+	}
+
+	protected void showSetting() {
+		Dialog<Boolean> dialog = new Dialog<>();
+		final SettingController controller = SettingController.getInstance();
+		Parent parent = controller.getRoot();
+		dialog.getDialogPane().setContent(parent);
+		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.APPLY);
+		dialog.setResultConverter(new Callback<ButtonType, Boolean>() {
+			
+			@Override
+			public Boolean call(ButtonType param) {
+				if(param.equals(ButtonType.APPLY)) {
+					return controller.applySubmit();
+				}
+				return true;
+			}
+		});
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		dialog.initOwner(stage);
+		dialog.show();
+		controller.start();
 	}
 
 	private void login() {

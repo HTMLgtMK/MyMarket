@@ -30,4 +30,8 @@ public class Params {
 	public static final String URL_GETDISCOUNTS = URL_SERVER_BASE + "api/market/Goods/getDiscounts";
 	/*撤销本次交易接口地址*/
 	public static final String URL_REVOKE_DEAL = URL_SERVER_BASE + "api/market/Goods_Sale/revokeDeal";
+	/*余额支付预下单请求地址*/
+	public static final String URL_BALANCE_PAY_PRECREATE = URL_SERVER_BASE + "api/market/Goods_Sale/balance_qrpay";
+	/*余额支付交易请求结果查询地址*/
+	public static final String URL_BALANCE_PAY_TRADE_QUERY = URL_SERVER_BASE + "api/market/Goods_Sale/balancePayQuery";
 }

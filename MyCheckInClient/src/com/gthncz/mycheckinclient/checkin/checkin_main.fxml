@@ -5,7 +5,7 @@
 
 
 <ScrollPane fx:id="scrollPane_checkin_main_root" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gthncz.mycheckinclient.checkin.CheckInControl"
-	hbarPolicy="ALWAYS" vbarPolicy="NEVER" 
+	hbarPolicy="NEVER" vbarPolicy="NEVER" 
 	stylesheets="@./css/checkin.css" >
 	<content>
 		<HBox >

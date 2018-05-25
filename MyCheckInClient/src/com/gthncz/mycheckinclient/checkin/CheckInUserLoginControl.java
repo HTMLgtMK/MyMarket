@@ -19,6 +19,7 @@ import com.gthncz.mycheckinclient.checkin.CheckInControl.Page;
 import com.gthncz.mycheckinclient.helper.NetworkHelper;
 import com.gthncz.mycheckinclient.helper.QRCodeHelper;
 
+import application.Main;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -54,6 +55,8 @@ import net.sf.json.JSONObject;
  *
  */
 public class CheckInUserLoginControl implements Initializable, OnGetUserListener {
+	
+	private static final String TAG = CheckInUserLoginControl.class.getSimpleName();
 
 	@FXML
 	private BorderPane checkin_userlogin_root;
@@ -150,6 +153,9 @@ public class CheckInUserLoginControl implements Initializable, OnGetUserListener
 				
 				@Override
 				public void run() {
+					if(Main.DEBUG) {
+						Logger.getLogger(TAG).log(Level.INFO, "** 信息 >> Image Slide Timer is running...");
+					}
 					if(curImg == 5) curImg = 0;
 					for(int i=0;i<5;++i) {
 						imgViews[i].setVisible(false);
@@ -241,6 +247,9 @@ public class CheckInUserLoginControl implements Initializable, OnGetUserListener
 				
 				@Override
 				public void run() {
+					if(Main.DEBUG) {
+						Logger.getLogger(TAG).log(Level.INFO, "** 信息 >> Check User Grant Timer is running...");
+					}
 					if(checkFlag == false) {
 						return;
 					}
