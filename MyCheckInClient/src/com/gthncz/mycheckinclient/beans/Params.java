@@ -1,9 +1,13 @@
 package com.gthncz.mycheckinclient.beans;
 
 public class Params {
-	
+	public static final String INI_NAME = "checkinclient.ini";
 	/*服务器根目录地址*/
 	public static final String URL_SERVER_BASE = "http://localhost:8888/";
+	/*本地安保系统服务器地址*/
+	public static final String URL_SAFEGUARD_BASE = "localhost";
+	/*安保系统端口*/
+	public static final int PORT_SAFEGUARD_BASE = 8686;
 	/*员工登陆地址*/
 	public static final String URL_LOGIN = URL_SERVER_BASE + "api/admin/Public/login";
 	/*订单提交地址*/

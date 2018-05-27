@@ -3,6 +3,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Separator?>
 
 <GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gthncz.mycheckinclient.login.SettingController">
 	<children>
@@ -11,6 +12,15 @@
 		
 		<Label  text="终端ID" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 		<TextField fx:id="tf_terminal_id" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="终端ID" />
+		
+		<Separator  GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2" />
+		
+		<Label  text="安保服务地址" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+		<TextField fx:id="tf_safeguard_addr" GridPane.columnIndex="1" GridPane.rowIndex="3" text="127.0.0.1" promptText="安保服务地址, 默认127.0.0.1" />
+		
+		<Label  text="安保服务端口" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+		<TextField fx:id="tf_safeguard_port" GridPane.columnIndex="1" GridPane.rowIndex="4" text="8686" promptText="安保服务端口, 默认8686" />
+		
 	</children>
 </GridPane>
 

@@ -1,0 +1,135 @@
+/* 安保系统全局样式 */
+
+*{
+	-fx-font-size: 20px;
+}
+
+.menu-bar .menu {
+	-fx-font-size: 15px;
+}
+
+.nav {
+	-fx-font-size: 20px;
+}
+
+/*默认按钮样式*/
+.default-button {
+	-fx-border-radiu:10px;
+	-fx-background-radiu:10px;
+	-fx-background-color:#00B2EE;
+	-fx-text-fill:#ffffff;
+}
+
+.default-button:hover{
+	-fx-background-color:#006400;
+}
+
+.button-warining {
+	-fx-border-radiu:10px;
+	-fx-background-radiu:10px;
+	-fx-background-color: #FFC125;
+	-fx-text-fill: #ffffff;
+}
+
+.button-warining:warning {
+	-fx-background-color: #FF7F24;
+}
+
+.button-cancel {
+	-fx-border-radiu:10px;
+	-fx-background-radiu:10px;
+	-fx-background-color: #4F4F4F;
+	-fx-text-fill: #ffffff;
+}
+
+.button-cancel:warning {
+	-fx-background-color: #363636;
+}
+
+.container {
+	
+}
+
+.container .container-top {
+	-fx-padding: 10, 20, 10, 20;
+	-fx-background-color:#ccccff; 
+	-fx-z-index:-1;
+	-fx-spacing: 10;
+	-fx-alignment: center-left;
+}
+
+.container .container-top Label {
+	-fx-font-size: 20px;
+}
+
+.container .container-center {
+	-fx-background-color: white;
+}
+
+.container .container-bottom {
+	
+}
+
+/* 容器内文字基本样式 */
+.container-text {
+	-fx-text-fill: WHITE;
+	-fx-font-size: 20px;
+}
+
+/* 提示信息 */
+.container-hint-msg {
+	-fx-padding:10 10 10 10;	
+}
+
+/** TabPane的样式 */
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 0;
+}
+
+.tab-pane:top *.tab-header-area {
+    -fx-background-insets: 0, 0 0 1 0;
+ /* -fx-padding: 0.416667em 0.166667em 0.0em 0.833em; /* 5 2 0 10 */
+	-fx-padding: 0.416667em 0.166667em 0.0em 0.0em;/* overridden as 5 2 0 0 */
+	-fx-background-color: #1874CD;
+}
+
+.tab-pane
+{
+    -fx-tab-min-width:100px;
+    -fx-tab-min-height:30px;
+}
+
+.tab{
+	-fx-background-insets: 0 1 0 1,0,0;
+    -fx-padding: 10 10;
+}
+
+/* -fx-background-color: #e6e6e6; */
+.tab-pane .tab 
+{
+   -fx-background-color: #1874CD;
+}
+
+/*-fx-background-color: #3c3c3c;*/
+.tab-pane .tab:selected
+{
+    -fx-background-color: #1E90FF;
+}
+
+/* -fx-text-fill: #828282; */
+/* -fx-text-fill: #96b946; */
+.tab .tab-label { 
+    -fx-alignment: CENTER;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 20px;
+}
+
+.tab:selected .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: #ffffff;
+}
+
+.tab-content-area {
+	 -fx-background-color: #1E90FF;
+}

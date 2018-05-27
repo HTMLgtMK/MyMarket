@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.gthncz.safeguard.main.SettingController"
+	stylesheets="@./css/safeguard_main.css"
+	styleClass="container"
+	hgap="10"  vgap="10"
+	>
+	<children>
+		<Label text="数据库配置" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2" />
+		<Separator  GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2" />
+		
+		<Label text="数据库端口" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+		<TextField fx:id="tf_db_port" GridPane.columnIndex="1" GridPane.rowIndex="1" text="3306" promptText="数据库端口, 默认3306" />
+		
+		<Label text="数据库用户" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+		<TextField fx:id="tf_db_user" GridPane.columnIndex="1" GridPane.rowIndex="2" text="root" promptText="数据库用户, 默认root" />
+		
+		<Label text="数据库密码" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+		<PasswordField fx:id="pwdfield_db_pwd" GridPane.columnIndex="1" GridPane.rowIndex="3" text="gt" promptText="数据库用户, 默认gt" />
+		
+		<Label text="数据库名称" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+		<TextField fx:id="tf_db_name" GridPane.columnIndex="1" GridPane.rowIndex="4" text="db_market_safeguard" promptText="数据库名称, 默认db_market_safeguard" />
+		
+		<Separator  GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2" />
+		<Label text="服务配置" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="2" />
+		<Separator  GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="2" />
+		
+		<Label text="服务端口" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+		<TextField fx:id="tf_server_port"  GridPane.columnIndex="1" GridPane.rowIndex="8" text="8686" promptText="安保服务器监听端口, 默认8686" />
+	</children>
+</GridPane>
+

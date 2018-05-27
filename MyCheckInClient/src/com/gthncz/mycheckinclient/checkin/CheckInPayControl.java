@@ -153,7 +153,7 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 			}
 		});
 		
-		HashMap<String, String> ini = INIHelper.getIniSet();
+		HashMap<String, String> ini = INIHelper.getIniSet(Params.INI_NAME);
 		if(ini != null) {
 			storeId = ini.get("store_id").trim();
 			terminalId = ini.get("terminal_id").trim();

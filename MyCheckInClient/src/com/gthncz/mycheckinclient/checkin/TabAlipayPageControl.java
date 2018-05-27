@@ -232,6 +232,7 @@ public class TabAlipayPageControl implements Initializable {
 
 						@Override
 						public void run() {
+							forceStopTimer();
 							if (showPageListener != null) {
 								showPageListener.showPage(Page.PAGE_PAY_RESULT);// 显示最后一页
 							}

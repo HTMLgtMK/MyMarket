@@ -1,0 +1,22 @@
+/* 欢迎界面的样式  */
+
+.container-top-welcome{
+	-fx-background-color: linear-gradient(#7dc5eb, #bd8cbb) ;
+	-fx-alignment: center ;
+}
+
+.container-top-welcome .container-title {
+	-fx-text-fill: white ;
+	-fx-font-size: 30px;
+	-fx-text-alignment: center;
+}
+
+.container-center {
+	-fx-alignment: center;
+}
+
+.container-center Label {
+	-fx-font-size: 20px;
+}
+
+

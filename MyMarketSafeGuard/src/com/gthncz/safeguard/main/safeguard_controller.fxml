@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" 
+	fx:controller="com.gthncz.safeguard.main.SafeGuardControlController"
+	styleClass="container"
+	>
+	<center>
+		<GridPane styleClass="container-center" hgap="10" vgap="10"
+			gridLinesVisible="false">
+			<columnConstraints>
+				<ColumnConstraints percentWidth="30"
+					hgrow="SOMETIMES" halignment="CENTER"></ColumnConstraints>
+				<ColumnConstraints percentWidth="30"
+					hgrow="SOMETIMES" halignment="RIGHT"></ColumnConstraints>
+				<ColumnConstraints percentWidth="20"
+					hgrow="SOMETIMES" halignment="LEFT"></ColumnConstraints>
+			</columnConstraints>
+			<padding>
+				<Insets top="20" />
+			</padding>
+			<children>
+				<!-- 读写器信息 -->
+				<Label GridPane.columnIndex="0" GridPane.rowIndex="0"
+					text="读写器状态" />
+				<Label fx:id="label_uhf_status" text="状态"
+					GridPane.columnIndex="1" GridPane.rowIndex="0" />
+				<Button fx:id="btn_uhf_connect" text="连接"
+					styleClass="default-button" GridPane.columnIndex="2"
+					GridPane.rowIndex="0" />
+
+				<Separator GridPane.columnIndex="0"
+					GridPane.columnSpan="3" GridPane.rowIndex="1">
+					<GridPane.margin>
+						<Insets top="30" bottom="30" />
+					</GridPane.margin>
+				</Separator>
+				
+				<!-- 服务器信息 -->
+				<Label GridPane.columnIndex="0" GridPane.rowIndex="2"
+					text="本地服务器状态" />
+				<Label fx:id="label_server_status" text="状态"
+					GridPane.columnIndex="1" GridPane.rowIndex="2" />
+				<Button fx:id="btn_server_connect" text="开启"
+					styleClass="default-button" GridPane.columnIndex="2"
+					GridPane.rowIndex="2" />
+			</children>
+		</GridPane>
+	</center>
+	<bottom>
+		<ScrollPane fx:id="scrollpane_info" fitToHeight="true"
+			fitToWidth="true" minHeight="200" maxHeight="200"
+			stylesheets="@./css/bg_scrollpane_white.css"
+			styleClass="container-bottom" vbarPolicy="ALWAYS">
+		</ScrollPane>
+	</bottom>
+</BorderPane>
+

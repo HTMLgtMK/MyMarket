@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Separator?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.gthncz.safeguard.main.SafeGuardTabPageController"
+	styleClass="container">
+	<!-- 中间显示全部未付款的商品 -->
+	<center>
+		<VBox fx:id="safeguard_container_center"
+			styleClass="container-center">
+			<children>
+				<!-- 顶部信息 -->
+				<AnchorPane style="-fx-background-color:#00B2EE;">
+					<children>
+						<Label text="未付款商品"
+							AnchorPane.leftAnchor="0.0"
+							styleClass="container-text, container-hint-msg" />
+						<!-- 提示信息(显示时间) -->
+						<Label fx:id="label_msg" text="提示"
+							AnchorPane.rightAnchor="0.0"
+							styleClass="container-text, container-hint-msg" />
+					</children>
+				</AnchorPane>
+				<TableView fx:id="tableView_safeguard_unchecked"
+					prefWidth="${safeguard_container_center.width}">
+					<columns>
+						<TableColumn fx:id="unCheckedEPCCloumn" text="EPC"
+							prefWidth="${tableView_safeguard_unchecked.width/4}">
+							<cellValueFactory>
+								<PropertyValueFactory property="epc" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn fx:id="unCheckedNameCloumn" text="商品"
+							prefWidth="${tableView_safeguard_unchecked.width/4}">
+							<cellValueFactory>
+								<PropertyValueFactory property="name" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn fx:id="unCheckedTimeColumn" text="时间"
+							prefWidth="${tableView_safeguard_unchecked.width/4}">
+							<cellValueFactory>
+								<PropertyValueFactory property="time" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn fx:id="unCheckedStatusColumn" text="状态"
+							prefWidth="${tableView_safeguard_unchecked.width/4}">
+							<cellValueFactory>
+								<PropertyValueFactory property="status" />
+							</cellValueFactory>
+						</TableColumn>
+					</columns>
+					<items></items>
+					<sortOrder>
+						<fx:reference source="unCheckedTimeColumn" />
+					</sortOrder>
+				</TableView>
+			</children>
+		</VBox>
+	</center>
+	<bottom>
+		<VBox fx:id="safeguard_container_bottom"
+			styleClass="container-bottom">
+			<children>
+				<Separator />
+				<!-- 顶部信息 -->
+				<AnchorPane>
+					<children>
+						<!-- 提示信息 -->
+						<Label fx:id="label_all_msg" text="提示"
+							AnchorPane.leftAnchor="0.0"
+							styleClass="container-text, container-hint-msg" />
+					</children>
+				</AnchorPane>
+				<TableView fx:id="tableView_saefeguard_all" prefWidth="${safeguard_container_bottom.width}"
+					minHeight="300" maxHeight="300" >
+					<columns>
+						<TableColumn fx:id="allEPCCloumn" text="EPC"
+							prefWidth="${tableView_saefeguard_all.width/2}">
+							<cellValueFactory>
+								<PropertyValueFactory property="epc" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn fx:id="allTimeColumn" text="时间"
+							prefWidth="${tableView_saefeguard_all.width/2}">
+							<cellValueFactory>
+								<PropertyValueFactory property="time" />
+							</cellValueFactory>
+						</TableColumn>
+					</columns>
+				</TableView>
+			</children>
+		</VBox>
+	</bottom>
+</BorderPane>
+

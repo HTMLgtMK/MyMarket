@@ -20,21 +20,18 @@ import java.util.Iterator;
 public class INIHelper {
 
 	private static final String DIR = "ini";
-	/*配置文件名*/
-	private static final String INI_NAME = "checinclient.ini";
-	
 	/**
 	 * 写入配置
 	 * @param map
 	 */
-	public static boolean writeIni(HashMap<String, String> map) {
+	public static boolean writeIni(String iniName, HashMap<String, String> map) {
 		File dir = new File(DIR);
 		if(!dir.exists()) {
 			if(!dir.mkdir()) {
 				return false;
 			}
 		}
-		File file = new File(dir, INI_NAME);
+		File file = new File(dir, iniName);
 		if(!file.exists()) {
 			try {
 				file.createNewFile();
@@ -80,12 +77,12 @@ public class INIHelper {
 	 * 读取配置信息
 	 * @return
 	 */
-	public static HashMap<String, String> getIniSet(){
+	public static HashMap<String, String> getIniSet(String iniName){
 		File dir = new File(DIR);
 		if(!dir.exists()) {
 			return null;
 		}
-		File file = new File(dir, INI_NAME);
+		File file = new File(dir, iniName);
 		if(!file.exists()) {
 			return null;
 		}
@@ -98,6 +95,7 @@ public class INIHelper {
 			String line = null;
 			while((line = reader.readLine())!=null) {
 				if(line.length() == 0) continue;
+				if(line.startsWith(";") || line.startsWith("#")) continue; // 注释行
 				String[] ini = line.split("=");
 				map.put(ini[0], ini[1]);
 			}

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.gthncz.safeguard.main.SafeGuardController"
+	stylesheets="@./css/safeguard_main.css" styleClass="container">
+	<top>
+		<MenuBar fx:id="menubar_main">
+			<menus>
+				<Menu text="程序">
+					<items>
+						<MenuItem fx:id="menuItem_setting" text="设置" />
+						<MenuItem fx:id="menuItem_exit" text="退出" />
+					</items>
+				</Menu>
+				<Menu text="操作">
+					<items>
+						<MenuItem fx:id="menuItem_welcome" text="欢迎" />
+						<MenuItem fx:id="menuItem_controller" text="控制" />
+						<MenuItem fx:id="menuItem_safeguard" text="监控" />
+					</items>
+				</Menu>
+				<Menu text="帮助">
+					<items>
+						<MenuItem fx:id="menuItem_about" text="关于" />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+	</top>
+	<center>
+		<TabPane fx:id="tabPane_main" tabClosingPolicy="UNAVAILABLE"
+			styleClass="container-center">
+			<tabs>
+				<Tab fx:id="tab_welcome" text="欢迎">
+					<fx:include fx:id="tabWelcomePage"
+						source="safeguard_welcome.fxml" />
+				</Tab>
+				<Tab fx:id="tab_controller" text="控制">
+					<fx:include fx:id="tabControllerPage"
+						source="safeguard_controller.fxml" />
+				</Tab>
+				<Tab fx:id="tab_safeguard" text="监控">
+					<fx:include fx:id="tabSafeGuardPage"
+						source="safeguard_safeguard.fxml" />
+				</Tab>
+			</tabs>
+		</TabPane>
+	</center>
+</BorderPane>
+

@@ -119,6 +119,10 @@ public class CheckInControl implements Initializable {
 				if(userLoginController != null) {
 					userLoginController.exitForceStopTimer();
 				}
+				
+				if(payResultController != null) {
+					payResultController.terminateReporter();
+				}
 			};
 		});
 		showPage(Page.PAGE_WELCOME);
@@ -143,6 +147,7 @@ public class CheckInControl implements Initializable {
 
 		MyGetTradeResponseListener getTradeResponseListener = new MyGetTradeResponseListener();
 		payResultController.setOnGetTradeQueryResponseListener(getTradeResponseListener);
+		payResultController.setDealListener(getDealListener);
 
 		MyGetUserListener getUserListener = new MyGetUserListener();
 		cartController.setOnGetUserListener(getUserListener);

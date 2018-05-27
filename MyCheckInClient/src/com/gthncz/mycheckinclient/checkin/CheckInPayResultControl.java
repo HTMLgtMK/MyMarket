@@ -1,18 +1,30 @@
 package com.gthncz.mycheckinclient.checkin;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.gthncz.mycheckinclient.beans.AlipayTradeQueryResponseBean;
 import com.gthncz.mycheckinclient.beans.BalancepayTradeQueryResponse;
+import com.gthncz.mycheckinclient.beans.GoodsBean;
+import com.gthncz.mycheckinclient.beans.Params;
 import com.gthncz.mycheckinclient.beans.WxpayOrderQueryResponseBean;
+import com.gthncz.mycheckinclient.checkin.CheckInControl.OnGetDealListener;
 import com.gthncz.mycheckinclient.checkin.CheckInControl.OnGetTradeQueryResponseListener;
 import com.gthncz.mycheckinclient.checkin.CheckInControl.OnShowPageListener;
 import com.gthncz.mycheckinclient.checkin.CheckInControl.Page;
+import com.gthncz.mycheckinclient.helper.INIHelper;
 
 import application.Main;
 import javafx.application.Platform;
@@ -27,6 +39,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
+import net.sf.json.JSONArray;
 
 public class CheckInPayResultControl implements Initializable {
 	private static final String TAG = CheckInPayResultControl.class.getSimpleName();
@@ -46,9 +59,25 @@ public class CheckInPayResultControl implements Initializable {
 	
 	private int count;
 	
+	private ExecutorService executor;
+	private int nThreads;
+	private static final int DEFAULT_nTHREAD = 5;
+	
+	private String safeguardAddr = null;
+	private static final String SAFEGUARD_ADDR = "127.0.0.1";
+	private int safeguardPort = DEFAULT_SAFEGUARD_PORT;
+	private static final int DEFAULT_SAFEGUARD_PORT = 8686;
+	
 	private OnShowPageListener showPageListener;
 	
 	private OnGetTradeQueryResponseListener getTradeQueryResponseListener;
+	
+	private ArrayList<GoodsBean> goodsList;// 提交的商品列表
+	private OnGetDealListener getDealListener;
+	
+	public void setDealListener(OnGetDealListener listener) {
+		this.getDealListener = listener;
+	}
 	
 	public void setOnShowPageListener(OnShowPageListener listener) {
 		this.showPageListener = listener;
@@ -58,10 +87,19 @@ public class CheckInPayResultControl implements Initializable {
 		this.getTradeQueryResponseListener = listener;
 	}
 	
+	public void terminateReporter() {
+		if(executor != null) {
+			executor.shutdown();
+		}
+	}
+	
 	/**
 	 * 开始处理业务逻辑
 	 */
 	public void start() {
+		if(getDealListener != null) {
+			goodsList = getDealListener.getGoodsList();
+		}
 		if(getTradeQueryResponseListener!=null) {
 			AlipayTradeQueryResponseBean alipayTradeQueryResponseBean = getTradeQueryResponseListener.geAlipayTradeQueryResponseBean();
 			WxpayOrderQueryResponseBean wxpayOrderQueryResponseBean = getTradeQueryResponseListener.getWxpayOrderQueryResponseBean();
@@ -82,6 +120,12 @@ public class CheckInPayResultControl implements Initializable {
 				label_result_msg.setGraphic(new ImageView(img));
 				
 				label_tip.setText("感谢您使用自助收银系统!欢迎再次光临!");
+				
+				if(goodsList != null) {
+					ReportGoodsTask task = new ReportGoodsTask(goodsList);
+					executor.execute(task);
+				}
+				
 			}else if(alipayTradeQueryResponseBean.getCode() == -1  || wxpayOrderQueryResponseBean.getCode() == -1
 					|| balancepayTradeQueryResponse.getCode() == 0) {
 				Image img = new Image("file:resource/drawable/pay_fail.png");
@@ -140,6 +184,63 @@ public class CheckInPayResultControl implements Initializable {
 				}
 			}; 
 		});
+		nThreads = DEFAULT_nTHREAD;
+		executor = Executors.newFixedThreadPool(nThreads);
+		
+		HashMap<String, String> ini = INIHelper.getIniSet(Params.INI_NAME);
+		if(ini == null) {
+			safeguardAddr = SAFEGUARD_ADDR;
+			safeguardPort = DEFAULT_SAFEGUARD_PORT;
+		} else {
+			String addr = ini.get("safeguard_addr");
+			String port = ini.get("safeguard_port");
+			safeguardAddr = addr == null ? SAFEGUARD_ADDR : addr;
+			safeguardPort = port == null ? DEFAULT_SAFEGUARD_PORT : Integer.valueOf(port);
+		}
+	}
+	
+	private class ReportGoodsTask implements Runnable{
+		private ArrayList<GoodsBean> goodsList;
+		
+		public ReportGoodsTask(ArrayList<GoodsBean> goodsList) {
+			this.goodsList = new ArrayList<>();
+			this.goodsList.addAll(goodsList); // 备份, 防止被清空
+		}
+		
+		@Override
+		public void run() {
+			Logger.getLogger(TAG).log(Level.INFO, "runing the report task...");
+			Socket socket = null;
+			OutputStream os  = null;
+			OutputStreamWriter writer = null;
+			try {
+				socket = new Socket(safeguardAddr, safeguardPort);
+				socket.setSoTimeout(10000);
+				os= socket.getOutputStream();
+				writer = new OutputStreamWriter(os, "UTF-8");
+				JSONArray jsonArr = JSONArray.fromObject(goodsList);
+				String goodsListDetail = jsonArr.toString();
+				Logger.getLogger(TAG).log(Level.INFO, goodsListDetail);
+				writer.write(goodsListDetail);
+				writer.flush();
+			} catch (IOException e) {
+//				e.printStackTrace(); // 不打印异常
+			} finally {
+				try {
+					if(writer != null) {
+						writer.close();
+					}
+					if(os != null) {
+						os.close();
+					}
+					if(socket != null) {
+						socket.close();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 }

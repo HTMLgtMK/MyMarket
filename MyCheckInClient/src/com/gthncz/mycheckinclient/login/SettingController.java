@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import com.gthncz.mycheckinclient.beans.Params;
 import com.gthncz.mycheckinclient.helper.INIHelper;
 
 import javafx.fxml.FXML;
@@ -17,6 +18,8 @@ public class SettingController implements Initializable {
 	
 	@FXML private TextField tf_store_id;
 	@FXML private TextField tf_terminal_id;
+	@FXML private TextField tf_safeguard_addr;
+	@FXML private TextField tf_safeguard_port;
 	
 	private Parent parent;
 	
@@ -39,10 +42,12 @@ public class SettingController implements Initializable {
 	}
 	
 	public void start() {
-		HashMap<String, String> ini = INIHelper.getIniSet();
+		HashMap<String, String> ini = INIHelper.getIniSet(Params.INI_NAME);
 		if(ini != null) {
 			tf_store_id.setText(ini.get("store_id"));
 			tf_terminal_id.setText(ini.get("terminal_id"));
+			tf_safeguard_addr.setText(ini.get("safeguard_addr"));
+			tf_safeguard_port.setText(ini.get("safeguard_port"));
 		}
 	}
 	
@@ -53,10 +58,14 @@ public class SettingController implements Initializable {
 	public boolean applySubmit() {
 		String storeId = tf_store_id.getText();
 		String terminalId = tf_terminal_id.getText();
+		String safeguard_addr = tf_safeguard_addr.getText();
+		String safeguard_port = tf_safeguard_port.getText();
 		HashMap<String, String> map = new HashMap<>();
 		map.put("store_id", storeId);
 		map.put("terminal_id", terminalId);
-		return INIHelper.writeIni(map);
+		map.put("safeguard_addr", safeguard_addr);
+		map.put("safeguard_port", safeguard_port);
+		return INIHelper.writeIni(Params.INI_NAME, map);
 	}
 
 	@Override
