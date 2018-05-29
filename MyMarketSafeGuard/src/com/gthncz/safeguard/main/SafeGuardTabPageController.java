@@ -260,11 +260,19 @@ public class SafeGuardTabPageController implements Initializable {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				if(queue.isEmpty()) continue;
+				try {
+					queueSemaphore.acquire(); // 使用队列信号量
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} 
+				if(queue.isEmpty()) {
+					queueSemaphore.release();
+					continue;
+				}
 				epcList.clear();
 				int index = 0;
 				Set<String> epcSet = new HashSet<>(); // 用于过滤同一个标签
-				for(SimpleGoodsBean bean : queue) {
+				for(SimpleGoodsBean bean : queue) { // java.util.ConcurrentModificationException
 					if(!epcSet.contains(bean.getEpc())) {
 						epcSet.add(bean.getEpc());
 						if(isGoodsMarked(bean.getEpc())) continue; // 已经标记, 跳过
@@ -275,15 +283,18 @@ public class SafeGuardTabPageController implements Initializable {
 					}
 				}
 				queue.clear();
+				queueSemaphore.release(); // 释放信号量
 				if(epcList.isEmpty()) continue;
 				// 向服务器发起请求
 				String json = NetworkHelper.downloadString(Params.URL_GET_SIMPLE_GOODS_INFO, epcList, "POST");
 				Logger.getLogger(TAG).log(Level.INFO, "check json : " + json);
 				ArrayList<SimpleGoodsBean> list = parseJSON(json);
 				// 过滤商品， 添加到表格
-				for(SimpleGoodsBean bean : list) {
-					if(bean.getStatus() != 2) {
-						unCheckedGoods.add(bean);
+				if(list != null) { // 查询时间过期，导致为空
+					for(SimpleGoodsBean bean : list) {
+						if(bean.getStatus() != 2) {
+							unCheckedGoods.add(bean);
+						}
 					}
 				}
 				updateUncheckedTable();

@@ -42,8 +42,8 @@ public class WxpayOrderQueryResponseBean {
 	
 	public void clear() {
 		this.code = 0;
-		this.out_trade_no = "";
-		this.status = "";
+		this.out_trade_no = null;
+		this.status = null;
 	}
 	
 }

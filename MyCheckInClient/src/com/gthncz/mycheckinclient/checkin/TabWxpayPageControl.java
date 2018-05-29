@@ -181,13 +181,15 @@ public class TabWxpayPageControl implements Initializable {
 	private void showQrCode() {
 		label_info.setText("请使用微信扫描二维码!");
 		// 微信支付处理结果
-		if (wxpayPreCreateResponseBean.getReturn_code().equals(String.valueOf(RETURN_CODE.SUCCESS))
-				&& wxpayPreCreateResponseBean.getResult_code().equals(String.valueOf(RETURN_CODE.SUCCESS))) {
+		if (String.valueOf(RETURN_CODE.SUCCESS).equals(wxpayPreCreateResponseBean.getReturn_code())
+				&& String.valueOf(RETURN_CODE.SUCCESS).equals(wxpayPreCreateResponseBean.getResult_code())) {
 			Image img_wxpay_qrcode = QRCodeHelper.zxingQRCodeCreate(wxpayPreCreateResponseBean.getCode_url(), 300, 300);
 			Logger.getLogger(getClass().getSimpleName()).log(Level.INFO,
 					"wxpay qrcode is null : " + (img_wxpay_qrcode == null));
 			imageView_qrcode.setImage(img_wxpay_qrcode);
+			label_result.setText(null); // 清空结果信息
 		} else {
+			imageView_qrcode.setImage(null); // 清空图片信息
 			label_result.setText(
 					wxpayPreCreateResponseBean.getReturn_msg() + " " + wxpayPreCreateResponseBean.getErr_code_des());
 		}

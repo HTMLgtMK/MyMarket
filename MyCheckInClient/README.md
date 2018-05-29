@@ -1,6 +1,82 @@
 
 ## 自助收银终端项目开发日志
 
+/**
+ *                             _ooOoo_
+ *                            o8888888o
+ *                            88" . "88
+ *                            (| -_- |)
+ *                            O\  =  /O
+ *                         ____/`---'\____
+ *                       .'  \\|     |//  `.
+ *                      /  \\|||  :  |||//  \
+ *                     /  _||||| -:- |||||-  \
+ *                     |   | \\\  -  /// |   |
+ *                     | \_|  ''\---/''  |   |
+ *                     \  .-\__  `-`  ___/-. /
+ *                   ___`. .'  /--.--\  `. . __
+ *                ."" '<  `.___\_<|>_/___.'  >'"".
+ *               | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+ *               \  \ `-.   \_ __\ /__ _/   .-` /  /
+ *          ======`-.____`-.___\_____/___.-`____.-'======
+ *                             `=---='
+ *          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ *                     佛祖保佑        永无BUG
+*/
+
+-------------------------------------------------
+
+2018.05.29 10:30
+
+1. 修改支付界面显示二维码逻辑，多次使用收银系统，若下次交易申请二维码失败，
+	则应该清除上次显示的二维码。
+
+2. 修改了`NetworkHelper`的上传部分，直接使用`OutputStreamWriter`，并指定文字编码，
+	否则上传中文会出现问题，导致服务器端`json_decode()`出现`MalUTF8Error`.
+	```java
+	OutputStream os = connection.getOutputStream();
+	OutputStreamWriter writer = new OutputStreamWriter(os, "UTF-8"); // 使用这个, 指定输出数据的编码
+	writer.write(builder.toString());
+	writer.flush();
+	writer.close();
+	os.close();
+	```
+	本来还以为是Eclipse导出的jar包有问题，原来是上传数据的方式有问题。
+	
+3. 修改上传购买商品`Base64`编码过程, 不适用`encodeToString()`方法, 该方法生成的字符串编码类型为`ISO-8859-1`,
+	还是先转换成byte数组，然后在转换成`UTF-8`的字符串方法比较好。
+	```java
+	byte[] bytes = Base64.getEncoder().encode(goods_detail.getBytes()); // !important, 使用这个, encodeToString()使用的编码是  ISO-8859-1.
+	goods_detail = new String(bytes, StandardCharsets.UTF_8); // ! important
+	```
+	
+4. 运行jar包时，windows系统默认的JVM编码是`GBK`，而程序内部使用的编码全部已经修改成`UTF-8`了.
+	运行jar包需要在命令行下，指定 `-Dfile.encoding=UTF-8`，才能正确运行。</br>
+	获取JVM编码的方法:
+	```java
+	Charset charset = Charset.defaultCharset();
+	Logger.getLogger(Main.class.getSimpleName()).log(Level.INFO, "default charset :" +charset);
+	```
+	运行jar包的方法:(一定要是cmd, 不是PowerShell)
+	```cmd
+	> java -Dfile.encoding=UTF-8 -jar .\MyMarketClient.jar
+	```
+	
+5. 当完成一交易马上经行下一交易，而下交易的金额为0时，出现仍然显示上一次订单信息的问题。
+	1. 修改`showQrCode()`函数逻辑，当二维码请求失败时，
+		```java
+		imageView_qrcode.setImage(null);
+		```
+	2. 修改购物车清空信息函数
+		```java
+		public void clearGoods(){
+			... 其他
+			totalPrice = 0;
+			payPrice = 0;
+			discountPrice = 0;
+		}
+		```
+
 -------------------------------------------------
 
 2018.05.25 23:05

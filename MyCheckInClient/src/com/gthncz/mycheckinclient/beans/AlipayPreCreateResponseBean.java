@@ -16,13 +16,13 @@ public class AlipayPreCreateResponseBean {
 	private String sign;
 	
 	public void clear() {//清空数据
-		code = "";
-		msg = "";
-		subcode = "";
-		submsg = "";
-		out_trade_no = "";
-		qr_code = "";
-		sign = "";
+		code = null;
+		msg = null;
+		subcode = null;
+		submsg = null;
+		out_trade_no = null;
+		qr_code = null;
+		sign = null;
 	}
 	
 	public String getSubcode() {

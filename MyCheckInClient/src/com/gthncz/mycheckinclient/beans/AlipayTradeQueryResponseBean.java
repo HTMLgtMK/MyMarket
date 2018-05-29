@@ -16,8 +16,8 @@ public class AlipayTradeQueryResponseBean {
 	
 	public void clear() {
 		code = 0;
-		status = "";
-		out_trade_no = "";
+		status = null;
+		out_trade_no = null;
 	}
 	
 	public int getCode() {

@@ -1,6 +1,7 @@
 package com.gthncz.mycheckinclient.checkin;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -178,10 +179,18 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 			discountPrice = getDealListener.getDiscountPrice();
 			payPrice = getDealListener.getPayPrice();
 			discountList = getDealListener.getDiscountList();
+		}else {
+//			goodsList = null;
+//			discountList = null;
+			totalPrice = 0;
+			discountPrice = 0;
+			payPrice = 0;
 		}
 		//获取用户授权信息
 		if(getUserListener != null) {
 			userBean = getUserListener.getUser();
+		}else {
+			userBean = null;
 		}
 		// 开始清空结果信息， 设置二维码展示面板不可见
 		tabAlipay.getTabPane().setVisible(false);
@@ -215,7 +224,8 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 				Logger.getLogger(CheckInPayControl.class.getSimpleName()).log(Level.INFO,
 						"goods_detail: " + goods_detail);
 				try {
-					goods_detail = Base64.getEncoder().encodeToString(goods_detail.getBytes());// !important
+					byte[] bytes = Base64.getEncoder().encode(goods_detail.getBytes()); // !important, 使用这个, encodeToString()使用的编码是  ISO-8859-1.
+					goods_detail = new String(bytes, StandardCharsets.UTF_8); // ! important
 					map.put("goods_detail", goods_detail);
 				} catch (Exception e) {
 					// continue?
@@ -227,7 +237,8 @@ public class CheckInPayControl implements Initializable,OnGetTradeQueryResponseL
 				Logger.getLogger(CheckInPayControl.class.getSimpleName()).log(Level.INFO,
 						"discount_str: " + discount_detail);
 				try {
-					discount_detail = Base64.getEncoder().encodeToString(discount_detail.getBytes());// !important
+					byte[] bytes = Base64.getEncoder().encode(discount_detail.getBytes()); // !important
+					discount_detail = new String(bytes, StandardCharsets.UTF_8); // ! important
 					map.put("discount_detail", discount_detail);
 				} catch (Exception e) {
 					e.printStackTrace();

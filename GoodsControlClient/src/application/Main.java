@@ -1,5 +1,9 @@
 package application;
 	
+import java.nio.charset.Charset;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import beans.AdminstratorInfo;
 import beans.UHFReaderBean;
 import javafx.application.Application;
@@ -35,6 +39,8 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) {
+		Charset charset = Charset.defaultCharset();
+		Logger.getLogger(Main.class.getSimpleName()).log(Level.INFO, "default charset :" +charset);
 		launch(args);
 	}
 

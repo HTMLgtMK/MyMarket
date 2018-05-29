@@ -1,9 +1,10 @@
 package helper;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -50,7 +51,8 @@ public class NetworkHelper {
 			connection.connect();
 			//提交数据
 			if(map!=null) {//只有当map不为空时认为有数据提交
-				DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
+				OutputStream os = connection.getOutputStream();
+				OutputStreamWriter writer = new OutputStreamWriter(os, "UTF-8");
 				Iterator<String> it = map.keySet().iterator();
 				while(it.hasNext()) {
 					StringBuilder builder = new StringBuilder();
@@ -60,13 +62,15 @@ public class NetworkHelper {
 					builder.append('=');
 					builder.append(value);
 					builder.append('&');
-					dos.write(builder.toString().getBytes()); // 不能使用writeBytes(String)方法, 会出现中文不能传输的问题。
+					writer.write(builder.toString());
+//					dos.write(builder.toString().getBytes()); // 不能使用writeBytes(String)方法, 会出现中文不能传输的问题。
 					if(debug) {
 						Logger.getLogger(NetworkHelper.class.getSimpleName()).log(Level.INFO , key+"="+value);
 					}
 				}
-				dos.flush();
-				dos.close();
+				writer.flush();
+				writer.close();
+				os.close();
 			}
 			if(connection.getResponseCode() != 200) {//状态码错误
 				//按照JSON格式返回数据

@@ -174,14 +174,15 @@ public class TabAlipayPageControl implements Initializable {
 	private void showQrCode() {
 		label_info.setText("请使用支付宝扫描二维码!");
 		// 支付宝处理结果
-		if (alipayPreCreateResponseBean.getCode().equals("10000")) {
+		if ("10000".equals(alipayPreCreateResponseBean.getCode())) {
 			Image img_alipay_qrcode = QRCodeHelper.zxingQRCodeCreate(alipayPreCreateResponseBean.getQr_code(), 300,
 					300);
 			Logger.getLogger(getClass().getSimpleName()).log(Level.INFO,
 					"alipay qrcode is null : " + (img_alipay_qrcode == null));
 			imageView_qrcode.setImage(img_alipay_qrcode);
-			label_result.setText("");//设置空值，否则二维码上面会有文字
+			label_result.setText(null);//设置空值，否则二维码上面会有文字
 		} else {
+			imageView_qrcode.setImage(null);
 			label_result.setText(alipayPreCreateResponseBean.getSubmsg());
 		}
 		borderPane_tab_alipay_root.setVisible(true);

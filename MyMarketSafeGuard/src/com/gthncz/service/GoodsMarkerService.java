@@ -242,9 +242,9 @@ public class GoodsMarkerService {
 						ClientDBHelper.getInstance().insertSimpleGoods(bean);
 					}
 				} catch (SQLException e) {
-					e.printStackTrace();
+//					e.printStackTrace();
 					Logger.getLogger(TAG).log(Level.INFO, String.format("%s %d %s", e.getMessage(), e.getErrorCode(), e.getSQLState()));
-				}
+				} 
 			}
 		}
 		

@@ -1,11 +1,37 @@
 package application;
 	
+import java.nio.charset.Charset;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.gthncz.beans.UHFReaderBean;
 import com.gthncz.safeguard.login.LoginController;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ *                             _ooOoo_
+ *                            o8888888o
+ *                            88" . "88
+ *                            (| -_- |)
+ *                            O\  =  /O
+ *                         ____/`---'\____
+ *                       .'  \\|     |//  `.
+ *                      /  \\|||  :  |||//  \
+ *                     /  _||||| -:- |||||-  \
+ *                     |   | \\\  -  /// |   |
+ *                     | \_|  ''\---/''  |   |
+ *                     \  .-\__  `-`  ___/-. /
+ *                   ___`. .'  /--.--\  `. . __
+ *                ."" '<  `.___\_<|>_/___.'  >'"".
+ *               | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+ *               \  \ `-.   \_ __\ /__ _/   .-` /  /
+ *          ======`-.____`-.___\_____/___.-`____.-'======
+ *                             `=---='
+ *          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ *                     佛祖保佑        永无BUG
+*/
 
 public class Main extends Application {
 	
@@ -65,6 +91,8 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) {
+		Charset charset = Charset.defaultCharset();
+		Logger.getLogger(Main.class.getSimpleName()).log(Level.INFO, "default charset :" +charset);
 		launch(args);
 	}
 }

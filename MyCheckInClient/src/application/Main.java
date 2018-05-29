@@ -1,6 +1,9 @@
 package application;
 	
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.gthncz.mycheckinclient.beans.AdminstratorInfo;
 import com.gthncz.mycheckinclient.beans.UHFReaderBean;
@@ -49,6 +52,8 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) {
+		Charset charset = Charset.defaultCharset();
+		Logger.getLogger(Main.class.getSimpleName()).log(Level.INFO, "default charset :" +charset);
 		launch(args);
 	}
 

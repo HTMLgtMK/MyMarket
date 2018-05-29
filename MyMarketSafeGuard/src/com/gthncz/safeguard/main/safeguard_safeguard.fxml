@@ -30,7 +30,7 @@
 					</children>
 				</AnchorPane>
 				<TableView fx:id="tableView_safeguard_unchecked"
-					prefWidth="${safeguard_container_center.width}">
+					prefWidth="${safeguard_container_center.width}" VBox.vgrow="ALWAYS">
 					<columns>
 						<TableColumn fx:id="unCheckedEPCCloumn" text="EPC"
 							prefWidth="${tableView_safeguard_unchecked.width/4}">

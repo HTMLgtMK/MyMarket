@@ -153,6 +153,9 @@ public class CheckInCart2Control implements Initializable, OnGetDealListener {
 		if (usedDiscountSet != null) {
 			usedDiscountSet.clear();
 		}
+		totalPrice = 0;
+		discountPrice = 0;
+		payPrice = 0;
 	}
 
 	public void exitForceStopTimer() {

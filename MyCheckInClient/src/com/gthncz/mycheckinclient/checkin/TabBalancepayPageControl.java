@@ -184,8 +184,9 @@ public class TabBalancepayPageControl implements Initializable {
 			Logger.getLogger(getClass().getSimpleName()).log(Level.INFO,
 					"balancepay qrcode is null : " + (img_balancepay_qrcode == null));
 			imageView_qrcode.setImage(img_balancepay_qrcode);
-			label_result.setText("");//设置空值，否则二维码上面会有文字
+			label_result.setText(null);//设置空值，否则二维码上面会有文字
 		} else {
+			imageView_qrcode.setImage(null);
 			label_result.setText(balancepayPreCreateResponseBean.getMsg());
 		}
 		borderPane_tab_balancepay_root.setVisible(true);

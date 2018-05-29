@@ -63,20 +63,20 @@ public class WxpayPreCreateResponseBean {
 	}
 	
 	public void clear() {//清空数据
-		this.return_code = "";
-		this.return_msg = "";
-		this.out_trade_no = "";
-		this.appid = "";
-		this.mch_id = "";
-		this.device_info = "";
-		this.nonce_str = "";
-		this.sign = "";
-		this.result_code = "";
-		this.err_code = "";
-		this.err_code_des = "";
-		this.trade_type = "";
-		this.code_url = "";
-		this.prepay_id = "";
+		this.return_code = null;
+		this.return_msg = null;
+		this.out_trade_no = null;
+		this.appid = null;
+		this.mch_id = null;
+		this.device_info = null;
+		this.nonce_str = null;
+		this.sign = null;
+		this.result_code = null;
+		this.err_code = null;
+		this.err_code_des = null;
+		this.trade_type = null;
+		this.code_url = null;
+		this.prepay_id = null;
 	}
 	
 	public String getOut_trade_no() {
